@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "774110096656",
+    "project_id": "fish-e-commerce-dd83e",
+    "storage_bucket": "fish-e-commerce-dd83e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774110096656:android:b83c5d03ddf3d037d50995",
+        "android_client_info": {
+          "package_name": "com.example.trungtamgiasu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774110096656-ua74vjhrj5e8hm4vmps30g3cskhjtcnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trungtamgiasu",
+            "certificate_hash": "7885fbf3745f426d5d849925e3c5cfb98278c20f"
+          }
+        },
+        {
+          "client_id": "774110096656-qa1poebckre2i41rm2cur9lv22vlcgke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGUCOr7ra5eM23lxsEBoACs-4vBiPn8ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774110096656-no3rbl8c6hm2foauucpv00lm4g6ej02e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

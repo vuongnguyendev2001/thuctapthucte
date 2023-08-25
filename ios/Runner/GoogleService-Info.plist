@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>774110096656-hdenvf0c40aqqltrsikp8khsom5fo57t.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.774110096656-hdenvf0c40aqqltrsikp8khsom5fo57t</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>774110096656-ua74vjhrj5e8hm4vmps30g3cskhjtcnq.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAqT5b2q5m8aHl7Qkdkfa1iOYmzpQ16xlc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>774110096656</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.trungtamgiasu</string>
+	<key>PROJECT_ID</key>
+	<string>fish-e-commerce-dd83e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fish-e-commerce-dd83e.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:774110096656:ios:b00a92bc40e1708cd50995</string>
+</dict>
+</plist>
