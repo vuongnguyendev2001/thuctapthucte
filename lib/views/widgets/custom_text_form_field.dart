@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final String? hintText;
   final IconData? iconData;
+  final bool? obscureText;
 
   const CustomTextFormField({
     super.key,
@@ -17,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.hintText,
     this.iconData,
+    this.obscureText = false,
   });
 
   @override
@@ -25,6 +27,7 @@ class CustomTextFormField extends StatelessWidget {
       color: cardsLite,
       child: TextFormField(
         controller: controller,
+        obscureText: obscureText ?? false,
         decoration: InputDecoration(
           focusedBorder: ShareStyles.defaultOutlineBorder,
           border: ShareStyles.defaultOutlineBorder,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const primaryColor = Color(0xFFDC1D25);
+const primaryColor = Color(0xff3876ea);
 const accentColor = Color(0xFF0E3E6C);
 const kBackgroundFB = Color(0xff3876ea);
 const textBoxLite = Color(0XFFDCDBE7);
@@ -31,4 +31,5 @@ var dashOrange = Colors.orange.withOpacity(0.6);
 var dashPurple = Colors.purple.withOpacity(0.6);
 var dashRed = Colors.red.withOpacity(0.6);
 var dashTeal = Colors.teal.shade600;
+var whiteColor = Colors.white;
 var primaryButtonColor = Colors.teal.shade600;

@@ -8,7 +8,7 @@ class Loading {
       ..loadingStyle = EasyLoadingStyle.custom
       ..progressColor = cardsLite
       ..backgroundColor = textBoxLite
-      ..indicatorColor = primaryButtonColor
+      ..indicatorColor = primaryColor
       ..textColor = blackColor
       ..userInteractions = true
       ..dismissOnTap = false;

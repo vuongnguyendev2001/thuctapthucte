@@ -32,6 +32,13 @@ class Style {
       color: blackColor,
     ),
   );
+  static TextStyle homesubtitleStyle = GoogleFonts.openSans(
+    textStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 13,
+      color: whiteColor,
+    ),
+  );
   static TextStyle priceStyle = GoogleFonts.openSans(
     textStyle: const TextStyle(
       fontWeight: FontWeight.w400,

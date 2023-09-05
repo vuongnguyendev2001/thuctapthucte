@@ -25,10 +25,12 @@ class _LoginScreenState extends State<LoginScreen> {
   var phone = "";
   final GlobalKey<FormState> _formKeyOtp = GlobalKey();
   final _auth = FirebaseAuth.instance;
+  bool? isShowPass;
   @override
   void initState() {
     super.initState();
     countryController.text = "+84";
+    isShowPass = true;
   }
 
   @override
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //   style: TextStyle(fontSize: 33, color: Colors.grey),
                     // ),
                     const Icon(Icons.account_circle_outlined,
-                        color: Colors.blue),
+                        color: primaryColor),
                     const SizedBox(
                       width: 10,
                     ),
@@ -113,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Mã số",
-                          hintStyle: TextStyle(color: Colors.blue),
+                          hintStyle: TextStyle(color: primaryColor),
                         ),
                       ),
                     ),
@@ -158,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //   "|",
                     //   style: TextStyle(fontSize: 33, color: Colors.grey),
                     // ),
-                    const Icon(Icons.password_outlined, color: Colors.blue),
+                    const Icon(Icons.password_outlined, color: primaryColor),
                     const SizedBox(
                       width: 10,
                     ),
@@ -166,21 +168,44 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextFormField(
                         validator: (value) {
                           if (value?.trim().isEmpty ?? true) {
-                            return 'Vui lòng nhập số điện thoại';
+                            return 'Vui lòng nhập mật khẩu';
                           }
-                          if (!(value?.trim().isPhoneNumber ?? false)) {
-                            return 'Số điện thoại không hợp lệ';
-                          }
+                          // if (!(value?.trim().isPhoneNumber ?? false)) {
+                          //   return 'Số điện thoại không hợp lệ';
+                          // }
                           return null;
                         },
                         // controller: emailController,
                         keyboardType: TextInputType.text,
+                        obscureText: isShowPass!,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Mật khẩu",
-                          hintStyle: TextStyle(color: Colors.blue),
+                          hintStyle: TextStyle(color: primaryColor),
                         ),
                       ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (isShowPass == true) {
+                          setState(() {
+                            isShowPass = false;
+                          });
+                        } else {
+                          setState(() {
+                            isShowPass = true;
+                          });
+                        }
+                      },
+                      child: Icon(
+                        isShowPass == true
+                            ? Icons.visibility_rounded
+                            : Icons.visibility_off_rounded,
+                        color: primaryColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
                     ),
                   ],
                 ),
@@ -195,6 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         try {
+                          Get.toNamed(RouteManager.chatbotScreen);
                           // await Loading().isShowLoading();
                           // await LoginService().sendOTP(emailController.text);
                         } catch (e) {
@@ -209,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(Get.width, 44),
                         elevation: 0.0,
-                        backgroundColor: dashTeal,
+                        backgroundColor: primaryColor,
                         side: const BorderSide(
                           color: Colors.grey,
                           width: 1.0,
@@ -227,6 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+
               // /// Or
               const SizedBox(height: 20),
               Row(
@@ -252,25 +279,52 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
+                        Get.toNamed(RouteManager.signUpScreen);
+                        // try {
+                        //   // await Loading().isShowLoading();
+                        //   // await LoginService().sendOTP(emailController.text);
+                        // } catch (e) {
+                        //   UIHelper.showFlushbar(
+                        //     message: 'Có lỗi xãy ra. Vui lòng thử lại !',
+                        //     snackBarType: SnackBarType.warning,
+                        //   );
+                        // } finally {
+                        //   await Loading().isOffShowLoading();
+                        // }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(Get.width, 44),
+                        elevation: 0.0,
+                        backgroundColor: accentColor,
+                        side: const BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Đăng kí tài khoản',
+                        // 'login'.tr.capitalize,
+                        style: Style.titleStyle.copyWith(color: backgroundLite),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  /// Google
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
                         try {
                           await Loading().isShowLoading();
                           await LoginService().handleGoogleSignIn();
-                          bool checkPhone = await LoginService()
-                              .checkPhoneNumberExists(_auth.currentUser!.uid);
-                          print(checkPhone);
-                          //         _auth.currentUser!.uid)
-                          //ignore: unrelated_type_equality_checks
-                          if (checkPhone == false) {
-                            UserModel user = UserModel(
-                              phoneNumber: _auth.currentUser?.phoneNumber,
-                              userName: _auth.currentUser?.displayName,
-                              email: _auth.currentUser?.email,
-                            );
-                            Get.offAllNamed(RouteManager.signUpScreen,
-                                arguments: user);
-                          } else {
-                            Get.offAllNamed(RouteManager.layoutScreen);
-                          }
+                          await LoginService().postDetailsToFirestore();
+                          Get.offAllNamed(RouteManager.layoutScreen);
                         } catch (e) {
                           UIHelper.showFlushbar(
                             message: 'Có lỗi xãy ra. Vui lòng thử lại !',
@@ -312,7 +366,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              // const SizedBox(height: 10),
+              const SizedBox(height: 15),
               // Row(
               //   children: [
               //     /// Google
@@ -352,6 +406,22 @@ class _LoginScreenState extends State<LoginScreen> {
               //     ),
               //   ],
               // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Bạn cần hỗ trợ? ',
+                    style: Style.subtitleStyle,
+                  ),
+                  Text(
+                    'Liên hệ ngay',
+                    style: Style.subtitleStyle.copyWith(
+                      color: primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

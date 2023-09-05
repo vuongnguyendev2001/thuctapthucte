@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
 
-import 'layout_screen.dart';
+import 'layout/layout_screen.dart';
 import 'login/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -23,8 +24,8 @@ class SplashScreen extends StatelessWidget {
             );
           } else if (user.hasData && user.data?.email != 'admin@email.com') {
             return const NavbarScreen();
-          } else if (user.hasData && user.data?.email == 'admin@email.com') {
-            return const NavbarScreen();
+          } else if (user.hasData && user.data?.email == 'giaovu@gmail.com') {
+            return const LayoutGiaovuScreen();
           } else {
             return const LoginScreen();
           }

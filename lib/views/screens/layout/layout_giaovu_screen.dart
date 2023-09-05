@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
 
-import 'home/home_screen.dart';
-
-class NavbarScreen extends StatefulWidget {
-  const NavbarScreen({Key? key}) : super(key: key);
+class LayoutGiaovuScreen extends StatefulWidget {
+  const LayoutGiaovuScreen({Key? key}) : super(key: key);
   static const String id = 'navbar_screen';
   @override
-  State<NavbarScreen> createState() => _NavbarScreenState();
+  State<LayoutGiaovuScreen> createState() => _LayoutGiaovuScreenState();
 }
 
-class _NavbarScreenState extends State<NavbarScreen> {
+class _LayoutGiaovuScreenState extends State<LayoutGiaovuScreen> {
   int currentIndex = 0;
   void onTap(int index) {
     setState(() {
@@ -18,14 +18,10 @@ class _NavbarScreenState extends State<NavbarScreen> {
   }
 
   List pages = [
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
+    // const HomeScreen(),
+    // const HomeScreen(),
+    // const HomeScreen(),
+    // const AccountScreen()
   ];
 
   // void initState() {
@@ -52,11 +48,9 @@ class _NavbarScreenState extends State<NavbarScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Tìm kiếm'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Trò chuyện"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.badge_outlined), label: "Giỏ hàng"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "Người dùng"),
+              icon: Icon(Icons.notifications), label: "Thông báo"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Cá nhân"),
         ],
       ),
     );
