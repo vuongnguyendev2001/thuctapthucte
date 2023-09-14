@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   final TextEditingController countryController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   var phone = "";
   final GlobalKey<FormState> _formKeyOtp = GlobalKey();
   final _auth = FirebaseAuth.instance;
@@ -178,6 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // controller: emailController,
                         keyboardType: TextInputType.text,
                         obscureText: isShowPass!,
+                        controller: passwordController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Mật khẩu",
@@ -220,9 +222,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         try {
-                          Get.toNamed(RouteManager.chatbotScreen);
-                          // await Loading().isShowLoading();
-                          // await LoginService().sendOTP(emailController.text);
+                          await Loading().isShowLoading();
+                          await LoginService().signInAccount(
+                              emailController.text, passwordController.text);
+                          final userType = await LoginService().checkUserType();
+
+                          print(userType);
+                          if (userType == 'Giáo vụ') {
+                            Get.toNamed(RouteManager.layoutGiaovuScreen);
+                          }
+                          if (userType == 'Sinh viên') {
+                            Get.toNamed(RouteManager.layoutScreen);
+                          }
+                          if (userType == 'Giảng viên') {
+                            Get.toNamed(RouteManager.layoutGiangvienScreen);
+                          }
+                          if (userType == 'Nhân viên') {
+                            Get.toNamed(RouteManager.layoutNhanvienScreen);
+                          }
                         } catch (e) {
                           UIHelper.showFlushbar(
                             message: 'Có lỗi xãy ra. Vui lòng thử lại !',
@@ -323,7 +340,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         try {
                           await Loading().isShowLoading();
                           await LoginService().handleGoogleSignIn();
-                          await LoginService().postDetailsToFirestore();
+                          if (LoginService().checkGoogleSignInStatus() ==
+                              true) {
+                            await LoginService().postDetailsToFirestore();
+                          }
                           Get.offAllNamed(RouteManager.layoutScreen);
                         } catch (e) {
                           UIHelper.showFlushbar(

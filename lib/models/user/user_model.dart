@@ -5,13 +5,15 @@ class UserModel {
   String? email;
   String? phoneNumber;
   String? address;
+  String? type;
   UserModel(
       {this.uid,
       this.email,
       this.userName,
       this.avatar,
       this.phoneNumber,
-      this.address});
+      this.address,
+      this.type});
   factory UserModel.fromMap(map) {
     return UserModel(
       uid: map['uid'],
@@ -20,6 +22,7 @@ class UserModel {
       avatar: map['avatar'],
       phoneNumber: map['phoneNumber'],
       address: map['address'],
+      type: map['type'],
     );
   }
   Map<String, dynamic> toMap() {
@@ -29,7 +32,8 @@ class UserModel {
       'userName': userName,
       'avatar': avatar,
       'phoneNumber': phoneNumber,
-      'address': address
+      'address': address,
+      'type': type
     };
   }
 }

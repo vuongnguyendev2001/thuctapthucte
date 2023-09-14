@@ -12,29 +12,31 @@ import '../../../constants/style.dart';
 import '../../../controllers/route_manager.dart';
 import '../../../services/login_service.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeNhanVienScreen extends StatefulWidget {
+  const HomeNhanVienScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeNhanVienScreen> createState() => _HomeNhanVienScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
   @override
   UserModel loggedInUser = UserModel();
   User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
-    FirebaseFirestore.instance
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final snapshot = await FirebaseFirestore.instance
         .collection("user")
         .doc(user!.uid)
-        .get()
-        .then((value) {
-      loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
-    });
-    print(loggedInUser);
+        .get();
+    loggedInUser = UserModel.fromMap(snapshot.data());
+    setState(() {});
   }
 
   @override
@@ -144,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: 92,
+                          width: 75,
                           child: Column(
                             children: [
                               SvgPicture.asset(
@@ -155,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 40,
                                 child: Text(
-                                  'Tìm kiếm địa điểm thực tập',
+                                  'Xét duyệt thực tập',
                                   style: Style.homesubtitleStyle,
                                 ),
                               )
@@ -176,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(
                                   child: Text(
-                                    'Địa điểm đã đăng ký',
+                                    'Lập phiếu giao việc',
                                     style: Style.homesubtitleStyle,
                                   ),
                                 )
@@ -184,21 +186,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icon_svg/note.svg',
-                              width: 45, // Kích thước chiều rộng
-                              height: 45, // Kích thước chiều cao
-                            ),
-                            SizedBox(
-                              height: 40,
-                              child: Text(
-                                'Phiếu tiếp nhận',
-                                style: Style.homesubtitleStyle,
+                        SizedBox(
+                          width: 65,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/note.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
                               ),
-                            )
-                          ],
+                              SizedBox(
+                                height: 40,
+                                child: Text(
+                                  'Đánh giá thực tập',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),

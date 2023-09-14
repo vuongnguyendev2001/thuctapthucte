@@ -54,7 +54,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   Future<String> sendMessageToRasa(String message) async {
     final response = await http.post(
       Uri.parse(
-          'http://192.168.2.3:5005/webhooks/rest/webhook'), // Thay đổi URL tới máy chủ Rasa của bạn
+          'http://192.168.2.2:5005/webhooks/rest/webhook'), // Thay đổi URL tới máy chủ Rasa của bạn
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -110,11 +110,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                         color: isMe ? primaryColor : Colors.white,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 20.0),
+                              vertical: 10.0, horizontal: 15.0),
                           child: Text(
                             '$messageText',
                             style: TextStyle(
-                              color: isMe ? Colors.white : Colors.black54,
+                              color: isMe ? Colors.white : Colors.black87,
                               fontSize: 15.0,
                             ),
                           ),

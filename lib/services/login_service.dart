@@ -37,6 +37,16 @@ class LoginService {
     }
   }
 
+  Future<bool?> checkGoogleSignInStatus() async {
+    GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+    final googleSignInAccount = await _googleSignIn.signInSilently();
+    if (googleSignInAccount != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<void> signUpAccount(String emailAddress, String password) async {
     try {
       final credential =
@@ -113,6 +123,32 @@ class LoginService {
     );
   }
 
+  Future<String?> checkUserTypeSplash(String? userUid) async {
+    if (userUid != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('user').doc(userUid);
+      final userData = await userDoc.get();
+      if (userData.exists) {
+        final userType = userData.data()?['type'];
+        if (userType == 'Sinh viên') {
+          return userType;
+        } else if (userType == 'Giáo vụ') {
+          return userType;
+        } else if (userType == 'Nhân viên') {
+          return userType;
+        } else if (userType == 'Giảng viên') {
+          return userType;
+        } else {
+          print('Tài khoản không có loại xác định.');
+        }
+      } else {
+        print('Tài khoản không tồn tại trong Firestore.');
+      }
+    } else {
+      print('Người dùng chưa đăng nhập.');
+    }
+  }
+
   Future<String?> checkUserType() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -122,27 +158,21 @@ class LoginService {
       if (userData.exists) {
         final userType = userData.data()?['type'];
         if (userType == 'Sinh viên') {
-          return 'Sinh viên';
+          return userType;
         } else if (userType == 'Giáo vụ') {
-          return 'Giáo vụ';
-          // Thực hiện các hành động cho tài khoản người dùng.
+          return userType;
         } else if (userType == 'Nhân viên') {
-          return 'Nhân viên';
-          // Thực hiện các hành động cho tài khoản người dùng.
+          return userType;
         } else if (userType == 'Giảng viên') {
-          return 'Giảng viên';
-          // Thực hiện các hành động cho tài khoản người dùng.
+          return userType;
         } else {
           print('Tài khoản không có loại xác định.');
-          // Xử lý trường hợp tài khoản không có loại cụ thể.
         }
       } else {
         print('Tài khoản không tồn tại trong Firestore.');
-        // Xử lý trường hợp tài khoản không tồn tại trong Firestore.
       }
     } else {
       print('Người dùng chưa đăng nhập.');
-      // Xử lý trường hợp người dùng chưa đăng nhập.
     }
   }
 
@@ -198,6 +228,7 @@ class LoginService {
     userModel.uid = user.uid;
     userModel.userName = user.displayName;
     userModel.avatar = user.photoURL;
+
     return await firebaseFirestore
         .collection("user")
         .doc(user.uid)
@@ -209,6 +240,16 @@ class LoginService {
     return await firebaseFirestore.collection("user").doc(userModel!.uid).set(
           userModel.toMap(),
         );
+  }
+
+  Future<void> fetchLoggedInUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection("users").doc(user.uid);
+      final value = await userDoc.get();
+      UserModel.fromMap(value.data());
+    }
   }
 
   Future<bool> checkPhoneNumberExists(String userId) async {

@@ -12,14 +12,14 @@ import '../../../constants/style.dart';
 import '../../../controllers/route_manager.dart';
 import '../../../services/login_service.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeGiangvienScreen extends StatefulWidget {
+  const HomeGiangvienScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeGiangvienScreen> createState() => _HomeGiangvienScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeGiangvienScreenState extends State<HomeGiangvienScreen> {
   @override
   UserModel loggedInUser = UserModel();
   User? user = FirebaseAuth.instance.currentUser;
@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 40,
                                 child: Text(
-                                  'Tìm kiếm địa điểm thực tập',
+                                  'Xem thông tin sinh viên',
                                   style: Style.homesubtitleStyle,
                                 ),
                               )
@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(
                                   child: Text(
-                                    'Địa điểm đã đăng ký',
+                                    'Xem tiến độ thực tập',
                                     style: Style.homesubtitleStyle,
                                   ),
                                 )
@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 40,
                               child: Text(
-                                'Phiếu tiếp nhận',
+                                'Chấm điểm thực tập',
                                 style: Style.homesubtitleStyle,
                               ),
                             )

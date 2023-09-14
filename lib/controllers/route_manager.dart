@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/chatbot/chatbot_screen.dart';
+import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/home/home_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
+import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
 
 import '../views/screens/home/home_screen.dart';
@@ -19,8 +25,44 @@ class RouteManager {
   static const String signUpScreen = "/signUpScreen";
   static const String chatbotScreen = "/chatbotScreen";
   static const String accountScreen = "/accountScreen";
+  static const String layoutGiaovuScreen = "/layoutGiaovuScreen";
+  static const String homeGiaovuScreen = "/homeGiaovuScreen";
+  static const String homeGiangvienScreen = "/homeGiangvienScreen";
+  static const String homeNhanvienScreen = "/homeNhanvienScreen";
+  static const String layoutNhanvienScreen = "/layoutNhanvienScreen";
+  static const String layoutGiangvienScreen = "/layoutGiangvienScreen";
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case layoutNhanvienScreen:
+        return MaterialPageRoute(
+          builder: (_) => const LayoutNhanvienScreen(),
+          settings: settings,
+        );
+      case layoutGiangvienScreen:
+        return MaterialPageRoute(
+          builder: (_) => const LayoutGiangvienScreen(),
+          settings: settings,
+        );
+      case homeGiangvienScreen:
+        return MaterialPageRoute(
+          builder: (_) => const HomeNhanVienScreen(),
+          settings: settings,
+        );
+      case homeGiangvienScreen:
+        return MaterialPageRoute(
+          builder: (_) => const HomeGiaoVuScreen(),
+          settings: settings,
+        );
+      case homeGiaovuScreen:
+        return MaterialPageRoute(
+          builder: (_) => const HomeGiaoVuScreen(),
+          settings: settings,
+        );
+      case layoutGiaovuScreen:
+        return MaterialPageRoute(
+          builder: (_) => const LayoutGiaovuScreen(),
+          settings: settings,
+        );
       case accountScreen:
         return MaterialPageRoute(
           builder: (_) => const AccountScreen(),

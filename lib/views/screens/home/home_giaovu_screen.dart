@@ -12,20 +12,21 @@ import '../../../constants/style.dart';
 import '../../../controllers/route_manager.dart';
 import '../../../services/login_service.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeGiaoVuScreen extends StatefulWidget {
+  const HomeGiaoVuScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeGiaoVuScreen> createState() => _HomeGiaoVuScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
   @override
   UserModel loggedInUser = UserModel();
   User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     // TODO: implement initState
+    super.initState();
     FirebaseFirestore.instance
         .collection("user")
         .doc(user!.uid)
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
-    print(loggedInUser);
+    print(user);
   }
 
   @override
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(25),
                 child: CircleAvatar(
-                  child: Image.network(loggedInUser?.avatar.toString() ?? ''),
+                  child: Image.network(loggedInUser.avatar.toString()),
                   radius: 23,
                 ),
               ),
@@ -144,18 +145,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: 92,
+                          width: 80,
                           child: Column(
                             children: [
                               SvgPicture.asset(
-                                'assets/icon_svg/searchaddress.svg',
+                                'assets/icon_svg/account.svg',
                                 width: 45, // Kích thước chiều rộng
                                 height: 45, // Kích thước chiều cao
                               ),
                               SizedBox(
-                                height: 40,
+                                height: 60,
                                 child: Text(
-                                  'Tìm kiếm địa điểm thực tập',
+                                  'Cập nhật thông tin tài khoản',
                                   style: Style.homesubtitleStyle,
                                 ),
                               )
@@ -163,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () async {},
+                          onTap: () async {
+                            await LoginService().checkUserType();
+                          },
                           child: SizedBox(
                             width: 78,
                             child: Column(
@@ -176,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(
                                   child: Text(
-                                    'Địa điểm đã đăng ký',
+                                    'Cập nhật địa điểm thực tập',
                                     style: Style.homesubtitleStyle,
                                   ),
                                 )
@@ -184,21 +187,92 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icon_svg/note.svg',
-                              width: 45, // Kích thước chiều rộng
-                              height: 45, // Kích thước chiều cao
-                            ),
-                            SizedBox(
-                              height: 40,
-                              child: Text(
-                                'Phiếu tiếp nhận',
-                                style: Style.homesubtitleStyle,
+                        SizedBox(
+                          width: 78,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/note.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
                               ),
-                            )
-                          ],
+                              SizedBox(
+                                height: 60,
+                                child: Text(
+                                  'Cập nhật danh sách giảng viên',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          width: 80,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/account.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: Text(
+                                  'Xét duyệt địa điểm thực tập',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await LoginService().checkUserType();
+                          },
+                          child: SizedBox(
+                            width: 78,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icon_svg/list.svg',
+                                  width: 45, // Kích thước chiều rộng
+                                  height: 45, // Kích thước chiều cao
+                                ),
+                                SizedBox(
+                                  child: Text(
+                                    'Phân công giảng viên',
+                                    style: Style.homesubtitleStyle,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 78,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/note.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: Text(
+                                  'Cập nhật danh sách sinh viên',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),

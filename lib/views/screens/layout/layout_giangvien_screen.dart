@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
 
-class LayoutGiaovuScreen extends StatefulWidget {
-  const LayoutGiaovuScreen({Key? key}) : super(key: key);
+class LayoutGiangvienScreen extends StatefulWidget {
+  const LayoutGiangvienScreen({Key? key}) : super(key: key);
   static const String id = 'navbar_screen';
   @override
-  State<LayoutGiaovuScreen> createState() => _LayoutGiaovuScreenState();
+  State<LayoutGiangvienScreen> createState() => _LayoutGiangvienScreenState();
 }
 
-class _LayoutGiaovuScreenState extends State<LayoutGiaovuScreen> {
+class _LayoutGiangvienScreenState extends State<LayoutGiangvienScreen> {
   int currentIndex = 0;
   void onTap(int index) {
     setState(() {
@@ -19,7 +20,7 @@ class _LayoutGiaovuScreenState extends State<LayoutGiaovuScreen> {
   }
 
   List pages = [
-    const HomeGiaoVuScreen(),
+    const HomeGiangvienScreen(),
     const HomeScreen(),
     const HomeScreen(),
     const AccountScreen()
