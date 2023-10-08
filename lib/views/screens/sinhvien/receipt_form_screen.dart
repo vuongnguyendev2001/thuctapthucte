@@ -218,6 +218,12 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Dự kiến số ngày sinh viên sẽ có mặt tại nơi thực tập, tối thiểu 24 giờ/ 1 tuần:',
+                      style: Style.subtitleStyle,
+                    ),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),

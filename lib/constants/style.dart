@@ -20,7 +20,7 @@ class Style {
     ),
   );
   static TextStyle titleStyle = GoogleFonts.openSans(
-    textStyle: const TextStyle(
+    textStyle: TextStyle(
       fontWeight: FontWeight.w600,
       fontSize: 16,
       color: blackColor,
@@ -57,9 +57,16 @@ class Style {
 
   static TextStyle statusProductStyle = GoogleFonts.openSans(
     textStyle: const TextStyle(
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
       fontSize: 14,
       color: blackColor,
+    ),
+  );
+  static TextStyle homeTitleStyle = GoogleFonts.openSans(
+    textStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 18,
+      color: whiteColor,
     ),
   );
 }

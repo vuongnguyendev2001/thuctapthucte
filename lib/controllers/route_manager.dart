@@ -12,6 +12,7 @@ import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart'
 import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/read_information.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/registered_location.dart';
 import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
@@ -43,8 +44,14 @@ class RouteManager {
   static const String diadiemdadangky = "/diadiemdadangky";
   static const String notificationScreenCanBo = "/notificationScreenCanBo";
     static const String receiptFormScreen = "/receiptFormScreen";
+    static const String readInformationStudentScreen = "/readInformationStudentScreen";
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case readInformationStudentScreen:
+        return MaterialPageRoute(
+          builder: (_) => const ReadInformationStudentScreen(),
+          settings: settings,
+        );
       case receiptFormScreen:
         return MaterialPageRoute(
           builder: (_) => const ReceiptFormScreen(),
