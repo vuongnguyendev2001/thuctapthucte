@@ -25,4 +25,12 @@ class Loading {
   Future<void> isOffShowLoading() async {
     await EasyLoading.dismiss();
   }
+
+  Future<void> isShowSuccess(String message) async {
+    await EasyLoading.showSuccess(
+      message,
+      duration: const Duration(milliseconds: 1300),
+      maskType: EasyLoadingMaskType.black,
+    );
+  }
 }

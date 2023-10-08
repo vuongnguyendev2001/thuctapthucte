@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
@@ -22,7 +23,7 @@ class _LayoutNhanvienScreenState extends State<LayoutNhanvienScreen> {
   List pages = [
     const HomeNhanVienScreen(),
     const HomeScreen(),
-    const HomeScreen(),
+    const NotificationScreenCanBo(),
     const AccountScreen()
   ];
 

@@ -53,8 +53,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   List<String> botResponses = [];
   Future<String> sendMessageToRasa(String message) async {
     final response = await http.post(
-      Uri.parse(
-          'http://192.168.2.2:5005/webhooks/rest/webhook'), // Thay đổi URL tới máy chủ Rasa của bạn
+      Uri.parse('http://192.168.2.2:5005/webhooks/rest/webhook'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -89,8 +88,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             StreamBuilder<QuerySnapshot>(
               stream: getChatMessagesStream(),
               builder: (context, snapshot) {
+                // if (snapshot.connectionState == ConnectionState.waiting) {
+                //   return const Center(
+                //     child: CircularProgressIndicator(),
+                //   );
+                // }
                 if (!snapshot.hasData) {
-                  return Center(child: const CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 final messages = snapshot.data!.docs;
                 List<Widget> messageWidgets = [];

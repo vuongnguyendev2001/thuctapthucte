@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_image/flutter_svg_image.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/get_current_user.dart';
 
 import '../../../constants/color.dart';
 import '../../../constants/currency_formatter.dart';
@@ -21,22 +22,19 @@ class HomeNhanVienScreen extends StatefulWidget {
 
 class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
   @override
-  UserModel loggedInUser = UserModel();
-  User? user = FirebaseAuth.instance.currentUser;
+  UserModel? loggedInUser = UserModel();
+  // User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
-    // TODO: implement initState
     fetchData();
   }
 
   Future<void> fetchData() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection("user")
-        .doc(user!.uid)
-        .get();
-    loggedInUser = UserModel.fromMap(snapshot.data());
-    setState(() {});
+    final updatedUser = await getUserInfo(loggedInUser!);
+    setState(() {
+      loggedInUser = updatedUser;
+    });
   }
 
   @override
@@ -64,7 +62,7 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('Xin chào,', style: Style.subtitleStyle),
-                  Text(loggedInUser.userName.toString(),
+                  Text(loggedInUser?.userName.toString() ?? 'Người dùng',
                       style: Style.titleStyle),
                 ],
               ),
@@ -141,71 +139,76 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
                 ),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 75,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/searchaddress.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 40,
-                                child: Text(
-                                  'Xét duyệt thực tập',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {},
-                          child: SizedBox(
-                            width: 78,
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(RouteManager.duyetThucTap);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            width: 75,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset(
-                                  'assets/icon_svg/list.svg',
+                                  'assets/icon_svg/searchaddress.svg',
                                   width: 45, // Kích thước chiều rộng
                                   height: 45, // Kích thước chiều cao
                                 ),
                                 SizedBox(
+                                  height: 40,
                                   child: Text(
-                                    'Lập phiếu giao việc',
+                                    'Xét duyệt thực tập',
                                     style: Style.homesubtitleStyle,
                                   ),
                                 )
                               ],
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 65,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/note.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
+                          GestureDetector(
+                            onTap: () async {},
+                            child: SizedBox(
+                              width: 78,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/icon_svg/list.svg',
+                                    width: 45, // Kích thước chiều rộng
+                                    height: 45, // Kích thước chiều cao
+                                  ),
+                                  SizedBox(
+                                    child: Text(
+                                      'Lập phiếu giao việc',
+                                      style: Style.homesubtitleStyle,
+                                    ),
+                                  )
+                                ],
                               ),
-                              SizedBox(
-                                height: 40,
-                                child: Text(
-                                  'Đánh giá thực tập',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            width: 65,
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icon_svg/note.svg',
+                                  width: 45, // Kích thước chiều rộng
+                                  height: 45, // Kích thước chiều cao
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                  child: Text(
+                                    'Đánh giá thực tập',
+                                    style: Style.homesubtitleStyle,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

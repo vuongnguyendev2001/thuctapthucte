@@ -19,6 +19,7 @@ const searchBorderBg = Color(0XFFE8E8E8);
 const greyFontColor = Color(0XFFAFAEB4);
 const boxBg = Color(0XFFF6F6F5);
 const iconColor = Color(0XFF4F5059);
+const wordGreyColor = Color(0XFF888888);
 const imageBg = Color(0XFFF0F0F0);
 var gridBg = const Color(0XFFF9F9F9);
 const otherImgsBg = Color(0XFFCBCBCC);

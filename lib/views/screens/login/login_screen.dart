@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trungtamgiasu/services/get_current_user.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/snack_bar_type.dart';
 import '../../../constants/style.dart';
@@ -27,16 +28,33 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKeyOtp = GlobalKey();
   final _auth = FirebaseAuth.instance;
   bool? isShowPass;
+  // UserModel currentUser = getUserInfo();
   @override
   void initState() {
     super.initState();
     countryController.text = "+84";
     isShowPass = true;
+    // currentUser = getUserInfo();
+    // print(currentUser.email);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          UIHelper.showFlushbar(
+            message: 'Vui lòng đăng nhập để sử dụng tính năng',
+            snackBarType: SnackBarType.error,
+          );
+        },
+        backgroundColor: whiteColor,
+        child: SvgPicture.asset(
+          'assets/icon_svg/question.svg',
+          width: 45, // Kích thước chiều rộng
+          height: 45, // Kích thước chiều cao
+        ),
+      ),
       backgroundColor: background,
       body: SingleChildScrollView(
         child: Padding(
@@ -68,33 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Image.asset(
-                    //   'assets/images/icons/vietnam.png',
-                    //   height: 18,
-                    //   width: 18,
-                    // ),
-                    // const SizedBox(
-                    //   width: 5,
-                    // ),
-                    // SizedBox(
-                    //   width: 40,
-                    //   child: TextField(
-                    //     controller: countryController,
-                    //     keyboardType: TextInputType.number,
-                    //     readOnly: true,
-                    //     decoration: const InputDecoration(
-                    //         border: InputBorder.none,
-                    //         hintStyle: TextStyle(
-                    //           fontWeight: FontWeight.w400,
-                    //           fontSize: 14,
-                    //           color: priceColor,
-                    //         )),
-                    //   ),
-                    // ),
-                    // const Text(
-                    //   "|",
-                    //   style: TextStyle(fontSize: 33, color: Colors.grey),
-                    // ),
                     const Icon(Icons.account_circle_outlined,
                         color: primaryColor),
                     const SizedBox(
@@ -226,7 +217,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           await LoginService().signInAccount(
                               emailController.text, passwordController.text);
                           final userType = await LoginService().checkUserType();
-
                           print(userType);
                           if (userType == 'Giáo vụ') {
                             Get.toNamed(RouteManager.layoutGiaovuScreen);
@@ -296,9 +286,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
+                        // print(currentUser.email);
                         Get.toNamed(RouteManager.signUpScreen);
                         // try {
-                        //   // await Loading().isShowLoading();
+                        // await Loading().isShowLoading();
                         //   // await LoginService().sendOTP(emailController.text);
                         // } catch (e) {
                         //   UIHelper.showFlushbar(

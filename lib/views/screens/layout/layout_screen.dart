@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
+import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
 
 import '../home/home_screen.dart';
 
@@ -21,7 +22,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
 
   List pages = [
     const HomeScreen(),
-    const HomeScreen(),
+    const TimKiemDiaDiem(),
     const HomeScreen(),
     const AccountScreen()
   ];

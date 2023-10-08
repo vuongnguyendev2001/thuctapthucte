@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg_image/flutter_svg_image.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/get_current_user.dart';
 
 import '../../../constants/color.dart';
 import '../../../constants/currency_formatter.dart';
@@ -26,15 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    FirebaseFirestore.instance
-        .collection("user")
-        .doc(user!.uid)
-        .get()
-        .then((value) {
-      loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final updatedUser = await getUserInfo(loggedInUser);
+    setState(() {
+      loggedInUser = updatedUser;
     });
-    print(loggedInUser);
   }
 
   @override
@@ -62,18 +61,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('Xin chào,', style: Style.subtitleStyle),
-                  Text(loggedInUser.userName.toString(),
-                      style: Style.titleStyle),
+                  loggedInUser.userName != null
+                      ? Text(loggedInUser.userName.toString(),
+                          style: Style.titleStyle)
+                      : Text('Đang tải', style: Style.titleStyle)
                 ],
               ),
               const SizedBox(width: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: CircleAvatar(
-                  child: Image.network(loggedInUser?.avatar.toString() ?? ''),
-                  radius: 23,
-                ),
-              ),
+              loggedInUser.avatar != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: CircleAvatar(
+                        radius: 23,
+                        child: Image.network(loggedInUser.avatar.toString()),
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: CircleAvatar(
+                        radius: 23,
+                        child: Image.asset('assets/images/user.png'),
+                      ),
+                    ),
               const SizedBox(width: 10),
               //     InkWell(
               //       onTap: () async {
@@ -127,6 +136,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: Container(
+        height: Get.height,
+        width: Get.width,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/images/sodo.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: [
             Padding(
@@ -142,28 +161,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 92,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/searchaddress.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 40,
-                                child: Text(
-                                  'Tìm kiếm địa điểm thực tập',
-                                  style: Style.homesubtitleStyle,
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(RouteManager.timKiemDiaDiem);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 92,
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icon_svg/searchaddress.svg',
+                                  width: 45, // Kích thước chiều rộng
+                                  height: 45, // Kích thước chiều cao
                                 ),
-                              )
-                            ],
+                                SizedBox(
+                                  height: 40,
+                                  child: Text(
+                                    'Tìm kiếm địa điểm thực tập',
+                                    style: Style.homesubtitleStyle,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                         GestureDetector(
-                          onTap: () async {},
+                          onTap: () =>
+                              Get.toNamed(RouteManager.diadiemdadangky),
                           child: SizedBox(
                             width: 78,
                             child: Column(
@@ -197,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Phiếu tiếp nhận',
                                 style: Style.homesubtitleStyle,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],

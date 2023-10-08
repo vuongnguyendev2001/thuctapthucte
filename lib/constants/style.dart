@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import 'color.dart';
 
@@ -25,6 +26,13 @@ class Style {
       color: blackColor,
     ),
   );
+  static TextStyle titlegreyStyle = GoogleFonts.openSans(
+    textStyle: const TextStyle(
+      fontWeight: FontWeight.w500,
+      fontSize: 14,
+      color: wordGreyColor,
+    ),
+  );
   static TextStyle subtitleStyle = GoogleFonts.openSans(
     textStyle: const TextStyle(
       fontWeight: FontWeight.w400,
@@ -43,7 +51,7 @@ class Style {
     textStyle: const TextStyle(
       fontWeight: FontWeight.w400,
       fontSize: 14,
-      color: priceColor,
+      color: wordGreyColor,
     ),
   );
 

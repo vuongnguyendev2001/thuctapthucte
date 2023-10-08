@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/agency_staff/approving_internships_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/chatbot/chatbot_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
@@ -9,6 +12,9 @@ import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart'
 import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/registered_location.dart';
+import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
 
 import '../views/screens/home/home_screen.dart';
 import '../views/screens/layout/layout_screen.dart';
@@ -31,8 +37,44 @@ class RouteManager {
   static const String homeNhanvienScreen = "/homeNhanvienScreen";
   static const String layoutNhanvienScreen = "/layoutNhanvienScreen";
   static const String layoutGiangvienScreen = "/layoutGiangvienScreen";
+  static const String timKiemDiaDiem = "/timKiemDiaDiem";
+  static const String duyetThucTap = "/duyetThucTap";
+  static const String pdfViewer = "/pdfViewer";
+  static const String diadiemdadangky = "/diadiemdadangky";
+  static const String notificationScreenCanBo = "/notificationScreenCanBo";
+    static const String receiptFormScreen = "/receiptFormScreen";
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case receiptFormScreen:
+        return MaterialPageRoute(
+          builder: (_) => const ReceiptFormScreen(),
+          settings: settings,
+        );
+      case notificationScreenCanBo:
+        return MaterialPageRoute(
+          builder: (_) => const NotificationScreenCanBo(),
+          settings: settings,
+        );
+      case diadiemdadangky:
+        return MaterialPageRoute(
+          builder: (_) => const RegisteredLocationScreen(),
+          settings: settings,
+        );
+      case pdfViewer:
+        return MaterialPageRoute(
+          builder: (_) => const PdfViewer(),
+          settings: settings,
+        );
+      case duyetThucTap:
+        return MaterialPageRoute(
+          builder: (_) => const ApprovingInternshipsScreen(),
+          settings: settings,
+        );
+      case timKiemDiaDiem:
+        return MaterialPageRoute(
+          builder: (_) => const TimKiemDiaDiem(),
+          settings: settings,
+        );
       case layoutNhanvienScreen:
         return MaterialPageRoute(
           builder: (_) => const LayoutNhanvienScreen(),
