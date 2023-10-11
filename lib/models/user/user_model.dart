@@ -1,3 +1,5 @@
+import 'package:trungtamgiasu/models/course_register.dart';
+
 class UserModel {
   String? avatar;
   String? uid;
@@ -12,20 +14,23 @@ class UserModel {
   String? MSSV;
   String? phoneNumberCompany;
   String? phoneNumberCanBo;
-  UserModel(
-      {this.idCompany,
-      this.uid,
-      this.email,
-      this.userName,
-      this.avatar,
-      this.phoneNumber,
-      this.address,
-      this.type,
-      this.MSSV,
-      this.idClass,
-      this.major,
-      this.phoneNumberCanBo,
-      this.phoneNumberCompany});
+  // CourseRegistration? courseRegistration;
+  UserModel({
+    this.idCompany,
+    this.uid,
+    this.email,
+    this.userName,
+    this.avatar,
+    this.phoneNumber,
+    this.address,
+    this.type,
+    this.MSSV,
+    this.idClass,
+    this.major,
+    this.phoneNumberCanBo,
+    this.phoneNumberCompany,
+    // this.courseRegistration,
+  });
   factory UserModel.fromMap(map) {
     return UserModel(
       uid: map['uid'],
@@ -41,6 +46,9 @@ class UserModel {
       major: map['major'],
       phoneNumberCanBo: map['phoneNumberCanBo'],
       phoneNumberCompany: map['phoneNumberCompany'],
+      // courseRegistration: map['courseRegistration'] != null
+      //     ? CourseRegistration.fromMap(map['courseRegistration'])
+      //     : null,
     );
   }
   Map<String, dynamic> toMap() {
@@ -57,7 +65,8 @@ class UserModel {
       'idClass': idClass,
       'major': major,
       'phoneNumberCanBo': phoneNumberCanBo,
-      'phoneNumberCompany': phoneNumberCompany
+      'phoneNumberCompany': phoneNumberCompany,
+      // 'courseRegistration': courseRegistration!.toMap(),
     };
   }
 }

@@ -34,7 +34,10 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
   final TextEditingController _mssvController = TextEditingController();
   final TextEditingController _idClassController = TextEditingController();
   final TextEditingController _majorController = TextEditingController();
+  final TextEditingController _hourperdayController = TextEditingController();
+  final TextEditingController _dayperweekController = TextEditingController();
   final TextEditingController _workContentController = TextEditingController();
+
   CompanyIntern? company;
   @override
   void initState() {
@@ -88,7 +91,7 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Phiếu tiếp nhận sinh viên'.toUpperCase(),
             style: Style.homeStyle),
@@ -224,6 +227,36 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                       style: Style.subtitleStyle,
                     ),
                     const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormReceipt(
+                            controller: _hourperdayController,
+                            lableText: 'Số giờ/ngày',
+                            icon: null,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: TextFormReceipt(
+                            controller: _dayperweekController,
+                            lableText: 'Số ngày/tuần',
+                            icon: null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Nội dung công việc – bắt buộc phải có\nLưu ý: Công việc được thực hiện trong 8 tuần',
+                      style: Style.subtitleStyle,
+                    ),
+                    const SizedBox(height: 15),
+                    TextFormReceipt(
+                      maxline: 5,
+                      controller: _workContentController,
+                      lableText: 'Nội dung công việc',
+                      icon: null,
+                    ),
                   ],
                 ),
               ),
@@ -308,11 +341,14 @@ class TextFormReceipt extends StatelessWidget {
   String? lableText;
   TextEditingController? controller;
   Icon? icon;
-  TextFormReceipt(
-      {super.key,
-      required this.lableText,
-      required this.controller,
-      required this.icon});
+  int? maxline;
+  TextFormReceipt({
+    super.key,
+    this.maxline = 1,
+    required this.lableText,
+    required this.controller,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -326,6 +362,7 @@ class TextFormReceipt extends StatelessWidget {
         // }
         return null;
       },
+      maxLines: maxline,
       controller: controller,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(

@@ -175,53 +175,53 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 15),
-                                  internshipApplications[index].status ==
-                                          'Đã duyệt'
-                                      ? InkWell(
-                                          onTap: () {
-                                            // PdfViewerArguments arguments =
-                                            //     PdfViewerArguments(
-                                            //   internshipApplications[index]
-                                            //       .urlCV,
-                                            //   internshipApplications[index]
-                                            //       .nameCV,
-                                            // );
-                                            RegisterViewerArguments arguments =
-                                                RegisterViewerArguments(
-                                              internshipApplications[index]
-                                                  .user,
-                                              internshipApplications[index]
-                                                  .Company,
-                                            );
-                                            Get.toNamed(
-                                              RouteManager.receiptFormScreen,
-                                              arguments: arguments,
-                                            );
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(5),
-                                            width: 200,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(7),
-                                              color: primaryColor,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.check,
-                                                  color: whiteColor,
-                                                ),
-                                                Text(
-                                                  ' Lập phiếu tiếp nhận',
-                                                  style: TextStyle(
-                                                      color: whiteColor),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      : const SizedBox()
+                                  // internshipApplications[index].status ==
+                                  //         'Đã duyệt'
+                                  //     ? InkWell(
+                                  //         onTap: () {
+                                  //           // PdfViewerArguments arguments =
+                                  //           //     PdfViewerArguments(
+                                  //           //   internshipApplications[index]
+                                  //           //       .urlCV,
+                                  //           //   internshipApplications[index]
+                                  //           //       .nameCV,
+                                  //           // );
+                                  //           RegisterViewerArguments arguments =
+                                  //               RegisterViewerArguments(
+                                  //             internshipApplications[index]
+                                  //                 .user,
+                                  //             internshipApplications[index]
+                                  //                 .Company,
+                                  //           );
+                                  //           Get.toNamed(
+                                  //             RouteManager.receiptFormScreen,
+                                  //             arguments: arguments,
+                                  //           );
+                                  //         },
+                                  //         child: Container(
+                                  //           padding: const EdgeInsets.all(5),
+                                  //           width: 200,
+                                  //           decoration: BoxDecoration(
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(7),
+                                  //             color: primaryColor,
+                                  //           ),
+                                  //           child: Row(
+                                  //             children: [
+                                  //               Icon(
+                                  //                 Icons.check,
+                                  //                 color: whiteColor,
+                                  //               ),
+                                  //               Text(
+                                  //                 ' Lập phiếu tiếp nhận',
+                                  //                 style: TextStyle(
+                                  //                     color: whiteColor),
+                                  //               )
+                                  //             ],
+                                  //           ),
+                                  //         ),
+                                  //       )
+                                  //     : const SizedBox()
                                 ],
                               )
                             ],

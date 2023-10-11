@@ -69,4 +69,18 @@ class Style {
       color: whiteColor,
     ),
   );
+  static TextStyle subtitlehomeGiaovuStyle = GoogleFonts.openSans(
+    textStyle: const TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 15,
+      color: blackColor,
+    ),
+  );
+  static TextStyle subtitleBlackGiaovuStyle = GoogleFonts.openSans(
+    textStyle: const TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 15,
+      color: blackColor,
+    ),
+  );
 }

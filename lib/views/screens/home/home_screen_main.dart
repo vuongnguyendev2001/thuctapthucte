@@ -135,81 +135,116 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      body: Container(
-        height: Get.height,
-        width: Get.width,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/images/sodo.png',
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: accentColor,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(RouteManager.courseRegistrationScreen);
+                        },
+                        child: SizedBox(
+                          width: 65,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/note.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                height: 40,
+                                child: Text(
+                                  'Đăng ký học phần',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(RouteManager.timKiemDiaDiem);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 92,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/searchaddress.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                height: 40,
+                                child: Text(
+                                  'Tìm kiếm địa điểm thực tập',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Get.toNamed(RouteManager.diadiemdadangky),
+                        child: SizedBox(
+                          width: 78,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/list.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                child: Text(
+                                  'Địa điểm đã đăng ký',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            fit: BoxFit.cover,
           ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: accentColor,
-                ),
-                child: Column(
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: accentColor,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(RouteManager.timKiemDiaDiem);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 92,
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icon_svg/searchaddress.svg',
-                                  width: 45, // Kích thước chiều rộng
-                                  height: 45, // Kích thước chiều cao
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                  child: Text(
-                                    'Tìm kiếm địa điểm thực tập',
-                                    style: Style.homesubtitleStyle,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () =>
-                              Get.toNamed(RouteManager.diadiemdadangky),
-                          child: SizedBox(
-                            width: 78,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icon_svg/list.svg',
-                                  width: 45, // Kích thước chiều rộng
-                                  height: 45, // Kích thước chiều cao
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    'Địa điểm đã đăng ký',
-                                    style: Style.homesubtitleStyle,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Column(
+                    GestureDetector(
+                      onTap: () {
+                        // Get.toNamed(RouteManager.courseRegistrationScreen);
+                      },
+                      child: SizedBox(
+                        width: 105,
+                        child: Column(
                           children: [
                             SvgPicture.asset(
                               'assets/icon_svg/note.svg',
@@ -217,7 +252,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 45, // Kích thước chiều cao
                             ),
                             SizedBox(
-                              height: 40,
                               child: Text(
                                 'Phiếu tiếp nhận',
                                 style: Style.homesubtitleStyle,
@@ -225,14 +259,59 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                      ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Get.toNamed(RouteManager.timKiemDiaDiem);
+                      },
+                      child: SizedBox(
+                        width: 100,
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icon_svg/searchaddress.svg',
+                              width: 45, // Kích thước chiều rộng
+                              height: 45, // Kích thước chiều cao
+                            ),
+                            SizedBox(
+                              child: Text(
+                                'Phiếu giao việc',
+                                style: Style.homesubtitleStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Get.toNamed(RouteManager.diadiemdadangky),
+                      child: SizedBox(
+                        width: 85,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icon_svg/list.svg',
+                              width: 45, // Kích thước chiều rộng
+                              height: 45, // Kích thước chiều cao
+                            ),
+                            SizedBox(
+                              child: Text(
+                                'Nộp báo cáo',
+                                style: Style.homesubtitleStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

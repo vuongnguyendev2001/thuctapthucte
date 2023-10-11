@@ -176,6 +176,37 @@ class LoginService {
     }
   }
 
+  Future<bool?> checkCourseRegistration() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('user').doc(user.uid);
+      final userData = await userDoc.get();
+
+      // Kiểm tra xem tài liệu có tồn tại không
+      if (userData.exists) {
+        final userCourseRegistration = userData.data()?['courseRegistration'];
+
+        // Kiểm tra xem trường courseRegistration có tồn tại không
+        if (userCourseRegistration != null) {
+          print('true');
+          return true;
+        } else {
+          print('false');
+          return false;
+        }
+      } else {
+        print('false');
+        return false;
+      }
+    } else {
+      print('Người dùng chưa đăng nhập.');
+    }
+
+    print('false');
+    return false;
+  }
+
   // Future<UserCredential> signInWithFacebook() async {
   //   // Trigger the sign-in flow
   //   final LoginResult loginResult = await FacebookAuth.instance.login();

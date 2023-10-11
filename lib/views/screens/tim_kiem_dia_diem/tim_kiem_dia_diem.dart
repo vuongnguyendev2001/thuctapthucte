@@ -201,16 +201,16 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () async {
-              addCompaniesToFirestore(companies);
-            },
-            icon: const Icon(
-              Icons.add_circle_outline_outlined,
-            ),
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () async {
+        //       addCompaniesToFirestore(companies);
+        //     },
+        //     icon: const Icon(
+        //       Icons.add_circle_outline_outlined,
+        //     ),
+        //   )
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -401,6 +401,44 @@ class _ApprovingInternshipsScreenState
                                   ],
                                 ),
                               ),
+                              const SizedBox(height: 5),
+                              internshipApplications[index].status == 'Đã duyệt'
+                                  ? InkWell(
+                                      onTap: () {
+                                        RegisterViewerArguments arguments =
+                                            RegisterViewerArguments(
+                                          internshipApplications[index].user,
+                                          internshipApplications[index].Company,
+                                        );
+                                        Get.toNamed(
+                                          RouteManager.receiptFormScreen,
+                                          arguments: arguments,
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: 200,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: primaryColor,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.check,
+                                              color: whiteColor,
+                                            ),
+                                            Text(
+                                              ' Lập phiếu tiếp nhận',
+                                              style:
+                                                  TextStyle(color: whiteColor),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox()
                             ],
                           ),
                           trailing: const Icon(

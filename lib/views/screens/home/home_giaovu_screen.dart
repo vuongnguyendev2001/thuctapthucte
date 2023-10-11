@@ -76,209 +76,51 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
                 ),
               ),
               const SizedBox(width: 10),
-              //     InkWell(
-              //       onTap: () async {
-              //         await LoginService().handleGoogleSignOut();
-              //         await LoginService().handleSignOut();
-              //         await Get.offAllNamed(RouteManager.loginScreen);
-              //       },
-              //       child: ClipRRect(
-              //         borderRadius: BorderRadius.circular(10),
-              //         child: Container(
-              //           height: 37,
-              //           width: 37,
-              //           color: cardsLite,
-              //           child: Image(
-              //             image: SvgImage.asset(
-              //               'assets/icon_svg/Buy.svg',
-              //               currentColor: blackColor,
-              //             ),
-              //             height: 18,
-              //             width: 18,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 15),
-              //     InkWell(
-              //       onTap: () {
-              //         print(user);
-              //       },
-              //       child: ClipRRect(
-              //         borderRadius: BorderRadius.circular(10),
-              //         child: Container(
-              //           height: 37,
-              //           width: 37,
-              //           color: cardsLite,
-              //           child: Image(
-              //             image: SvgImage.asset(
-              //               'assets/icon_svg/Notification.svg',
-              //               currentColor: blackColor,
-              //             ),
-              //             height: 18,
-              //             width: 18,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 20),
             ],
           ),
         ],
       ),
 
-      body: Container(
+      body: Padding(
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: accentColor,
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 80,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/account.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 60,
-                                child: Text(
-                                  'Cập nhật thông tin tài khoản',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await LoginService().checkUserType();
-                          },
-                          child: SizedBox(
-                            width: 78,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icon_svg/list.svg',
-                                  width: 45, // Kích thước chiều rộng
-                                  height: 45, // Kích thước chiều cao
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    'Cập nhật địa điểm thực tập',
-                                    style: Style.homesubtitleStyle,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 78,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/note.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 60,
-                                child: Text(
-                                  'Cập nhật danh sách giảng viên',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 80,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/account.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 60,
-                                child: Text(
-                                  'Xét duyệt địa điểm thực tập',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await LoginService().checkUserType();
-                          },
-                          child: SizedBox(
-                            width: 78,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icon_svg/list.svg',
-                                  width: 45, // Kích thước chiều rộng
-                                  height: 45, // Kích thước chiều cao
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    'Phân công giảng viên',
-                                    style: Style.homesubtitleStyle,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 78,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/note.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 60,
-                                child: Text(
-                                  'Cập nhật danh sách sinh viên',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            Button_HomeGiaoVu_Screen(
+              icon: const Icon(
+                Icons.manage_accounts_outlined,
+                color: primaryColor,
               ),
+              title: 'Quản lý tài khoản',
+              onTap: () {},
+            ),
+            const SizedBox(height: 10),
+            Button_HomeGiaoVu_Screen(
+              icon: const Icon(
+                Icons.article_outlined,
+                color: primaryColor,
+              ),
+              title: 'Quản lý học phần',
+              onTap: () {
+                Get.toNamed(RouteManager.quanlyhocphan);
+              },
+            ),
+            const SizedBox(height: 10),
+            Button_HomeGiaoVu_Screen(
+              icon: const Icon(
+                Icons.work_outline_rounded,
+                color: primaryColor,
+              ),
+              title: 'Quản lý công ty',
+              onTap: () {},
+            ),
+            const SizedBox(height: 10),
+            Button_HomeGiaoVu_Screen(
+              icon: const Icon(
+                Icons.work_outline_rounded,
+                color: primaryColor,
+              ),
+              title: 'Danh sách sinh viên thực tập',
+              onTap: () {},
             ),
           ],
         ),
@@ -292,6 +134,53 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
           'assets/icon_svg/question.svg',
           width: 45, // Kích thước chiều rộng
           height: 45, // Kích thước chiều cao
+        ),
+      ),
+    );
+  }
+}
+
+class Button_HomeGiaoVu_Screen extends StatelessWidget {
+  Function()? onTap;
+  String? title;
+  Icon? icon;
+  Button_HomeGiaoVu_Screen({Key? key, this.onTap, this.title, this.icon})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        color: whiteColor,
+        child: Column(
+          children: [
+            InkWell(
+              onTap: onTap,
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        icon!,
+                        const SizedBox(width: 5),
+                        Text(
+                          title!,
+                          style: Style.subtitlehomeGiaovuStyle,
+                        ),
+                      ],
+                    ),
+                    const Icon(
+                      Icons.keyboard_arrow_right_outlined,
+                      size: 26,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

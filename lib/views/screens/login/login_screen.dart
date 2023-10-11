@@ -217,17 +217,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           await LoginService().signInAccount(
                               emailController.text, passwordController.text);
                           final userType = await LoginService().checkUserType();
-                          print(userType);
+                          final checkCourseRegistration =
+                              await LoginService().checkCourseRegistration();
+                          // print(checkCourseRegistration);
+                          print(checkCourseRegistration);
                           if (userType == 'Giáo vụ') {
                             Get.toNamed(RouteManager.layoutGiaovuScreen);
-                          }
-                          if (userType == 'Sinh viên') {
+                          } else if (userType == 'Sinh viên') {
                             Get.toNamed(RouteManager.layoutScreen);
-                          }
-                          if (userType == 'Giảng viên') {
+                          } else if (userType == 'Giảng viên') {
                             Get.toNamed(RouteManager.layoutGiangvienScreen);
-                          }
-                          if (userType == 'Nhân viên') {
+                          } else if (userType == 'Nhân viên') {
                             Get.toNamed(RouteManager.layoutNhanvienScreen);
                           }
                         } catch (e) {

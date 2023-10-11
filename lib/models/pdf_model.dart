@@ -15,5 +15,12 @@ class RegisterViewerArguments {
   RegisterViewerArguments(this.userModel, this.companyIntern);
 }
 
+class SinhVienDaDangKyThucTapArguments{
+  final String idHocKiNamHoc;
+  final String idAllHocPhan;
 
-
+  SinhVienDaDangKyThucTapArguments(
+    this.idHocKiNamHoc,
+    this.idAllHocPhan,
+  );
+}

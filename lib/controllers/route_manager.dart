@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
-import 'package:trungtamgiasu/views/screens/agency_staff/approving_internships_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/approving_internships_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/chatbot/chatbot_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/quan_ly_hoc_phan.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/sv_da_dk_hp.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_nhanvien_screen.dart';
@@ -12,8 +14,9 @@ import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart'
 import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/course_registration.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_information.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/registered_location.dart';
 import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
 
@@ -43,10 +46,29 @@ class RouteManager {
   static const String pdfViewer = "/pdfViewer";
   static const String diadiemdadangky = "/diadiemdadangky";
   static const String notificationScreenCanBo = "/notificationScreenCanBo";
-    static const String receiptFormScreen = "/receiptFormScreen";
-    static const String readInformationStudentScreen = "/readInformationStudentScreen";
+  static const String receiptFormScreen = "/receiptFormScreen";
+  static const String readInformationStudentScreen =
+      "/readInformationStudentScreen";
+  static const String courseRegistrationScreen = "/courseRegistrationScreen";
+  static const String quanlyhocphan = "/quanlyhocphan";
+  static const String svDaDKHP = "/svDaDKHP";
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case svDaDKHP:
+        return MaterialPageRoute(
+          builder: (_) => const SVDADKHP(),
+          settings: settings,
+        );
+      case quanlyhocphan:
+        return MaterialPageRoute(
+          builder: (_) => const QuanLyHocPhan(),
+          settings: settings,
+        );
+      case courseRegistrationScreen:
+        return MaterialPageRoute(
+          builder: (_) => const CourseRegistrationScreen(),
+          settings: settings,
+        );
       case readInformationStudentScreen:
         return MaterialPageRoute(
           builder: (_) => const ReadInformationStudentScreen(),
