@@ -217,10 +217,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           await LoginService().signInAccount(
                               emailController.text, passwordController.text);
                           final userType = await LoginService().checkUserType();
-                          final checkCourseRegistration =
-                              await LoginService().checkCourseRegistration();
-                          // print(checkCourseRegistration);
-                          print(checkCourseRegistration);
                           if (userType == 'Giáo vụ') {
                             Get.toNamed(RouteManager.layoutGiaovuScreen);
                           } else if (userType == 'Sinh viên') {
@@ -279,10 +275,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               // /// Social login
-              const SizedBox(height: 15),
+              // const SizedBox(height: 15),
               Row(
                 children: [
-                  /// Google
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {

@@ -96,14 +96,14 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
   }
 
   void add_register(UserModel urserModel, CompanyIntern company) async {
-    await _firebaseFirestore.collection("registrations").add(RegistrationModel(
-          nameCV: fileNamePdf ?? '',
-          urlCV: pdfUrl ?? '',
-          id: '',
-          Company: company,
-          user: urserModel,
-          status: 'Đang duyệt',
-        ).toMap());
+    RegistrationModel data = RegistrationModel(
+        nameCV: fileNamePdf ?? '',
+        urlCV: pdfUrl ?? '',
+        Company: company,
+        user: urserModel,
+        status: 'Đang duyệt',
+        timestamp: Timestamp.now());
+    await _firebaseFirestore.collection("registrations").add(data.toMap());
   }
 
   Future<String?> get_regiter(String? idRegister) async {
@@ -756,15 +756,31 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
   }
 
   Future<void> add_register(UserModel urserModel, CompanyIntern company) async {
-    await _firebaseFirestore.collection("registrations").add(RegistrationModel(
-          nameCV: fileNamePdf ?? '',
-          urlCV: pdfUrl ?? '',
-          id: '',
-          Company: company,
-          user: urserModel,
-          status: 'Đang duyệt',
-        ).toMap());
-    Loading().isShowSuccess('Ứng tuyển thành công !');
+    RegistrationModel registrationModel = RegistrationModel(
+        nameCV: fileNamePdf ?? '',
+        urlCV: pdfUrl ?? '',
+        Company: company,
+        user: urserModel,
+        status: 'Đang duyệt',
+        timestamp: Timestamp.now());
+    await _firebaseFirestore
+        .collection("registrations")
+        .add(registrationModel.toMap())
+        .then((documentReference) {
+      String documentId = documentReference.id;
+      documentReference.update({
+        'id': documentId,
+      }).then((_) {
+        // In ID của tài liệu sau khi đã cập nhật
+        Loading().isShowSuccess(
+            'Ứng tuyển thành công !\nKiểm tra ở công ty đã đăng ký');
+        print('ID của tài liệu vừa được thêm và cập nhật: $documentId');
+      }).catchError((error) {
+        // Xử lý lỗi nếu có khi cập nhật
+        print('Lỗi khi cập nhật ID của tài liệu: $error');
+      });
+    });
+    Get.back();
   }
 
   @override

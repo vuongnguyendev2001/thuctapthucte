@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/profile_canbo_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_nhanvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/home_nhanvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 
 class LayoutNhanvienScreen extends StatefulWidget {
   const LayoutNhanvienScreen({Key? key}) : super(key: key);
@@ -22,9 +23,9 @@ class _LayoutNhanvienScreenState extends State<LayoutNhanvienScreen> {
 
   List pages = [
     const HomeNhanVienScreen(),
-    const HomeScreen(),
+    // const HomeScreen(),
     const NotificationScreenCanBo(),
-    const AccountScreen()
+    const ProfileCanBoScreen()
   ];
 
   // void initState() {
@@ -50,7 +51,7 @@ class _LayoutNhanvienScreenState extends State<LayoutNhanvienScreen> {
         elevation: 1,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Tìm kiếm'),
+          // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Tìm kiếm'),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications), label: "Thông báo"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Cá nhân"),

@@ -123,56 +123,57 @@ class LoginService {
     );
   }
 
-  Future<String?> checkUserTypeSplash(String? userUid) async {
-    if (userUid != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('user').doc(userUid);
-      final userData = await userDoc.get();
-      if (userData.exists) {
-        final userType = userData.data()?['type'];
-        if (userType == 'Sinh viên') {
-          return userType;
-        } else if (userType == 'Giáo vụ') {
-          return userType;
-        } else if (userType == 'Nhân viên') {
-          return userType;
-        } else if (userType == 'Giảng viên') {
-          return userType;
-        } else {
-          print('Tài khoản không có loại xác định.');
-        }
+  Stream<String> checkUserTypeStream(String userUid) async* {
+    final userDoc = FirebaseFirestore.instance.collection('user').doc(userUid);
+    final userData = await userDoc.get();
+    if (userData.exists) {
+      final userType = userData.data()?['type'];
+      if (userType == 'Sinh viên' ||
+          userType == 'Giáo vụ' ||
+          userType == 'Nhân viên' ||
+          userType == 'Giảng viên') {
+        yield userType.toString();
       } else {
-        print('Tài khoản không tồn tại trong Firestore.');
+        yield 'Tài khoản không có loại xác định.';
       }
     } else {
-      print('Người dùng chưa đăng nhập.');
+      yield 'Tài khoản không tồn tại trong Firestore.';
     }
   }
 
-  Future<String?> checkUserType() async {
+  Future<String> checkUserType() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('user').doc(user.uid);
-      final userData = await userDoc.get();
-      if (userData.exists) {
-        final userType = userData.data()?['type'];
-        if (userType == 'Sinh viên') {
-          return userType;
-        } else if (userType == 'Giáo vụ') {
-          return userType;
-        } else if (userType == 'Nhân viên') {
-          return userType;
-        } else if (userType == 'Giảng viên') {
-          return userType;
-        } else {
-          print('Tài khoản không có loại xác định.');
-        }
+    final userDoc =
+        FirebaseFirestore.instance.collection('user').doc(user!.uid);
+    final userData = await userDoc.get();
+    if (userData.exists) {
+      final userType = userData.data()?['type'];
+      if (userType == 'Sinh viên') {
+        return userType;
+      } else if (userType == 'Giáo vụ') {
+        return userType;
+      } else if (userType == 'Nhân viên') {
+        return userType;
+      } else if (userType == 'Giảng viên') {
+        return userType;
       } else {
-        print('Tài khoản không tồn tại trong Firestore.');
+        return 'Tài khoản không có loại xác định.';
       }
     } else {
-      print('Người dùng chưa đăng nhập.');
+      return 'Người dùng chưa đăng nhập.';
+    }
+  }
+
+  Future<String> checkUserHaveFormReceipt(String userUid) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userDoc =
+        FirebaseFirestore.instance.collection('ReceiptForm').doc(user!.uid);
+    final userData = await userDoc.get();
+    if (userData.exists) {
+      final userModel = userData.data()?['userModel'];
+      return userModel;
+    } else {
+      return 'Chưa lập phiếu.';
     }
   }
 

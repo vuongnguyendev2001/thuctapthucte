@@ -8,7 +8,10 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
+import 'package:trungtamgiasu/models/receipt_form.dart';
+import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/get_current_user.dart';
 
 class ReceiptFormScreen extends StatefulWidget {
   const ReceiptFormScreen({super.key});
@@ -18,8 +21,17 @@ class ReceiptFormScreen extends StatefulWidget {
 }
 
 class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
-  bool? _isSelected1 = false;
-  bool? _isSelected2 = false;
+  Future<void> fetchData() async {
+    final updatedUser = await getUserInfo(loggedInUser);
+    setState(() {
+      loggedInUser = updatedUser;
+    });
+  }
+
+  bool? _isWorkRoomSelected1 = false;
+  bool? _isComputerSelected2 = false;
+  bool? _isWorkOnlineSelected = false;
+  bool? _isSalarySelected2 = false;
   final TextEditingController _nameCompanyController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _phoneNumberCompanyController =
@@ -34,8 +46,10 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
   final TextEditingController _mssvController = TextEditingController();
   final TextEditingController _idClassController = TextEditingController();
   final TextEditingController _majorController = TextEditingController();
-  final TextEditingController _hourperdayController = TextEditingController();
-  final TextEditingController _dayperweekController = TextEditingController();
+  final TextEditingController _hourperdayController =
+      TextEditingController(text: '8');
+  final TextEditingController _dayperweekController =
+      TextEditingController(text: '5');
   final TextEditingController _workContentController = TextEditingController();
 
   CompanyIntern? company;
@@ -52,6 +66,7 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
     _majorController.text = arguments.userModel.major!;
     _mssvController.text = arguments.userModel.MSSV!;
     getUserForCompany(arguments.companyIntern);
+    fetchData();
   }
 
   Future<List<CompanyIntern>> getCompanies() async {
@@ -157,22 +172,46 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                       controlAffinity: ListTileControlAffinity.leading,
                       title: const Text('Phòng làm việc'),
                       activeColor: primaryColor,
-                      value: _isSelected1,
+                      value: _isWorkRoomSelected1,
                       onChanged: (bool? newValue) {
                         setState(() {
-                          _isSelected1 = newValue;
+                          _isWorkRoomSelected1 = newValue;
                         });
                       },
                     ),
                     CheckboxListTile(
                       dense: true,
                       controlAffinity: ListTileControlAffinity.leading,
-                      title: const Text('Máy tính'),
+                      title: const Text('Thiết bị (máy tính, màn hình rời,..)'),
                       activeColor: primaryColor,
-                      value: _isSelected2,
+                      value: _isComputerSelected2,
                       onChanged: (bool? newValue) {
                         setState(() {
-                          _isSelected2 = newValue;
+                          _isComputerSelected2 = newValue;
+                        });
+                      },
+                    ),
+                    CheckboxListTile(
+                      dense: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: const Text('Trợ cấp thực tập'),
+                      activeColor: primaryColor,
+                      value: _isSalarySelected2,
+                      onChanged: (bool? newValue) {
+                        setState(() {
+                          _isSalarySelected2 = newValue;
+                        });
+                      },
+                    ),
+                    CheckboxListTile(
+                      dense: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: const Text('Thực tập online'),
+                      activeColor: primaryColor,
+                      value: _isWorkOnlineSelected,
+                      onChanged: (bool? newValue) {
+                        setState(() {
+                          _isWorkOnlineSelected = newValue;
                         });
                       },
                     ),
@@ -246,13 +285,13 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10),
                     Text(
-                      'Nội dung công việc – bắt buộc phải có\nLưu ý: Công việc được thực hiện trong 8 tuần',
+                      'Nội dung công việc – bắt buộc phải có\nLưu ý: Công việc được thực hiện trong 8 tuần (chưa cần ghi chi tiết hãy ghi)',
                       style: Style.subtitleStyle,
                     ),
                     const SizedBox(height: 15),
                     TextFormReceipt(
-                      maxline: 5,
                       controller: _workContentController,
                       lableText: 'Nội dung công việc',
                       icon: null,
@@ -280,7 +319,77 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () async {},
+                            onPressed: () async {
+                              RegisterViewerArguments? arguments =
+                                  Get.arguments as RegisterViewerArguments?;
+                              ReceiptForm receiptForm = ReceiptForm(
+                                isWorkRoomSelected1: _isWorkRoomSelected1,
+                                isComputerSelected2: _isComputerSelected2,
+                                isSalarySelected2: _isSalarySelected2,
+                                isWorkOnlineSelected: _isWorkOnlineSelected,
+                                userStudent: arguments!.userModel,
+                                companyIntern: arguments.companyIntern,
+                                hourPerDay: _hourperdayController.text,
+                                dayPerWeek: _dayperweekController.text,
+                                workContent: _workContentController.text,
+                                userCanBo: loggedInUser,
+                                timestamp: Timestamp.now(),
+                              );
+                              ResultEvaluation resultEvaluation =
+                                  ResultEvaluation(
+                                companyIntern: arguments.companyIntern,
+                                userCanBo: loggedInUser,
+                                userStudent: arguments.userModel,
+                              );
+                              Map<String, dynamic> dataReceiptForm =
+                                  receiptForm.toMap();
+                              Map<String, dynamic> dataResultEvaluation =
+                                  resultEvaluation.toMap();
+                              await FirebaseFirestore.instance
+                                  .collection('ReceiptForm')
+                                  .add(dataReceiptForm)
+                                  .then((documentReference) {
+                                String documentId = documentReference.id;
+                                // Cập nhật trường ID của tài liệu với ID vừa lấy được
+                                documentReference.update({
+                                  'id': documentId,
+                                }).then((_) {
+                                  EasyLoading.showSuccess(
+                                    'Lập phiếu thành công!',
+                                  );
+                                  Get.back();
+                                  print(
+                                      'ID của tài liệu vừa được thêm và cập nhật: $documentId');
+                                }).catchError((error) {
+                                  // Xử lý lỗi nếu có khi cập nhật
+                                  print(
+                                      'Lỗi khi cập nhật ID của tài liệu: $error');
+                                });
+                              }).catchError((error) {
+                                // Xử lý lỗi nếu có khi thêm tài liệu
+                                print('Lỗi khi thêm tài liệu: $error');
+                              });
+                              await FirebaseFirestore.instance
+                                  .collection('ResultsEvaluation')
+                                  .add(dataResultEvaluation)
+                                  .then((documentReference) {
+                                String documentId = documentReference.id;
+                                // Cập nhật trường ID của tài liệu với ID vừa lấy được
+                                documentReference.update({
+                                  'id': documentId,
+                                }).then((_) {
+                                  print(
+                                      'ID của tài liệu vừa được thêm và cập nhật: $documentId');
+                                }).catchError((error) {
+                                  // Xử lý lỗi nếu có khi cập nhật
+                                  print(
+                                      'Lỗi khi cập nhật ID của tài liệu: $error');
+                                });
+                              }).catchError((error) {
+                                // Xử lý lỗi nếu có khi thêm tài liệu
+                                print('Lỗi khi thêm tài liệu: $error');
+                              });
+                            },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),
                               elevation: 0.0,
@@ -304,7 +413,7 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                                   width: 3,
                                 ),
                                 Text(
-                                  'Đăng ký thực tập',
+                                  'Hoàn thành phiếu',
                                   // 'login'.tr.capitalize,
                                   style: Style.titleStyle.copyWith(
                                       color: backgroundLite, fontSize: 16),
@@ -339,12 +448,16 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
 
 class TextFormReceipt extends StatelessWidget {
   String? lableText;
+  Function(String)? onChanged;
   TextEditingController? controller;
   Icon? icon;
   int? maxline;
+  bool? isReadOnly;
   TextFormReceipt({
     super.key,
-    this.maxline = 1,
+    this.onChanged = null,
+    this.maxline = null,
+    this.isReadOnly = false,
     required this.lableText,
     required this.controller,
     required this.icon,
@@ -362,24 +475,30 @@ class TextFormReceipt extends StatelessWidget {
         // }
         return null;
       },
+      onChanged: onChanged,
+      readOnly: isReadOnly ?? false,
       maxLines: maxline,
       controller: controller,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         prefixIcon: icon,
         prefixIconColor: primaryColor,
-        contentPadding: EdgeInsets.symmetric(
+        contentPadding: const EdgeInsets.symmetric(
             vertical: 8.0,
             horizontal:
                 8.0), // Điều này sẽ giúp điều chỉnh kích thước của TextFormField.
         labelText: lableText,
         labelStyle: const TextStyle(color: blackColor),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-                color: primaryColor) // Màu của viền khi trường được chọn
-            ),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(
+            color: primaryColor,
+          ), // Màu của viền khi trường được chọn
+        ),
+        
       ),
     );
   }

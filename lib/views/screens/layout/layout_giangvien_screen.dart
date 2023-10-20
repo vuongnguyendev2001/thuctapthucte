@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 
 class LayoutGiangvienScreen extends StatefulWidget {
   const LayoutGiangvienScreen({Key? key}) : super(key: key);

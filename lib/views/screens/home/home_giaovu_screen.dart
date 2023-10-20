@@ -25,7 +25,6 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     FirebaseFirestore.instance
         .collection("user")
@@ -71,8 +70,8 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(25),
                 child: CircleAvatar(
-                  child: Image.network(loggedInUser.avatar.toString()),
                   radius: 23,
+                  child: Image.network(loggedInUser.avatar.toString()),
                 ),
               ),
               const SizedBox(width: 10),
@@ -91,7 +90,9 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
                 color: primaryColor,
               ),
               title: 'Quản lý tài khoản',
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RouteManager.signUpScreen);
+              },
             ),
             const SizedBox(height: 10),
             Button_HomeGiaoVu_Screen(
@@ -126,8 +127,8 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(RouteManager.chatbotScreen);
+        onPressed: () async {
+          await Get.toNamed(RouteManager.chatbotScreen);
         },
         backgroundColor: whiteColor,
         child: SvgPicture.asset(

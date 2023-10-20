@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trungtamgiasu/constants/color.dart';
+import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
@@ -175,6 +176,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 15),
+
                                   // internshipApplications[index].status ==
                                   //         'Đã duyệt'
                                   //     ? InkWell(
@@ -223,7 +225,11 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                                   //       )
                                   //     : const SizedBox()
                                 ],
-                              )
+                              ),
+                              Text(
+                                'Ngày đăng ký: ${CurrencyFormatter().formattedDatebook(internshipApplications[index].timestamp)}',
+                                style: Style.subtitleStyle,
+                              ),
                             ],
                           ),
                           trailing: const Icon(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
@@ -284,6 +285,8 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                                 documentReference.update({
                                                   'idDKHP': documentId
                                                 }).then((_) {
+                                                  EasyLoading.showSuccess(
+                                                      'Đăng ký thành công !\n Kiểm ra ở kết quả ĐKHP');
                                                   print(
                                                       'ID của tài liệu vừa được thêm và cập nhật: $documentId');
                                                 }).catchError((error) {

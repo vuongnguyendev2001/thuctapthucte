@@ -12,13 +12,10 @@ Future<UserModel> getUserInfo(UserModel currentUser) async {
   if (user != null) {
     final DocumentSnapshot snapshot =
         await FirebaseFirestore.instance.collection("user").doc(user.uid).get();
-
     if (snapshot.exists) {
       final data = snapshot.data();
       if (data != null) {
         final updatedUser = UserModel.fromMap(data);
-        print(updatedUser.email);
-        print(updatedUser.uid);
         return updatedUser;
       }
     }

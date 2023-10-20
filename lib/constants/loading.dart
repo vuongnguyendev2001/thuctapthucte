@@ -33,4 +33,12 @@ class Loading {
       maskType: EasyLoadingMaskType.black,
     );
   }
+
+  Future<void> isshowError(String message) async {
+    await EasyLoading.showError(
+      message,
+      duration: const Duration(milliseconds: 1300),
+      maskType: EasyLoadingMaskType.black,
+    );
+  }
 }

@@ -14,14 +14,14 @@ class NotificationScreenCanBo extends StatefulWidget {
 class _NotificationScreenCanBoState extends State<NotificationScreenCanBo> {
   @override
   Widget build(BuildContext context) {
-    final message = Get.arguments as RemoteMessage;
+    // final message = Get.arguments as RemoteMessage;
     return Scaffold(
       body: Center(
         child: Column(
           children: [
-            Text('${message.notification?.title}'),
-            Text('${message.notification?.body}'),
-            Text('${message.data}'),
+            // Text('${message.notification?.title}'),
+            // Text('${message.notification?.body}'),
+            // Text('${message.data}'),
           ],
         ),
       ),

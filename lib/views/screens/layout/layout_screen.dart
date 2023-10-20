@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_screen_main.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
-
-import '../home/home_screen.dart';
-
 class NavbarScreen extends StatefulWidget {
   const NavbarScreen({Key? key}) : super(key: key);
-  static const String id = 'navbar_screen';
   @override
   State<NavbarScreen> createState() => _NavbarScreenState();
 }
@@ -23,14 +20,9 @@ class _NavbarScreenState extends State<NavbarScreen> {
   List pages = [
     const HomeScreen(),
     const TimKiemDiaDiem(),
-    const HomeScreen(),
+    const NotificationScreenCanBo(),
     const AccountScreen()
   ];
-
-  // void initState() {
-  //   super.initState();
-  //   CloudFirestoreMethod().getAvatarNameandEmail();
-  // }
 
   @override
   Widget build(BuildContext context) {

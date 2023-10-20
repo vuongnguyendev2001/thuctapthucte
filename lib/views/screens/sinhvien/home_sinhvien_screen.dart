@@ -239,8 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        // Get.toNamed(RouteManager.courseRegistrationScreen);
+                      onTap: () async {
+                        await Get.toNamed(RouteManager.readReceiptForm);
                       },
                       child: SizedBox(
                         width: 105,
@@ -263,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Get.toNamed(RouteManager.timKiemDiaDiem);
+                        Get.toNamed(RouteManager.readAssignmentSlip);
                       },
                       child: SizedBox(
                         width: 100,
