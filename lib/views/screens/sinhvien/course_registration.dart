@@ -8,6 +8,7 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/course_register.dart';
 import 'package:trungtamgiasu/models/hoc_phan.dart';
+import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
@@ -44,6 +45,23 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
     setState(() {
       loggedInUser = updatedUser;
     });
+  }
+
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<bool?> getAllDKHP(String userID) async {
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   @override
@@ -264,42 +282,54 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                       InkWell(
                                         onTap: () async {
                                           try {
-                                            CollectionReference
-                                                courseRegistrationsCollection =
-                                                FirebaseFirestore.instance
-                                                    .collection(
-                                                        'DangKyHocPhan');
-                                            DangKyHocPhan dangKyHocPhan =
-                                                DangKyHocPhan(
-                                                    idDKHP: '',
-                                                    idHK:
-                                                        courseRegistration.id!,
-                                                    idHP: hocPhan.id!,
-                                                    user: loggedInUser);
-                                            if (loggedInUser != null) {
-                                              await courseRegistrationsCollection
-                                                  .add(dangKyHocPhan.toMap())
-                                                  .then((documentReference) {
-                                                String documentId =
-                                                    documentReference.id;
-                                                documentReference.update({
-                                                  'idDKHP': documentId
-                                                }).then((_) {
-                                                  EasyLoading.showSuccess(
-                                                      'Đăng ký thành công !\n Kiểm ra ở kết quả ĐKHP');
-                                                  print(
-                                                      'ID của tài liệu vừa được thêm và cập nhật: $documentId');
+                                            bool? checkDKHP = await getAllDKHP(
+                                                loggedInUser.uid!);
+                                            if (checkDKHP == true) {
+                                              EasyLoading.showError(
+                                                  'Bạn đã đằng ký học phần rồi !');
+                                            } else {
+                                              CollectionReference
+                                                  courseRegistrationsCollection =
+                                                  FirebaseFirestore.instance
+                                                      .collection(
+                                                          'DangKyHocPhan');
+                                              DangKyHocPhan dangKyHocPhan =
+                                                  DangKyHocPhan(
+                                                      idHK: courseRegistration
+                                                          .id!,
+                                                      idHP: hocPhan.id!,
+                                                      user: loggedInUser,
+                                                      idGiangVien:
+                                                          hocPhan.idGiangVien,
+                                                      locationIntern: false,
+                                                      receiptForm: false,
+                                                      assignmentSlipForm: false,
+                                                      evaluation: false);
+                                              if (loggedInUser != null) {
+                                                await courseRegistrationsCollection
+                                                    .add(dangKyHocPhan.toMap())
+                                                    .then((documentReference) {
+                                                  String documentId =
+                                                      documentReference.id;
+                                                  documentReference.update({
+                                                    'idDKHP': documentId
+                                                  }).then((_) {
+                                                    EasyLoading.showSuccess(
+                                                        'Đăng ký thành công !\n Kiểm ra ở kết quả ĐKHP');
+                                                    print(
+                                                        'ID của tài liệu vừa được thêm và cập nhật: $documentId');
+                                                  }).catchError((error) {
+                                                    print(
+                                                        'Lỗi khi cập nhật ID của tài liệu: $error');
+                                                  });
                                                 }).catchError((error) {
                                                   print(
-                                                      'Lỗi khi cập nhật ID của tài liệu: $error');
+                                                      'Lỗi khi thêm tài liệu: $error');
                                                 });
-                                              }).catchError((error) {
+                                              } else {
                                                 print(
-                                                    'Lỗi khi thêm tài liệu: $error');
-                                              });
-                                            } else {
-                                              print(
-                                                  'Biến loggedInUser có giá trị null. Không thể thêm dữ liệu.');
+                                                    'Biến loggedInUser có giá trị null. Không thể thêm dữ liệu.');
+                                              }
                                             }
                                           } catch (e) {
                                             print('Lỗi: $e');
@@ -514,6 +544,7 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                           HocPhan.fromMap(jsonData);
                                       hocPhanList.add(hocPhan);
                                     }
+
                                     return ListView.builder(
                                       shrinkWrap: true,
                                       physics:
@@ -521,7 +552,9 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                       itemCount: hocPhanList.length,
                                       itemBuilder: (context, index) {
                                         HocPhan hocPhan = hocPhanList[index];
-                                        if (hocPhan.id == dkHocPhan.idHP) {
+                                        if (hocPhan.id == dkHocPhan.idHP &&
+                                            dkHocPhan.user.uid ==
+                                                loggedInUser.uid) {
                                           return Column(
                                             children: [
                                               ListTile(

@@ -10,6 +10,7 @@ import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/constants/ui_helper.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/receipt_form.dart';
@@ -68,6 +69,25 @@ class _ApprovingInternshipsScreenState
       print('false');
       return false;
     }
+  }
+
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String userID) async {
+    int count = 0;
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          print(dangKyHocPhan.idDKHP);
+          return dangKyHocPhan.idDKHP;
+        }
+      }
+    }
+    return 'No data';
   }
 
   CollectionReference receiptForm =
@@ -277,6 +297,7 @@ class _ApprovingInternshipsScreenState
                                                     UIHelper
                                                         .showCupertinoDialog(
                                                       onComfirm: () async {
+                                                        
                                                         await FirebaseFirestore
                                                             .instance
                                                             .collection(
@@ -288,6 +309,21 @@ class _ApprovingInternshipsScreenState
                                                             .update(
                                                               dataToUpdate,
                                                             );
+                                                            String? idDKHP =
+                                                            await getAllDKHP(
+                                                                internshipApplications[
+                                                                        index]
+                                                                    .user
+                                                                    .uid!);
+
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'DangKyHocPhan')
+                                                            .doc(idDKHP)
+                                                            .update({
+                                                          'locationIntern': true
+                                                        });
                                                         Get.back();
                                                         Get.back();
                                                       },

@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Get.toNamed(RouteManager.diadiemdadangky),
+                      onTap: () => Get.toNamed(RouteManager.submitReport),
                       child: SizedBox(
                         width: 85,
                         child: Column(

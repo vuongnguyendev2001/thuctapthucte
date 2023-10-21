@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/receipt_form.dart';
@@ -101,6 +102,25 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
     } else {
       print('null');
     }
+  }
+
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String userID) async {
+    int count = 0;
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          print(dangKyHocPhan.idDKHP);
+          return dangKyHocPhan.idDKHP;
+        }
+      }
+    }
+    return 'No data';
   }
 
   @override
@@ -369,6 +389,12 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
+                              String? idDKHP =
+                                  await getAllDKHP(arguments.userModel.uid!);
+                              await FirebaseFirestore.instance
+                                  .collection('DangKyHocPhan')
+                                  .doc(idDKHP)
+                                  .update({'receiptForm': true});
                               await FirebaseFirestore.instance
                                   .collection('ResultsEvaluation')
                                   .add(dataResultEvaluation)
@@ -498,7 +524,6 @@ class TextFormReceipt extends StatelessWidget {
             color: primaryColor,
           ), // Màu của viền khi trường được chọn
         ),
-        
       ),
     );
   }

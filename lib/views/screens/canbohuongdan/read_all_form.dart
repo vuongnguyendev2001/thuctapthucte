@@ -30,7 +30,12 @@ class _ReadAllFormState extends State<ReadAllForm>
     _tabController = TabController(length: 2, vsync: this);
     fetchData();
   }
-
+  Future<void> fetchData() async {
+    final updatedUser = await getUserInfo(loggedInUser);
+    setState(() {
+      loggedInUser = updatedUser;
+    });
+  }
   @override
   void dispose() {
     _tabController.dispose();
@@ -38,12 +43,7 @@ class _ReadAllFormState extends State<ReadAllForm>
     super.dispose();
   }
 
-  Future<void> fetchData() async {
-    final updatedUser = await getUserInfo(loggedInUser);
-    setState(() {
-      loggedInUser = updatedUser;
-    });
-  }
+
 
   final Stream<QuerySnapshot> _receiptFormFirestore =
       FirebaseFirestore.instance.collection('ReceiptForm').snapshots();

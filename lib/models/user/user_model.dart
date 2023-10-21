@@ -12,6 +12,7 @@ class UserModel {
   String? idClass;
   String? major;
   String? MSSV;
+  String? MSCB;
   String? phoneNumberCompany;
   String? phoneNumberCanBo;
   // CourseRegistration? courseRegistration;
@@ -25,6 +26,7 @@ class UserModel {
     this.address,
     this.type,
     this.MSSV,
+    this.MSCB,
     this.idClass,
     this.major,
     this.phoneNumberCanBo,
@@ -33,6 +35,7 @@ class UserModel {
   });
   factory UserModel.fromMap(map) {
     return UserModel(
+      MSCB: map['MSCB'],
       uid: map['uid'],
       email: map['email'],
       userName: map['userName'],
@@ -62,6 +65,7 @@ class UserModel {
       'type': type,
       'idCompany': idCompany,
       'MSSV': MSSV,
+      'MSCB': MSCB,
       'idClass': idClass,
       'major': major,
       'phoneNumberCanBo': phoneNumberCanBo,

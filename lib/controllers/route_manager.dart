@@ -16,9 +16,11 @@ import 'package:trungtamgiasu/views/screens/canbohuongdan/tracking_sheet.dart';
 import 'package:trungtamgiasu/views/screens/chatbot/chatbot_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/quan_ly_hoc_phan.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/sv_da_dk_hp.dart';
-import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/home_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/home_nhanvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/lecturers_evaluation.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/read_student_course.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
@@ -30,6 +32,7 @@ import 'package:trungtamgiasu/views/screens/sinhvien/read_information.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/registered_location.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/submit_report.dart';
 import 'package:trungtamgiasu/views/screens/splash_screen2.dart';
 import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
 
@@ -78,8 +81,26 @@ class RouteManager {
       "/internshipEvaluationScreen";
   static const String trackingSheetScreen = "/trackingSheetScreen";
   static const String resultsEvaluationDetail = "/resultsEvaluationDetail";
+  static const String submitReport = "/submitReport";
+  static const String readStudentCourse = "/readStudentCourse";
+  static const String lecturersEvaluation = "/lecturersEvaluation";
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case lecturersEvaluation:
+        return MaterialPageRoute(
+          builder: (_) => const LecturersEvaluation(),
+          settings: settings,
+        );
+      case readStudentCourse:
+        return MaterialPageRoute(
+          builder: (_) => const ReadStudentCourse(),
+          settings: settings,
+        );
+      case submitReport:
+        return MaterialPageRoute(
+          builder: (_) => const SubmitReport(),
+          settings: settings,
+        );
       case resultsEvaluationDetail:
         return MaterialPageRoute(
           builder: (_) => const ResultsEvaluationDetail(),

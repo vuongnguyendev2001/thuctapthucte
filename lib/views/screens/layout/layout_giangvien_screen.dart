@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_giangvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/home_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/account_lectures_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 
 class LayoutGiangvienScreen extends StatefulWidget {
@@ -21,16 +23,9 @@ class _LayoutGiangvienScreenState extends State<LayoutGiangvienScreen> {
 
   List pages = [
     const HomeGiangvienScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const AccountScreen()
+    const NotificationScreenCanBo(),
+    const AccountLecturersScreen(),
   ];
-
-  // void initState() {
-  //   super.initState();
-  //   CloudFirestoreMethod().getAvatarNameandEmail();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +44,6 @@ class _LayoutGiangvienScreenState extends State<LayoutGiangvienScreen> {
         elevation: 1,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Tìm kiếm'),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications), label: "Thông báo"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Cá nhân"),

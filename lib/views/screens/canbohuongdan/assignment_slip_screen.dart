@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
@@ -28,9 +29,10 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
     _nameCompanyController.text = arguments!.companyIntern.name;
     _nameStudentController.text = arguments.userModel.userName!;
     _mssvController.text = arguments.userModel.MSSV!;
+    uidStudent = arguments.userModel.uid;
     getUserForCompany(arguments.companyIntern);
     fetchData();
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 1; i++) {
       addContainer();
     }
   }
@@ -62,13 +64,32 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
     }
   }
 
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String userID) async {
+    int count = 0;
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          print(dangKyHocPhan.idDKHP);
+          return dangKyHocPhan.idDKHP;
+        }
+      }
+    }
+    return 'No data';
+  }
+
   Timestamp? timestamp = Timestamp.now();
   List<Widget> containers = [];
   final TextEditingController _nameCompanyController = TextEditingController();
   final TextEditingController _nameCanBoController = TextEditingController();
   final TextEditingController _nameStudentController = TextEditingController();
   final TextEditingController _mssvController = TextEditingController();
-
+  String? uidStudent;
   List<WorkContent> workContentControllers = [];
   // final List<TextEditingController> weekNumberControllers = [];
   int weekNumber = 1;
@@ -340,6 +361,11 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
+                              String? idDKHP = await getAllDKHP(uidStudent!);
+                              await FirebaseFirestore.instance
+                                  .collection('DangKyHocPhan')
+                                  .doc(idDKHP)
+                                  .update({'assignmentSlipForm': true});
                               Map<String, dynamic> dataTrackingSheet =
                                   trackingSheetForm.toMap();
                               await FirebaseFirestore.instance

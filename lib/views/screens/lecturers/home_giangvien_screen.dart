@@ -142,28 +142,34 @@ class _HomeGiangvienScreenState extends State<HomeGiangvienScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 92,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icon_svg/searchaddress.svg',
-                                width: 45, // Kích thước chiều rộng
-                                height: 45, // Kích thước chiều cao
-                              ),
-                              SizedBox(
-                                height: 40,
-                                child: Text(
-                                  'Xem thông tin sinh viên',
-                                  style: Style.homesubtitleStyle,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () =>
+                        //       Get.toNamed(RouteManager.readStudentCourse),
+                        //   child: Container(
+                        //     alignment: Alignment.center,
+                        //     width: 92,
+                        //     child: Column(
+                        //       children: [
+                        //         SvgPicture.asset(
+                        //           'assets/icon_svg/searchaddress.svg',
+                        //           width: 45, // Kích thước chiều rộng
+                        //           height: 45, // Kích thước chiều cao
+                        //         ),
+                        //         SizedBox(
+                        //           height: 40,
+                        //           child: Text(
+                        //             'Xem thông tin sinh viên',
+                        //             style: Style.homesubtitleStyle,
+                        //           ),
+                        //         )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         GestureDetector(
-                          onTap: () async {},
+                          onTap: () async {
+                            Get.toNamed(RouteManager.readStudentCourse);
+                          },
                           child: SizedBox(
                             width: 78,
                             child: Column(
@@ -184,21 +190,26 @@ class _HomeGiangvienScreenState extends State<HomeGiangvienScreen> {
                             ),
                           ),
                         ),
-                        Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icon_svg/note.svg',
-                              width: 45, // Kích thước chiều rộng
-                              height: 45, // Kích thước chiều cao
-                            ),
-                            SizedBox(
-                              height: 40,
-                              child: Text(
-                                'Chấm điểm thực tập',
-                                style: Style.homesubtitleStyle,
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(RouteManager.lecturersEvaluation);
+                          },
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/note.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
                               ),
-                            )
-                          ],
+                              SizedBox(
+                                height: 40,
+                                child: Text(
+                                  'Chấm điểm thực tập',
+                                  style: Style.homesubtitleStyle,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),

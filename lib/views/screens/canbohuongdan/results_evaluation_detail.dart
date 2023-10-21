@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
@@ -43,6 +44,7 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
   TextEditingController workResults = TextEditingController();
   TextEditingController otherCommentsAboutStudents = TextEditingController();
   TextEditingController suggestedComments = TextEditingController();
+  TextEditingController idStudent = TextEditingController();
   void updateSum() {
     double implementTheRulesWellValue =
         double.tryParse(implementTheRulesWell.text) ?? 0;
@@ -91,6 +93,25 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
         .snapshots();
   }
 
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String userID) async {
+    int count = 0;
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          print(dangKyHocPhan.idDKHP);
+          return dangKyHocPhan.idDKHP;
+        }
+      }
+    }
+    return 'No data';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +144,7 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                   snapshot.data?.data() as Map<String, dynamic>? ?? {};
               ResultEvaluation resultEvaluationList =
                   ResultEvaluation.fromMap(data);
+              idStudent.text = resultEvaluationList.userStudent!.uid!;
               TextEditingController nameStudent = TextEditingController(
                   text: resultEvaluationList.userStudent?.userName);
               TextEditingController mssvController = TextEditingController(
@@ -588,35 +610,40 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () async {
-                              ResultEvaluation resultEvaluation =
-                                  ResultEvaluation(
-                                implementTheRulesWell:
-                                    implementTheRulesWell.text,
-                                complyWithWorkingHours:
-                                    complyWithWorkingHours.text,
-                                attitude: attitude.text,
-                                positiveInWork: positiveInWork.text,
-                                meetJobRequirements: meetJobRequirements.text,
-                                spiritOfLearning: spiritOfLearning.text,
-                                haveSuggestions: haveSuggestions.text,
-                                progressReport: progressReport.text,
-                                completeTheWork: completeTheWork.text,
-                                workResults: workResults.text,
-                                sumScore: sumController.text,
-                                otherCommentsAboutStudents:
-                                    otherCommentsAboutStudents.text,
-                                consistentWithReality: consistentWithReality,
-                                doesNotMatchReality: doesNotMatchReality,
-                                enhanceSoftSkills: enhanceSoftSkills,
-                                enhanceTeamworkSkills: enhanceTeamworkSkills,
-                                strengThenForeignLanguages:
-                                    strengThenForeignLanguages,
-                                suggestedComments: suggestedComments.text,
-                                timestamp: Timestamp.now(),
-                              );
+                              // ResultEvaluation resultEvaluation =
+                              //     ResultEvaluation(
+                              //   implementTheRulesWell:
+                              //       implementTheRulesWell.text,
+                              //   complyWithWorkingHours:
+                              //       complyWithWorkingHours.text,
+                              //   attitude: attitude.text,
+                              //   positiveInWork: positiveInWork.text,
+                              //   meetJobRequirements: meetJobRequirements.text,
+                              //   spiritOfLearning: spiritOfLearning.text,
+                              //   haveSuggestions: haveSuggestions.text,
+                              //   progressReport: progressReport.text,
+                              //   completeTheWork: completeTheWork.text,
+                              //   workResults: workResults.text,
+                              //   sumScore: sumController.text,
+                              //   otherCommentsAboutStudents:
+                              //       otherCommentsAboutStudents.text,
+                              //   consistentWithReality: consistentWithReality,
+                              //   doesNotMatchReality: doesNotMatchReality,
+                              //   enhanceSoftSkills: enhanceSoftSkills,
+                              //   enhanceTeamworkSkills: enhanceTeamworkSkills,
+                              //   strengThenForeignLanguages:
+                              //       strengThenForeignLanguages,
+                              //   suggestedComments: suggestedComments.text,
+                              //   timestamp: Timestamp.now(),
+                              // );
 
-                              Map<String, dynamic> dataResultEvaluation =
-                                  resultEvaluation.toMap();
+                              // Map<String, dynamic> dataResultEvaluation =
+                              //     resultEvaluation.toMap();
+                              String? idDKHP = await getAllDKHP(idStudent.text);
+                              await FirebaseFirestore.instance
+                                  .collection('DangKyHocPhan')
+                                  .doc(idDKHP)
+                                  .update({'evaluation': true});
                               await FirebaseFirestore.instance
                                   .collection('ResultsEvaluation')
                                   .doc(idDocument)

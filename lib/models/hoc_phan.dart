@@ -5,6 +5,7 @@ class HocPhan {
   String tenHocPhan;
   String lop;
   String giaoVien;
+  String? idGiangVien;
   String kyHieu;
 
   HocPhan(
@@ -14,6 +15,7 @@ class HocPhan {
     this.tenHocPhan,
     this.lop,
     this.giaoVien,
+    this.idGiangVien,
     this.kyHieu, // Thêm trường ký hiệu
   );
 
@@ -25,6 +27,7 @@ class HocPhan {
       'tenHocPhan': tenHocPhan,
       'lop': lop,
       'giaoVien': giaoVien,
+      'idGiangVien': idGiangVien ?? '',
       'kyHieu': kyHieu,
     };
   }
@@ -37,6 +40,7 @@ class HocPhan {
       map['tenHocPhan'],
       map['lop'],
       map['giaoVien'],
+      map['idGiangVien'] ?? '',
       map['kyHieu'],
     );
   }
@@ -76,7 +80,8 @@ List<Map<String, dynamic>> jsonHocPhanData = [
     "tenHocPhan": "Thực tập thực tế - KHMT",
     "lop": "DI19Z6A1",
     "kyHieu": "02",
-    "giaoVien": "Phạm Nguyên Hoàng"
+    "giaoVien": "Phạm Nguyên Hoàng",
+    "idGiangVien": "k6Ky5eCbFXPAEKQ7BqrXuVq4azu1"
   },
   {
     "maHocPhan": "CT473",
