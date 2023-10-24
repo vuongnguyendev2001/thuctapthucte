@@ -1,4 +1,4 @@
-class LecturersValuation {
+class LecturersEvaluation {
   String? id;
   String? nameStudent;
   String? MSSV;
@@ -17,8 +17,9 @@ class LecturersValuation {
   String? minusPoint;
   String? remainingPoints;
   String? lecturers;
-
-  LecturersValuation({
+  String? totalScore;
+  String? submitReport;
+  LecturersEvaluation({
     this.id,
     this.nameStudent,
     this.MSSV,
@@ -37,6 +38,8 @@ class LecturersValuation {
     this.minusPoint,
     this.remainingPoints,
     this.lecturers,
+    this.totalScore,
+    this.submitReport,
   });
 
   Map<String, dynamic> toMap() {
@@ -60,11 +63,13 @@ class LecturersValuation {
       'minusPoint': minusPoint ?? '',
       'remainingPoints': remainingPoints ?? '',
       'lecturers': lecturers ?? '',
+      'totalScore': totalScore ?? '',
+      'submitReport': submitReport ?? '',
     };
   }
 
-  factory LecturersValuation.fromMap(Map<String, dynamic> map) {
-    return LecturersValuation(
+  factory LecturersEvaluation.fromMap(Map<String, dynamic> map) {
+    return LecturersEvaluation(
       id: map['id'] ?? '',
       nameStudent: map['nameStudent'] ?? '',
       MSSV: map['MSSV'] ?? '',
@@ -84,6 +89,8 @@ class LecturersValuation {
       minusPoint: map['minusPoint'] ?? '',
       remainingPoints: map['remainingPoints'] ?? '',
       lecturers: map['lecturers'] ?? '',
+      totalScore: map['totalScore'] ?? '',
+      submitReport: map['submitReport'] ?? '',
     );
   }
 }

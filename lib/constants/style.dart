@@ -22,7 +22,7 @@ class Style {
   static TextStyle titleStyle = GoogleFonts.openSans(
     textStyle: TextStyle(
       fontWeight: FontWeight.w600,
-      fontSize: 16,
+      fontSize: 15,
       color: blackColor,
     ),
   );
@@ -36,7 +36,7 @@ class Style {
   static TextStyle subtitleStyle = GoogleFonts.openSans(
     textStyle: const TextStyle(
       fontWeight: FontWeight.w400,
-      fontSize: 14,
+      fontSize: 13,
       color: blackColor,
     ),
   );

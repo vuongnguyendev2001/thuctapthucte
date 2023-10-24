@@ -39,35 +39,46 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
-      appBar: AppBar(
-        title: Text(
-          'Phiếu giao việc sinh viên'.toUpperCase(),
-          style: Style.homeStyle,
-        ),
-        automaticallyImplyLeading: true,
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     'Phiếu giao việc sinh viên'.toUpperCase(),
+      //     style: Style.homeStyle,
+      //   ),
+      //   automaticallyImplyLeading: true,
+      // ),
       body: StreamBuilder(
-          stream: _assignmentSlipFormFirestore,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return const Center(child: Text('Something went wrong'));
-            }
+        stream: _assignmentSlipFormFirestore,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text('Something went wrong'));
+          }
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: primaryColor,
-                ),
-              );
-            }
-            List<AssignmentSlip> assignmentSlipFormList = [];
-            for (QueryDocumentSnapshot document in snapshot.data!.docs) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              AssignmentSlip assignmentSlipForm = AssignmentSlip.fromMap(data);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          }
+          List<AssignmentSlip> assignmentSlipFormList = [];
+          for (QueryDocumentSnapshot document in snapshot.data!.docs) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            AssignmentSlip assignmentSlipForm = AssignmentSlip.fromMap(data);
+            if (assignmentSlipForm.mssvController.text == loggedInUser.MSSV) {
               assignmentSlipFormList.add(assignmentSlipForm);
             }
+          }
+          // List<AssignmentSlip> assignmentSlipFormForStudentList = [];
+          // for (AssignmentSlip assignmentSlipFormForStudent
+          //     in assignmentSlipFormList) {
+          //   if (assignmentSlipFormForStudent.mssvController.text ==
+          //       loggedInUser.MSSV) {
+          //     assignmentSlipFormForStudentList
+          //         .add(assignmentSlipFormForStudent);
+          //     // print(receiptFormForStudent.userStudent!.uid);
+          //   }
+          // }
+          if (assignmentSlipFormList.isNotEmpty) {
             return ListView.builder(
                 itemCount: assignmentSlipFormList.length,
                 itemBuilder: (context, index) {
@@ -227,7 +238,25 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
                   }
                   return const SizedBox();
                 });
-          }),
+          } else {
+            return SizedBox(
+              height: Get.height * 0.85,
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/nodata.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Text(
+                    'Bạn chưa được lập phiếu giao việc !',
+                    style: Style.titleStyle,
+                  )
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

@@ -20,7 +20,9 @@ import 'package:trungtamgiasu/views/screens/lecturers/home_giangvien_screen.dart
 import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/home_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/lecturers_evaluation.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/lecturers_evaluation_detail.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/read_student_course.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/assignment_and_receipt.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
@@ -84,8 +86,20 @@ class RouteManager {
   static const String submitReport = "/submitReport";
   static const String readStudentCourse = "/readStudentCourse";
   static const String lecturersEvaluation = "/lecturersEvaluation";
+  static const String lecturersEvaluationDetail = "/lecturersEvaluationDetail";
+  static const String assignmentAndReceipt = '/assignmentAndReceipt';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case assignmentAndReceipt:
+        return MaterialPageRoute(
+          builder: (_) => const AssignmentAndReceipt(),
+          settings: settings,
+        );
+      case lecturersEvaluationDetail:
+        return MaterialPageRoute(
+          builder: (_) => const LecturersEvaluationDetail(),
+          settings: settings,
+        );
       case lecturersEvaluation:
         return MaterialPageRoute(
           builder: (_) => const LecturersEvaluation(),

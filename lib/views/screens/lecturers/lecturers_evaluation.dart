@@ -6,7 +6,10 @@ import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
+import 'package:trungtamgiasu/models/pdf_model.dart';
+import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
 class LecturersEvaluation extends StatefulWidget {
@@ -52,6 +55,23 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
       }
     }
     return false;
+  }
+
+  CollectionReference canBoEvaluation =
+      FirebaseFirestore.instance.collection('ResultsEvaluation');
+  Future<String?> getAllcanBoEvaluation(String IDStudent) async {
+    QuerySnapshot querySnapshot = await canBoEvaluation.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        ResultEvaluation resultEvaluation = ResultEvaluation.fromMap(data);
+        if (resultEvaluation.userStudent!.uid == IDStudent) {
+          return resultEvaluation.sumScore;
+        }
+      }
+    }
+    return 'null';
   }
 
   @override
@@ -141,9 +161,12 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
             DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
             dkhpList.add(dangKyHocPhan);
           }
-          // int count = 0;
-          // TextEditingController countController =
-          //     TextEditingController(text: count.toString());
+          List<DangKyHocPhan> dkhpFromMSSVList = [];
+          for (DangKyHocPhan dkhp in dkhpList) {
+            if (dkhp.idGiangVien == loggedInUser.uid) {
+              dkhpFromMSSVList.add(dkhp);
+            }
+          }
           return Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Column(
@@ -152,14 +175,23 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                 Table(
                   border: TableBorder.all(),
                   columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(80),
-                    1: FixedColumnWidth(150),
-                    2: FlexColumnWidth()
+                    0: FixedColumnWidth(30),
+                    1: FixedColumnWidth(70),
+                    2: FixedColumnWidth(135),
+                    3: FixedColumnWidth(50),
+                    4: FixedColumnWidth(50),
+                    5: FlexColumnWidth()
                   },
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: <TableRow>[
                     TableRow(
                       children: <Widget>[
+                        Center(
+                          child: Text(
+                            'STT',
+                            style: Style.titleStyle,
+                          ),
+                        ),
                         Center(
                           child: Text(
                             'MSSV',
@@ -174,7 +206,22 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                         ),
                         Center(
                           child: Text(
-                            'Điểm',
+                            'Điểm số',
+                            style: Style.titleStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'Điểm chữ',
+                            textAlign: TextAlign.center,
+                            style: Style.titleStyle,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'Chấm điểm',
+                            textAlign: TextAlign.center,
                             style: Style.titleStyle,
                           ),
                         ),
@@ -182,102 +229,121 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                     ),
                   ],
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: dkhpList.length,
-                    itemBuilder: (context, index) {
-                      if (dkhpList[index].idGiangVien == loggedInUser.uid) {
-                        bool? locationIntern = dkhpList[index].locationIntern;
-                        return GestureDetector(
-                          onTap: () {
-                            
-                          },
-                          child: Table(
-                            border: TableBorder.all(),
-                            columnWidths: const <int, TableColumnWidth>{
-                              0: FixedColumnWidth(80),
-                              1: FixedColumnWidth(150),
-                              2: FlexColumnWidth()
-                            },
-                            defaultVerticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            children: <TableRow>[
-                              TableRow(
-                                children: <Widget>[
-                                  Center(
-                                    child: Text(
-                                      '${dkhpList[index].user.MSSV}',
-                                      style: Style.subtitleStyle,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      '${dkhpList[index].user.userName}',
-                                      style: Style.subtitleStyle,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(2),
-                                      child: ElevatedButton(
-                                        onPressed: () async {},
-                                        style: ElevatedButton.styleFrom(
-                                          elevation: 0.0,
-                                          backgroundColor: primaryColor,
-                                          side: const BorderSide(
-                                            color: Colors.grey,
-                                            width: 1.0,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Icon(
-                                              Icons.check_circle_outline,
-                                              color: backgroundLite,
-                                              size: 18,
-                                            ),
-                                            const SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              'Đánh giá',
-                                              // 'login'.tr.capitalize,
-                                              style: Style.titleStyle.copyWith(
-                                                  color: backgroundLite,
-                                                  fontSize: 14),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  // const Center(
-                                  //   child: Row(
-                                  //     children: [
-                                  //       Text('Điểm: Chưa đánh giá'),
-                                  //       Icon(
-                                  //         Icons.arrow_right_outlined,
-                                  //         color: primaryColor,
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
-                                ],
+                ListView.builder(
+                  // physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: dkhpFromMSSVList.length,
+                  itemBuilder: (context, indexFromMSSV) {
+                    // double totalWord;
+                    // if (dkhpFromMSSVList[index].lecturersEvaluation !=
+                    //     null) {
+                    //   totalWord = double.parse(dkhpFromMSSVList[index]
+                    //       .lecturersEvaluation!
+                    //       .total!);
+                    // }
+                    return Table(
+                      border: TableBorder.all(),
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: FixedColumnWidth(30),
+                        1: FixedColumnWidth(70),
+                        2: FixedColumnWidth(135),
+                        3: FixedColumnWidth(50),
+                        4: FixedColumnWidth(50),
+                        5: FlexColumnWidth()
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: <TableRow>[
+                        TableRow(
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                '${indexFromMSSV + 1}',
+                                style: Style.subtitleStyle,
                               ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
+                            ),
+                            Center(
+                              child: Text(
+                                '${dkhpFromMSSVList[indexFromMSSV].user.MSSV}',
+                                style: Style.subtitleStyle,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Text(
+                                '${dkhpFromMSSVList[indexFromMSSV].user.userName}',
+                                style: Style.subtitleStyle,
+                              ),
+                            ),
+                            dkhpFromMSSVList[indexFromMSSV]
+                                        .lecturersEvaluation !=
+                                    null
+                                ? Center(
+                                    child: Text(
+                                      '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.total}',
+                                      style: Style.subtitleStyle,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      '-',
+                                      style: Style.subtitleStyle,
+                                    ),
+                                  ),
+                            dkhpFromMSSVList[indexFromMSSV]
+                                        .lecturersEvaluation !=
+                                    null
+                                ? Center(
+                                    child: Text(
+                                      '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.totalScore}',
+                                      style: Style.subtitleStyle,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      '-',
+                                      style: Style.subtitleStyle,
+                                    ),
+                                  ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  String? sumScoreCanBo =
+                                      await getAllcanBoEvaluation(
+                                          dkhpFromMSSVList[indexFromMSSV]
+                                              .user
+                                              .uid!);
+                                  print(sumScoreCanBo);
+                                  sumScoreAndIdDocParameters sumScoreAndIdDocs =
+                                      sumScoreAndIdDocParameters(
+                                          sumScoreCanBo!,
+                                          dkhpFromMSSVList[indexFromMSSV]
+                                             .idDKHP!);
+                                  Get.toNamed(
+                                    RouteManager.lecturersEvaluationDetail,
+                                    arguments: sumScoreAndIdDocs,
+                                  );
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 3.1),
+                                  color: primaryColor,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.edit_rounded,
+                                      color: backgroundLite,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                )
               ],
             ),
           );

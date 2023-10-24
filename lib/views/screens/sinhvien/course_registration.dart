@@ -295,16 +295,17 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                                           'DangKyHocPhan');
                                               DangKyHocPhan dangKyHocPhan =
                                                   DangKyHocPhan(
-                                                      idHK: courseRegistration
-                                                          .id!,
-                                                      idHP: hocPhan.id!,
-                                                      user: loggedInUser,
-                                                      idGiangVien:
-                                                          hocPhan.idGiangVien,
-                                                      locationIntern: false,
-                                                      receiptForm: false,
-                                                      assignmentSlipForm: false,
-                                                      evaluation: false);
+                                                idHK: courseRegistration.id!,
+                                                idHP: hocPhan.id!,
+                                                user: loggedInUser,
+                                                idGiangVien:
+                                                    hocPhan.idGiangVien,
+                                                locationIntern: false,
+                                                receiptForm: false,
+                                                assignmentSlipForm: false,
+                                                evaluation: false,
+                                                isSubmitReport: false,
+                                              );
                                               if (loggedInUser != null) {
                                                 await courseRegistrationsCollection
                                                     .add(dangKyHocPhan.toMap())

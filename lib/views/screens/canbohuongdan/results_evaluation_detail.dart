@@ -178,13 +178,11 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                 progressReport = TextEditingController(
                     text: resultEvaluationList.progressReport);
                 workResults = TextEditingController(
-                    text: resultEvaluationList.completeTheWork);
-                completeTheWork = TextEditingController(
                     text: resultEvaluationList.workResults);
+                completeTheWork = TextEditingController(
+                    text: resultEvaluationList.completeTheWork);
                 otherCommentsAboutStudents = TextEditingController(
                     text: resultEvaluationList.otherCommentsAboutStudents);
-                sumController =
-                    TextEditingController(text: resultEvaluationList.sumScore);
                 suggestedComments = TextEditingController(
                     text: resultEvaluationList.suggestedComments);
                 consistentWithReality =
@@ -195,6 +193,8 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                     resultEvaluationList.enhanceTeamworkSkills;
                 strengThenForeignLanguages =
                     resultEvaluationList.strengThenForeignLanguages;
+                sumController =
+                    TextEditingController(text: resultEvaluationList.sumScore);
               }
               return Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, bottom: 50),
@@ -636,9 +636,43 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                               //   suggestedComments: suggestedComments.text,
                               //   timestamp: Timestamp.now(),
                               // );
-
-                              // Map<String, dynamic> dataResultEvaluation =
-                              //     resultEvaluation.toMap();
+                              double implementTheRulesWellValue =
+                                  double.tryParse(implementTheRulesWell.text) ??
+                                      0;
+                              double complyWithWorkingHoursValue =
+                                  double.tryParse(
+                                          complyWithWorkingHours.text) ??
+                                      0;
+                              double attitudeValue =
+                                  double.tryParse(attitude.text) ?? 0;
+                              double positiveInWorkValue =
+                                  double.tryParse(positiveInWork.text) ?? 0;
+                              double meetJobRequirementsValue =
+                                  double.tryParse(meetJobRequirements.text) ??
+                                      0;
+                              double spiritOfLearningValue =
+                                  double.tryParse(spiritOfLearning.text) ?? 0;
+                              double haveSuggestionsValue =
+                                  double.tryParse(haveSuggestions.text) ?? 0;
+                              double progressReportValue =
+                                  double.tryParse(progressReport.text) ?? 0;
+                              double completeTheWorkValue =
+                                  double.tryParse(completeTheWork.text) ?? 0;
+                              double workResultsValue =
+                                  double.tryParse(workResults.text) ?? 0;
+                              double sumScore = implementTheRulesWellValue +
+                                  complyWithWorkingHoursValue +
+                                  attitudeValue +
+                                  positiveInWorkValue +
+                                  meetJobRequirementsValue +
+                                  spiritOfLearningValue +
+                                  haveSuggestionsValue +
+                                  progressReportValue +
+                                  completeTheWorkValue +
+                                  workResultsValue;
+                              // sumController.text = sumScore.toString();
+                              sumController = TextEditingController(
+                                  text: sumScore.toString());
                               String? idDKHP = await getAllDKHP(idStudent.text);
                               await FirebaseFirestore.instance
                                   .collection('DangKyHocPhan')

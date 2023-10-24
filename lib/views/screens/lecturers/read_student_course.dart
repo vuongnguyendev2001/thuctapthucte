@@ -4,6 +4,7 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
+import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
 class ReadStudentCourse extends StatefulWidget {
@@ -138,9 +139,12 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
             DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
             dkhpList.add(dangKyHocPhan);
           }
-          // int count = 0;
-          // TextEditingController countController =
-          //     TextEditingController(text: count.toString());
+          List<DangKyHocPhan> dkhpFromMSSVList = [];
+          for (DangKyHocPhan dkhp in dkhpList) {
+            if (dkhp.idGiangVien == loggedInUser.uid) {
+              dkhpFromMSSVList.add(dkhp);
+            }
+          }
           return Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Column(
@@ -149,14 +153,21 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                 Table(
                   border: TableBorder.all(),
                   columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(85),
-                    1: FixedColumnWidth(150),
-                    2: FlexColumnWidth()
+                    0: FixedColumnWidth(30),
+                    1: FixedColumnWidth(75),
+                    2: FixedColumnWidth(150),
+                    3: FlexColumnWidth()
                   },
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: <TableRow>[
                     TableRow(
                       children: <Widget>[
+                        Center(
+                          child: Text(
+                            'STT',
+                            style: Style.titleStyle,
+                          ),
+                        ),
                         Center(
                           child: Text(
                             'MSSV',
@@ -181,16 +192,16 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: dkhpList.length,
+                    itemCount: dkhpFromMSSVList.length,
                     itemBuilder: (context, index) {
                       if (dkhpList[index].idGiangVien == loggedInUser.uid) {
-                        bool? locationIntern = dkhpList[index].locationIntern;
                         return Table(
                           border: TableBorder.all(),
                           columnWidths: const <int, TableColumnWidth>{
-                            0: FixedColumnWidth(85),
-                            1: FixedColumnWidth(150),
-                            2: FlexColumnWidth()
+                            0: FixedColumnWidth(30),
+                            1: FixedColumnWidth(75),
+                            2: FixedColumnWidth(150),
+                            3: FlexColumnWidth()
                           },
                           defaultVerticalAlignment:
                               TableCellVerticalAlignment.middle,
@@ -199,7 +210,13 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                               children: <Widget>[
                                 Center(
                                   child: Text(
-                                    '${dkhpList[index].user.MSSV}',
+                                    '${index + 1}',
+                                    style: Style.subtitleStyle,
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    '${dkhpFromMSSVList[index].user.MSSV}',
                                     style: Style.subtitleStyle,
                                   ),
                                 ),
@@ -210,15 +227,15 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${dkhpList[index].user.userName}',
+                                        '${dkhpFromMSSVList[index].user.userName}',
                                         style: Style.subtitleStyle,
                                       ),
                                       Text(
-                                        'SĐT: ${dkhpList[index].user.phoneNumber}',
+                                        'SĐT: ${dkhpFromMSSVList[index].user.phoneNumber}',
                                         style: Style.subtitleStyle,
                                       ),
                                       Text(
-                                        'Lớp: ${dkhpList[index].user.idClass}',
+                                        'Lớp: ${dkhpFromMSSVList[index].user.idClass}',
                                         style: Style.subtitleStyle,
                                       ),
                                     ],
@@ -241,7 +258,8 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                   MaterialStatePropertyAll(
                                                 Colors.white70,
                                               ),
-                                              value: locationIntern,
+                                              value: dkhpFromMSSVList[index]
+                                                  .locationIntern,
                                               onChanged: null,
                                             ),
                                           ),
@@ -262,8 +280,8 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                     MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
-                                                value:
-                                                    dkhpList[index].receiptForm,
+                                                value: dkhpFromMSSVList[index]
+                                                    .receiptForm,
                                                 onChanged: null),
                                           ),
                                           Text(
@@ -283,7 +301,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                     MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
-                                                value: dkhpList[index]
+                                                value: dkhpFromMSSVList[index]
                                                     .assignmentSlipForm,
                                                 onChanged: null),
                                           ),
@@ -304,12 +322,33 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                     MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
-                                                value:
-                                                    dkhpList[index].evaluation,
+                                                value: dkhpFromMSSVList[index]
+                                                    .evaluation,
                                                 onChanged: null),
                                           ),
                                           Text(
                                             'Cán bộ đánh giá',
+                                            style: Style.subtitleStyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            height: 25,
+                                            width: 25,
+                                            child: Checkbox(
+                                                checkColor: primaryColor,
+                                                fillColor:
+                                                    MaterialStatePropertyAll(
+                                                  Colors.white70,
+                                                ),
+                                                value: dkhpFromMSSVList[index]
+                                                    .isSubmitReport,
+                                                onChanged: null),
+                                          ),
+                                          Text(
+                                            'Nộp báo cáo',
                                             style: Style.subtitleStyle,
                                           ),
                                         ],

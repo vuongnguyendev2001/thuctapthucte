@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
@@ -34,6 +35,24 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       loggedInUser = updatedUser;
     });
+  }
+
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String userID) async {
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          print(dangKyHocPhan.idDKHP);
+          return dangKyHocPhan.idDKHP;
+        }
+      }
+    }
+    return 'No data';
   }
 
   @override
@@ -240,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        await Get.toNamed(RouteManager.readReceiptForm);
+                        await Get.toNamed(RouteManager.assignmentAndReceipt);
                       },
                       child: SizedBox(
                         width: 105,
@@ -253,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             SizedBox(
                               child: Text(
-                                'Phiếu tiếp nhận',
+                                'Phiếu tiếp nhận Phiếu giao việc',
                                 style: Style.homesubtitleStyle,
                               ),
                             ),
@@ -262,30 +281,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed(RouteManager.readAssignmentSlip);
+                      onTap: () async {
+                        String? idDKHP = await getAllDKHP(loggedInUser.uid!);
+                        await Get.toNamed(RouteManager.submitReport,
+                            arguments: idDKHP);
                       },
-                      child: SizedBox(
-                        width: 100,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icon_svg/searchaddress.svg',
-                              width: 45, // Kích thước chiều rộng
-                              height: 45, // Kích thước chiều cao
-                            ),
-                            SizedBox(
-                              child: Text(
-                                'Phiếu giao việc',
-                                style: Style.homesubtitleStyle,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(RouteManager.submitReport),
                       child: SizedBox(
                         width: 85,
                         child: Column(
@@ -298,7 +298,31 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             SizedBox(
                               child: Text(
-                                'Nộp báo cáo',
+                                'Nộp báo cáo thực tập',
+                                style: Style.homesubtitleStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RouteManager.readAssignmentSlip);
+                      },
+                      child: SizedBox(
+                        width: 68,
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icon_svg/searchaddress.svg',
+                              width: 45, // Kích thước chiều rộng
+                              height: 45, // Kích thước chiều cao
+                            ),
+                            SizedBox(
+                              width: 75,
+                              child: Text(
+                                'Kết quả học tập',
                                 style: Style.homesubtitleStyle,
                               ),
                             )
