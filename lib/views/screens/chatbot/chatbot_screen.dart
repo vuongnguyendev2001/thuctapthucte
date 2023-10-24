@@ -23,7 +23,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   final _auth = FirebaseAuth.instance;
   User? loggedInUser;
   String? messageText;
-
+  String? question1 = 'Làm thế nào để chuẩn bị cho thực tập thực tế?';
+  String? question2 = 'Điều kiện để đi thực tập là gì?';
+  String? question3 = 'Tôi có thể tìm kiếm nơi thực tập ở đâu?';
+  String? question4 = 'Khi nào bắt đầu diễn ra thực tập thực tế?';
   @override
   void initState() {
     super.initState();
@@ -57,11 +60,12 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({
-        'message': message,
-      }),
+      body: jsonEncode(
+        {
+          'message': message,
+        },
+      ),
     );
-
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       final botResponse = responseData[0]['text'];
@@ -79,30 +83,200 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         automaticallyImplyLeading: true,
         centerTitle: true,
         backgroundColor: whiteColor,
-        title: Text('Hỏi Đáp Thực Tập'),
+        title: const Text('Hỏi Đáp Thực Tập'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             StreamBuilder<QuerySnapshot>(
               stream: getChatMessagesStream(),
               builder: (context, snapshot) {
-                // if (snapshot.connectionState == ConnectionState.waiting) {
-                //   return const Center(
-                //     child: CircularProgressIndicator(),
-                //   );
-                // }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
+                if (snapshot.data!.docs.isEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          await _firestore
+                              .collection('chats')
+                              .doc(loggedInUser!.uid)
+                              .collection('room')
+                              .add({
+                            'sender': loggedInUser!.email,
+                            'text': question1,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+                          await sendMessageToRasa(question1!).then((response) {
+                            setState(() {
+                              _firestore
+                                  .collection('chats')
+                                  .doc(loggedInUser!.uid)
+                                  .collection('room')
+                                  .add({
+                                'sender': 'chatbot',
+                                'text': response,
+                                'timestamp': FieldValue.serverTimestamp(),
+                              });
+                            });
+                          });
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            color: primaryColor,
+                            child: Text(
+                              question1!,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: whiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      InkWell(
+                        onTap: () async {
+                          await _firestore
+                              .collection('chats')
+                              .doc(loggedInUser!.uid)
+                              .collection('room')
+                              .add({
+                            'sender': loggedInUser!.email,
+                            'text': question2,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+                          await sendMessageToRasa(question2!).then((response) {
+                            setState(() {
+                              _firestore
+                                  .collection('chats')
+                                  .doc(loggedInUser!.uid)
+                                  .collection('room')
+                                  .add({
+                                'sender': 'chatbot',
+                                'text': response,
+                                'timestamp': FieldValue.serverTimestamp(),
+                              });
+                            });
+                          });
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            color: primaryColor,
+                            child: Text(
+                              question2!,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: whiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      InkWell(
+                        onTap: () async {
+                          await _firestore
+                              .collection('chats')
+                              .doc(loggedInUser!.uid)
+                              .collection('room')
+                              .add({
+                            'sender': loggedInUser!.email,
+                            'text': question3,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+                          await sendMessageToRasa(question3!).then((response) {
+                            setState(() {
+                              _firestore
+                                  .collection('chats')
+                                  .doc(loggedInUser!.uid)
+                                  .collection('room')
+                                  .add({
+                                'sender': 'chatbot',
+                                'text': response,
+                                'timestamp': FieldValue.serverTimestamp(),
+                              });
+                            });
+                          });
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            color: primaryColor,
+                            child: Text(
+                              question3!,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: whiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      InkWell(
+                        onTap: () async {
+                          await _firestore
+                              .collection('chats')
+                              .doc(loggedInUser!.uid)
+                              .collection('room')
+                              .add({
+                            'sender': loggedInUser!.email,
+                            'text': question4,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+                          await sendMessageToRasa(question4!).then((response) {
+                            setState(() {
+                              _firestore
+                                  .collection('chats')
+                                  .doc(loggedInUser!.uid)
+                                  .collection('room')
+                                  .add({
+                                'sender': 'chatbot',
+                                'text': response,
+                                'timestamp': FieldValue.serverTimestamp(),
+                              });
+                            });
+                          });
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            color: primaryColor,
+                            child: Text(
+                              question4!,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: whiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                    ],
+                  );
+                }
+                print(snapshot.data!.docs);
                 final messages = snapshot.data!.docs;
                 List<Widget> messageWidgets = [];
                 for (var message in messages) {
                   final messageText = message.get('text');
                   final messageSender = message.get('sender');
                   final isMe = messageSender == loggedInUser!.email;
-
                   final messageWidget = Column(
                     crossAxisAlignment: isMe
                         ? CrossAxisAlignment.end
@@ -113,8 +287,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                         elevation: 5.0,
                         color: isMe ? primaryColor : Colors.white,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 15.0,
+                          ),
                           child: Text(
                             '$messageText',
                             style: TextStyle(
@@ -124,15 +300,15 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5.0),
+                      const SizedBox(height: 5.0),
                       Text(
                         messageSender,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12.0,
                           color: Colors.black54,
                         ),
                       ),
-                      SizedBox(height: 10.0),
+                      const SizedBox(height: 10.0),
                     ],
                   );
                   messageWidgets.add(messageWidget);
@@ -140,8 +316,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 return Expanded(
                   child: ListView(
                     reverse: true,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 3.0, vertical: 3.0),
                     children: messageWidgets,
                   ),
                 );
@@ -177,6 +353,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                       validator: (value) {
                         return null;
                       },
+                      onChanged: (newValue) {},
                       controller: message,
                       keyboardType: TextInputType.text,
                       decoration: const InputDecoration(

@@ -677,7 +677,9 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                               await FirebaseFirestore.instance
                                   .collection('DangKyHocPhan')
                                   .doc(idDKHP)
-                                  .update({'evaluation': true});
+                                  .update({
+                                'evaluation': true,
+                              });
                               await FirebaseFirestore.instance
                                   .collection('ResultsEvaluation')
                                   .doc(idDocument)

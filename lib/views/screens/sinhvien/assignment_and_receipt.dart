@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_assignment_slip.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_receipt_form_screen.dart';
 
@@ -15,8 +17,20 @@ class _AssignmentAndReceiptState extends State<AssignmentAndReceipt>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   @override
+  String? uid;
   void initState() {
+    uid = loggedInUser.uid;
+    super.initState();
+    fetchData();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  UserModel loggedInUser = UserModel();
+  Future<void> fetchData() async {
+    final updatedUser = await getUserInfo(loggedInUser);
+    setState(() {
+      loggedInUser = updatedUser;
+    });
   }
 
   @override
@@ -50,7 +64,7 @@ class _AssignmentAndReceiptState extends State<AssignmentAndReceipt>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: const <Widget>[
+              children: <Widget>[
                 ReadReceiptFormScreen(),
                 ReadAssignmentSlip(),
               ],

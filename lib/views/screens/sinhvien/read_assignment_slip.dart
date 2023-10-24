@@ -1,8 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
@@ -12,7 +14,9 @@ import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 
 class ReadAssignmentSlip extends StatefulWidget {
-  const ReadAssignmentSlip({super.key});
+  ReadAssignmentSlip({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ReadAssignmentSlip> createState() => _ReadAssignmentSlipState();
@@ -64,7 +68,8 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
           for (QueryDocumentSnapshot document in snapshot.data!.docs) {
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             AssignmentSlip assignmentSlipForm = AssignmentSlip.fromMap(data);
-            if (assignmentSlipForm.mssvController.text == loggedInUser.MSSV) {
+            if (assignmentSlipForm.mssvController.text ==
+                loggedInUser.MSSV) {
               assignmentSlipFormList.add(assignmentSlipForm);
             }
           }

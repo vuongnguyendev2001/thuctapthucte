@@ -307,8 +307,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed(RouteManager.readAssignmentSlip);
+                      onTap: ()async {
+                         String? idDKHP = await getAllDKHP(loggedInUser.uid!);
+                        await Get.toNamed(RouteManager.learningOutcomes, arguments: idDKHP);
                       },
                       child: SizedBox(
                         width: 68,

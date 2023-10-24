@@ -408,7 +408,13 @@ class _SubmitReportState extends State<SubmitReport> {
                                                   fileNamePdf!,
                                                 ).toMap()
                                               },
-                                            );
+                                            ).then((_) {
+                                              {
+                                                // In ID của tài liệu sau khi đã cập nhật
+                                                Loading().isShowSuccess(
+                                                    'Nộp thành công');
+                                              }
+                                            });
                                           }
                                         } catch (e) {
                                           print(e);

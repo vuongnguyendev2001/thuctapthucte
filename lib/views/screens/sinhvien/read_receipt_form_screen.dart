@@ -1,8 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
@@ -14,7 +16,9 @@ import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 
 class ReadReceiptFormScreen extends StatefulWidget {
-  const ReadReceiptFormScreen({super.key});
+  ReadReceiptFormScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ReadReceiptFormScreen> createState() => _ReadReceiptFormScreenState();
@@ -28,7 +32,6 @@ class _ReadReceiptFormScreenState extends State<ReadReceiptFormScreen> {
     fetchData();
   }
 
-  UserModel loggedInUser = UserModel();
   Future<void> fetchData() async {
     final updatedUser = await getUserInfo(loggedInUser);
     setState(() {
@@ -36,22 +39,12 @@ class _ReadReceiptFormScreenState extends State<ReadReceiptFormScreen> {
     });
   }
 
-  String _userNameCanBo = '';
-  String _phoneNumberCanBoStudent = '';
-  String _phoneNumberCompany = '';
   final Stream<QuerySnapshot> _receiptFormFirestore =
       FirebaseFirestore.instance.collection('ReceiptForm').snapshots();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   title: Text('Phiếu tiếp nhận sinh viên'.toUpperCase(),
-      //       style: Style.homeStyle),
-      //   // centerTitle: true,
-      //   automaticallyImplyLeading: true,
-      // ),
       body: StreamBuilder<QuerySnapshot>(
           stream: _receiptFormFirestore,
           builder:
@@ -79,11 +72,9 @@ class _ReadReceiptFormScreenState extends State<ReadReceiptFormScreen> {
               receiptFormList.add(receiptForm);
             }
             List<ReceiptForm> receiptFormForStudentList = [];
-
             for (ReceiptForm receiptFormForStudent in receiptFormList) {
               if (receiptFormForStudent.userStudent!.uid == loggedInUser.uid) {
                 receiptFormForStudentList.add(receiptFormForStudent);
-                // print(receiptFormForStudent.userStudent!.uid);
               }
             }
             if (receiptFormForStudentList.isNotEmpty) {

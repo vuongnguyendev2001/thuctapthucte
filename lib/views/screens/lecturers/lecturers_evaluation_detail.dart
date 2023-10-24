@@ -28,18 +28,6 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
 
   String idDocument = '';
   String? sumScoreCanBo = ''; // Make sumScoreCanBo nullable
-
-  void calculateSumCaculator() {
-    if (sumScoreCanBo != null) {
-      double sumScoreCanBoString = double.tryParse(sumScoreCanBo!) ?? 0.0;
-      double sumCaculator = (sumScoreCanBoString / 100) * 5;
-      // Now you can use sumCaculator
-      print('sumCaculator: $sumCaculator');
-    } else {
-      print('sumScoreCanBo is null');
-    }
-  }
-
   sumScoreAndIdDocParameters? scoreAndIdDoc;
   TextEditingController correctFormat = TextEditingController();
   TextEditingController wellPresented = TextEditingController();
@@ -152,8 +140,20 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                     text: lecturersEvaluation.user.userName);
                 TextEditingController mssvStudent =
                     TextEditingController(text: lecturersEvaluation.user.MSSV);
-                TextEditingController reportName = TextEditingController(
-                    text: lecturersEvaluation.submitReport!.titleReport);
+                TextEditingController reportName =
+                    TextEditingController(text: 'Sinh viên chưa nộp báo cáo');
+
+                companyValuation = TextEditingController(text: 'Chưa đánh giá');
+                if (lecturersEvaluation.submitReport!.titleReport != null) {
+                  reportName = TextEditingController(
+                      text: lecturersEvaluation.submitReport!.titleReport);
+                }
+                if (sumScoreCanBo != null) {
+                  double sumScoreCanBoString = double.parse(sumScoreCanBo!);
+                  sumCaculator = (sumScoreCanBoString / 100) * 5;
+                  companyValuation =
+                      TextEditingController(text: sumCaculator.toString());
+                }
                 if (lecturersEvaluation.lecturersEvaluation != null) {
                   correctFormat = TextEditingController(
                       text: lecturersEvaluation
@@ -167,10 +167,8 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                   suitableMethod = TextEditingController(
                       text: lecturersEvaluation
                           .lecturersEvaluation!.suitableMethod);
-                  double sumScoreCanBoString = double.parse(sumScoreCanBo!);
-                  double sumCaculator = (sumScoreCanBoString / 100) * 5;
-                  companyValuation =
-                      TextEditingController(text: sumCaculator.toString());
+                  reportName = TextEditingController(
+                      text: lecturersEvaluation.submitReport!.titleReport);
                   understandingAboutInternLocation = TextEditingController(
                       text: lecturersEvaluation.lecturersEvaluation!
                           .understandingAboutInternLocation);
@@ -225,39 +223,47 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                           icon: null,
                         ),
                         const SizedBox(height: 10),
-                        InkWell(
-                          onTap: () {
-                            PdfViewerArguments arguments = PdfViewerArguments(
-                              lecturersEvaluation.submitReport!.urlReport,
-                              lecturersEvaluation.submitReport!.titleReport,
-                            );
-                            Get.toNamed(RouteManager.pdfViewer,
-                                arguments: arguments);
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              width: Get.width * 0.5,
-                              height: 40,
-                              color: primaryColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Xem báo cáo',
-                                    style: Style.titleStyle.copyWith(
-                                        color: backgroundLite, fontSize: 14),
+                        lecturersEvaluation.submitReport != null
+                            ? InkWell(
+                                onTap: () {
+                                  PdfViewerArguments arguments =
+                                      PdfViewerArguments(
+                                    lecturersEvaluation.submitReport!.urlReport,
+                                    lecturersEvaluation
+                                        .submitReport!.titleReport,
+                                  );
+                                  Get.toNamed(
+                                    RouteManager.pdfViewer,
+                                    arguments: arguments,
+                                  );
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    width: Get.width * 0.5,
+                                    height: 40,
+                                    color: primaryColor,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Xem báo cáo',
+                                          style: Style.titleStyle.copyWith(
+                                              color: backgroundLite,
+                                              fontSize: 14),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        const Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: backgroundLite,
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  const Icon(
-                                    Icons.remove_red_eye_outlined,
-                                    color: backgroundLite,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                                ),
+                              )
+                            : const SizedBox(),
                         const SizedBox(height: 10),
                         Table(
                           border: TableBorder.all(),

@@ -318,7 +318,7 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                                       sumScoreAndIdDocParameters(
                                           sumScoreCanBo!,
                                           dkhpFromMSSVList[indexFromMSSV]
-                                             .idDKHP!);
+                                              .idDKHP!);
                                   Get.toNamed(
                                     RouteManager.lecturersEvaluationDetail,
                                     arguments: sumScoreAndIdDocs,

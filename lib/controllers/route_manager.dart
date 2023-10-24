@@ -29,6 +29,7 @@ import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/course_registration.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/learning_outcomes.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_assignment_slip.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_information.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
@@ -88,8 +89,14 @@ class RouteManager {
   static const String lecturersEvaluation = "/lecturersEvaluation";
   static const String lecturersEvaluationDetail = "/lecturersEvaluationDetail";
   static const String assignmentAndReceipt = '/assignmentAndReceipt';
+  static const String learningOutcomes = '/learningOutcomes';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case learningOutcomes:
+        return MaterialPageRoute(
+          builder: (_) => const LearningOutcomes(),
+          settings: settings,
+        );
       case assignmentAndReceipt:
         return MaterialPageRoute(
           builder: (_) => const AssignmentAndReceipt(),
@@ -150,21 +157,13 @@ class RouteManager {
           builder: (_) => const ReadAllForm(),
           settings: settings,
         );
-      case readAssignmentSlip:
-        return MaterialPageRoute(
-          builder: (_) => const ReadAssignmentSlip(),
-          settings: settings,
-        );
+
       case assignmentSlip:
         return MaterialPageRoute(
           builder: (_) => const AssignmentSlipScreen(),
           settings: settings,
         );
-      case readReceiptForm:
-        return MaterialPageRoute(
-          builder: (_) => const ReadReceiptFormScreen(),
-          settings: settings,
-        );
+
       case svDaDKHP:
         return MaterialPageRoute(
           builder: (_) => const SVDADKHP(),
