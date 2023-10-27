@@ -57,7 +57,8 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
             return const Center(child: Text('Something went wrong'));
           }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              loggedInUser.MSSV == null) {
             return const Center(
               child: CircularProgressIndicator(
                 color: primaryColor,
@@ -68,8 +69,7 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
           for (QueryDocumentSnapshot document in snapshot.data!.docs) {
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             AssignmentSlip assignmentSlipForm = AssignmentSlip.fromMap(data);
-            if (assignmentSlipForm.mssvController.text ==
-                loggedInUser.MSSV) {
+            if (assignmentSlipForm.mssvController.text == loggedInUser.MSSV) {
               assignmentSlipFormList.add(assignmentSlipForm);
             }
           }

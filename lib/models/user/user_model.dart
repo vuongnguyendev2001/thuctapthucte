@@ -15,6 +15,7 @@ class UserModel {
   String? MSCB;
   String? phoneNumberCompany;
   String? phoneNumberCanBo;
+  String? fcmToken;
   // CourseRegistration? courseRegistration;
   UserModel({
     this.idCompany,
@@ -32,6 +33,7 @@ class UserModel {
     this.phoneNumberCanBo,
     this.phoneNumberCompany,
     // this.courseRegistration,
+    this.fcmToken
   });
   factory UserModel.fromMap(map) {
     return UserModel(
@@ -49,6 +51,7 @@ class UserModel {
       major: map['major'],
       phoneNumberCanBo: map['phoneNumberCanBo'],
       phoneNumberCompany: map['phoneNumberCompany'],
+      fcmToken: map['fcmToken']
       // courseRegistration: map['courseRegistration'] != null
       //     ? CourseRegistration.fromMap(map['courseRegistration'])
       //     : null,
@@ -70,6 +73,7 @@ class UserModel {
       'major': major,
       'phoneNumberCanBo': phoneNumberCanBo,
       'phoneNumberCompany': phoneNumberCompany,
+      'fcmToken': fcmToken
       // 'courseRegistration': courseRegistration!.toMap(),
     };
   }

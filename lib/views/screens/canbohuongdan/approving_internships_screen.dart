@@ -12,11 +12,13 @@ import 'package:trungtamgiasu/constants/ui_helper.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
+import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/receipt_form.dart';
 import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/user/intership_appycation_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
@@ -149,446 +151,476 @@ class _ApprovingInternshipsScreenState
           return const Text('Something went wrong');
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            loggedInUser.uid == null) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: primaryColor,
+            ),
+          );
         }
-        List<RegistrationModel> internshipApplications = [];
-        for (QueryDocumentSnapshot document in snapshot.data!.docs) {
-          String documentId = document.id;
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          RegistrationModel internshipApplication =
-              RegistrationModel.fromMap(data);
-          internshipApplication.id = documentId;
-          internshipApplications.add(internshipApplication);
-        }
+
         Map<String, dynamic> dataToUpdate = {
           'status': 'Đã duyệt',
         };
-
-        return ListView.builder(
-          itemCount: internshipApplications.length,
-          itemBuilder: ((context, index) {
-            if (internshipApplications[index].Company.id ==
-                loggedInUser.idCompany) {
-              return Column(
-                children: [
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      showModalBottomSheet<void>(
-                        // isScrollControlled: true,
-                        enableDrag: false,
-                        backgroundColor: background,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SizedBox(
-                            height: 220,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  alignment: Alignment.topLeft,
-                                  height: Get.height,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Center(
-                                        child: Text(
-                                            'Hồ sơ ứng tuyển'.toUpperCase(),
-                                            style: Style.hometitleStyle
-                                                .copyWith(color: primaryColor)),
-                                      ),
-                                      Text(
-                                        'Gmail: ${internshipApplications[index].user.email}',
-                                      ),
-                                      Text(
-                                        'Họ và tên: ${internshipApplications[index].user.userName}',
-                                      ),
-                                      Text(
-                                        'Số điện thoại: ${internshipApplications[index].user.phoneNumber}',
-                                      ),
-                                      Text(
-                                        'Địa chỉ: ${internshipApplications[index].user.address}',
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          PdfViewerArguments arguments =
-                                              PdfViewerArguments(
-                                            internshipApplications[index].urlCV,
-                                            internshipApplications[index]
-                                                .nameCV,
-                                          );
-                                          Get.toNamed(RouteManager.pdfViewer,
-                                              arguments: arguments);
-                                        },
-                                        // child: ClipRRect(
-                                        //   borderRadius: BorderRadius.circular(radius),
-                                        //   child: Container(
-                                        //     height: 150,
-                                        //     width: 150,
-                                        //     color: whiteColor,
-                                        //     child: Column(
-                                        //       children: [
-                                        //         Expanded(
-                                        //           child: Image.network(
-                                        //               'https://play-lh.googleusercontent.com/9XKD5S7rwQ6FiPXSyp9SzLXfIue88ntf9sJ9K250IuHTL7pmn2-ZB0sngAX4A2Bw4w=w240-h480-rw'),
-                                        //         ),
-                                        //         Text(
-                                        //           internshipApplications[index]
-                                        //               .nameCV,
-                                        //           maxLines: 1,
-                                        //           overflow: TextOverflow.ellipsis,
-                                        //         ),
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        child: Row(
-                                          children: [
-                                            const Text('CV: '),
-                                            Container(
-                                              padding: const EdgeInsets.all(5),
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(7),
-                                                color: primaryColor,
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.remove_red_eye,
-                                                    color: whiteColor,
-                                                  ),
-                                                  Text(
-                                                    ' Xem CV',
-                                                    style: TextStyle(
-                                                        color: whiteColor),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+        List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+        List<Widget> internshipApplications = [];
+        int index = 1;
+        documents.where((document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          RegistrationModel internshipApplication =
+              RegistrationModel.fromMap(data);
+          return internshipApplication.Company.id == loggedInUser.idCompany;
+        }).forEach((document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          RegistrationModel internshipApplication =
+              RegistrationModel.fromMap(data);
+          Widget item = Column(
+            children: [
+              const SizedBox(height: 10),
+              InkWell(
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    // isScrollControlled: true,
+                    enableDrag: false,
+                    backgroundColor: background,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        height: 250,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                child: Container(
+                              padding: const EdgeInsets.all(10),
+                              alignment: Alignment.topLeft,
+                              height: Get.height,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Text('Hồ sơ ứng tuyển'.toUpperCase(),
+                                        style: Style.hometitleStyle
+                                            .copyWith(color: primaryColor)),
                                   ),
-                                )),
-                                Container(
-                                  width: Get.width,
-                                  height: 55,
-                                  color: greyFontColor,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      SizedBox(
-                                        height: 50,
-                                        width: Get.width * 0.7,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  try {
-                                                    UIHelper
-                                                        .showCupertinoDialog(
-                                                      onComfirm: () async {
-                                                        
-                                                        await FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'registrations')
-                                                            .doc(
-                                                                internshipApplications[
-                                                                        index]
-                                                                    .id)
-                                                            .update(
-                                                              dataToUpdate,
-                                                            );
-                                                            String? idDKHP =
-                                                            await getAllDKHP(
-                                                                internshipApplications[
-                                                                        index]
-                                                                    .user
-                                                                    .uid!);
-
-                                                        await FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'DangKyHocPhan')
-                                                            .doc(idDKHP)
-                                                            .update({
-                                                          'locationIntern': true
-                                                        });
-                                                        Get.back();
-                                                        Get.back();
-                                                      },
-                                                      titleConfirm: 'Chấp nhận',
-                                                      titleClose: 'Đóng',
-                                                      isShowClose: true,
-                                                      title: 'Thông báo',
-                                                      message:
-                                                          'Đồng ý nhận sinh viên thực tập',
-                                                    );
-
-                                                    // UIHelper.showFlushbar(
-                                                    //     message:
-                                                    //         'Đăng ký thành công !');
-                                                  } catch (e) {
-                                                    print(e);
-                                                  } finally {
-                                                    await Loading()
-                                                        .isOffShowLoading();
-                                                  }
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  minimumSize:
-                                                      Size(Get.width, 44),
-                                                  elevation: 0.0,
-                                                  backgroundColor: primaryColor,
-                                                  side: const BorderSide(
-                                                    color: Colors.grey,
-                                                    width: 1.0,
-                                                  ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Chấp nhận',
-                                                  // 'login'.tr.capitalize,
-                                                  style: Style.titleStyle
-                                                      .copyWith(
-                                                          color: backgroundLite,
-                                                          fontSize: 16),
-                                                ),
+                                  Text(
+                                    'Vị trí ứng tuyển: ${internshipApplication.positionApply}',
+                                  ),
+                                  Text(
+                                    'Gmail: ${internshipApplication.user.email}',
+                                  ),
+                                  Text(
+                                    'Họ và tên: ${internshipApplication.user.userName}',
+                                  ),
+                                  Text(
+                                    'Số điện thoại: ${internshipApplication.user.phoneNumber}',
+                                  ),
+                                  Text(
+                                    'Địa chỉ: ${internshipApplication.user.address}',
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      PdfViewerArguments arguments =
+                                          PdfViewerArguments(
+                                        internshipApplication.urlCV,
+                                        internshipApplication.nameCV,
+                                      );
+                                      Get.toNamed(RouteManager.pdfViewer,
+                                          arguments: arguments);
+                                    },
+                                    // child: ClipRRect(
+                                    //   borderRadius: BorderRadius.circular(radius),
+                                    //   child: Container(
+                                    //     height: 150,
+                                    //     width: 150,
+                                    //     color: whiteColor,
+                                    //     child: Column(
+                                    //       children: [
+                                    //         Expanded(
+                                    //           child: Image.network(
+                                    //               'https://play-lh.googleusercontent.com/9XKD5S7rwQ6FiPXSyp9SzLXfIue88ntf9sJ9K250IuHTL7pmn2-ZB0sngAX4A2Bw4w=w240-h480-rw'),
+                                    //         ),
+                                    //         Text(
+                                    //           internshipApplication
+                                    //               .nameCV,
+                                    //           maxLines: 1,
+                                    //           overflow: TextOverflow.ellipsis,
+                                    //         ),
+                                    //       ],
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    child: Row(
+                                      children: [
+                                        const Text('CV: '),
+                                        Container(
+                                          padding: const EdgeInsets.all(5),
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            color: primaryColor,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.remove_red_eye,
+                                                color: whiteColor,
                                               ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  try {
+                                              Text(
+                                                ' Xem CV',
+                                                style: TextStyle(
+                                                    color: whiteColor),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                            Container(
+                              width: Get.width,
+                              height: 55,
+                              color: greyFontColor,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                    width: Get.width * 0.7,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              try {
+                                                UIHelper.showCupertinoDialog(
+                                                  onComfirm: () async {
+                                                    // Notifications
+                                                    //     notification =
+                                                    //     Notifications(
+                                                    //   title:
+                                                    //       'Trúng tuyển thực tập',
+                                                    //   body:
+                                                    //       'Bạn đã được duyệt thực tập tại công ty ${internshipApplication.Company.name}',
+                                                    //   timestamp:
+                                                    //       Timestamp.now(),
+                                                    //   emailUser:
+                                                    //       internshipApplications[
+                                                    //               index]
+                                                    //           .user
+                                                    //           .email!,
+                                                    // );
+                                                    // await FirebaseApi()
+                                                    //     .sendFirebaseCloudMessage(
+                                                    //   notification.title,
+                                                    //   notification.body,
+                                                    //   internshipApplications[
+                                                    //           index]
+                                                    //       .user
+                                                    //       .fcmToken!,
+                                                    // );
+                                                    // await FirebaseFirestore
+                                                    //     .instance
+                                                    //     .collection(
+                                                    //         'notifications')
+                                                    //     .add(
+                                                    //       notification
+                                                    //           .toJson(),
+                                                    //     );
                                                     await FirebaseFirestore
                                                         .instance
                                                         .collection(
                                                             'registrations')
                                                         .doc(
-                                                            internshipApplications[
-                                                                    index]
+                                                            internshipApplication
                                                                 .id)
+                                                        .update(
+                                                          dataToUpdate,
+                                                        );
+                                                    String? idDKHP =
+                                                        await getAllDKHP(
+                                                            internshipApplication
+                                                                .user.uid!);
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection(
+                                                            'DangKyHocPhan')
+                                                        .doc(idDKHP)
                                                         .update({
-                                                      'status': 'Từ chối'
+                                                      'locationIntern': true
                                                     });
                                                     Get.back();
-                                                  } catch (e) {
-                                                    print(e);
-                                                  } finally {
-                                                    await Loading()
-                                                        .isOffShowLoading();
-                                                  }
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  minimumSize:
-                                                      Size(Get.width, 44),
-                                                  elevation: 0.0,
-                                                  backgroundColor:
-                                                      primaryOpacity,
-                                                  side: const BorderSide(
-                                                    color: Colors.grey,
-                                                    width: 1.0,
-                                                  ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Từ chối',
-                                                  // 'login'.tr.capitalize,
-                                                  style: Style.titleStyle
-                                                      .copyWith(
-                                                          color: backgroundLite,
-                                                          fontSize: 16),
-                                                ),
+                                                    Get.back();
+                                                  },
+                                                  titleConfirm: 'Chấp nhận',
+                                                  titleClose: 'Đóng',
+                                                  isShowClose: true,
+                                                  title: 'Thông báo',
+                                                  message:
+                                                      'Đồng ý nhận sinh viên thực tập',
+                                                );
+
+                                                // UIHelper.showFlushbar(
+                                                //     message:
+                                                //         'Đăng ký thành công !');
+                                              } catch (e) {
+                                                print(e);
+                                              } finally {
+                                                await Loading()
+                                                    .isOffShowLoading();
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              minimumSize: Size(Get.width, 44),
+                                              elevation: 0.0,
+                                              backgroundColor: primaryColor,
+                                              side: const BorderSide(
+                                                color: Colors.grey,
+                                                width: 1.0,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () => Navigator.pop(context),
-                                        child: CircleAvatar(
-                                          child: const Icon(
-                                            Icons.close,
-                                            size: 20,
+                                            child: Text(
+                                              'Chấp nhận',
+                                              // 'login'.tr.capitalize,
+                                              style: Style.titleStyle.copyWith(
+                                                  color: backgroundLite,
+                                                  fontSize: 16),
+                                            ),
                                           ),
-                                          radius: 20,
-                                          backgroundColor: whiteColor,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                      color: whiteColor,
-                      child: ListTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Gmail: ${internshipApplications[index].user.email}',
-                            ),
-                            Text(
-                              'Họ và tên: ${internshipApplications[index].user.userName}',
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                text: 'Trạng thái: ',
-                                style: Style.subtitleStyle,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: internshipApplications[index].status,
-                                    style:
-                                        internshipApplications[index].status ==
-                                                'Đã duyệt'
-                                            ? Style.subtitleStyle.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: primaryColor,
-                                              )
-                                            : Style.subtitleStyle.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: primaryOpacity,
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              try {
+                                                await FirebaseFirestore.instance
+                                                    .collection('registrations')
+                                                    .doc(internshipApplication
+                                                        .id)
+                                                    .update(
+                                                        {'status': 'Từ chối'});
+                                                Get.back();
+                                              } catch (e) {
+                                                print(e);
+                                              } finally {
+                                                await Loading()
+                                                    .isOffShowLoading();
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              minimumSize: Size(Get.width, 44),
+                                              elevation: 0.0,
+                                              backgroundColor: primaryOpacity,
+                                              side: const BorderSide(
+                                                color: Colors.grey,
+                                                width: 1.0,
                                               ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Từ chối',
+                                              // 'login'.tr.capitalize,
+                                              style: Style.titleStyle.copyWith(
+                                                  color: backgroundLite,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () => Navigator.pop(context),
+                                    child: CircleAvatar(
+                                      child: const Icon(
+                                        Icons.close,
+                                        size: 20,
+                                      ),
+                                      radius: 20,
+                                      backgroundColor: whiteColor,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            if (internshipApplications[index].status ==
-                                'Đã duyệt')
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () async {
-                                        bool checkForm =
-                                            await getAllReceiptForm(
-                                                internshipApplications[index]
-                                                    .user
-                                                    .uid!,
-                                                internshipApplications[index]
-                                                    .Company
-                                                    .id) as bool;
-
-                                        if (checkForm == false) {
-                                          RegisterViewerArguments arguments =
-                                              RegisterViewerArguments(
-                                            internshipApplications[index].user,
-                                            internshipApplications[index]
-                                                .Company,
-                                          );
-                                          await Get.toNamed(
-                                            RouteManager.receiptFormScreen,
-                                            arguments: arguments,
-                                          );
-                                        } else {
-                                          await Loading().isshowError(
-                                              'Bạn đã lập phiếu cho sinh viên rồi');
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(5),
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                          color: primaryColor,
-                                        ),
-                                        child: Text(
-                                          'Lập phiếu tiếp nhận',
-                                          style: TextStyle(color: whiteColor),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () async {
-                                        bool checkForm =
-                                            await getAllAssignmentSlipForm(
-                                                internshipApplications[index]
-                                                    .user
-                                                    .MSSV!) as bool;
-                                        if (checkForm == false) {
-                                          RegisterViewerArguments arguments =
-                                              RegisterViewerArguments(
-                                            internshipApplications[index].user,
-                                            internshipApplications[index]
-                                                .Company,
-                                          );
-                                          await Get.toNamed(
-                                            RouteManager.assignmentSlip,
-                                            arguments: arguments,
-                                          );
-                                        } else {
-                                          await Loading().isshowError(
-                                              'Bạn đã lập phiếu cho sinh viên rồi');
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(5),
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                          color: primaryColor,
-                                        ),
-                                        child: Text(
-                                          'Lập phiếu giao việc',
-                                          style: TextStyle(color: whiteColor),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            else
-                              const SizedBox(),
-                            Text(
-                              'Ngày đăng ký: ${CurrencyFormatter().formattedDatebook(internshipApplications[index].timestamp)}',
-                              style: Style.subtitleStyle,
-                            ),
                           ],
                         ),
-                        trailing: const Icon(
-                          Icons.arrow_right_outlined,
-                          color: primaryColor,
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  color: whiteColor,
+                  child: ListTile(
+                    leading: Text(
+                      '$index',
+                      style: Style.subtitleStyle,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Vị trí ứng tuyển: ${internshipApplication.positionApply}',
                         ),
-                      ),
+                        Text(
+                          'Họ và tên: ${internshipApplication.user.userName}',
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: 'Trạng thái: ',
+                            style: Style.subtitleStyle,
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: internshipApplication.status,
+                                style:
+                                    internshipApplication.status == 'Đã duyệt'
+                                        ? Style.subtitleStyle.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryColor,
+                                          )
+                                        : Style.subtitleStyle.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryOpacity,
+                                          ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        if (internshipApplication.status == 'Đã duyệt')
+                          Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    bool checkForm = await getAllReceiptForm(
+                                            internshipApplication.user.uid!,
+                                            internshipApplication.Company.id)
+                                        as bool;
+
+                                    if (checkForm == false) {
+                                      RegisterViewerArguments arguments =
+                                          RegisterViewerArguments(
+                                        internshipApplication.user,
+                                        internshipApplication.Company,
+                                      );
+                                      await Get.toNamed(
+                                        RouteManager.receiptFormScreen,
+                                        arguments: arguments,
+                                      );
+                                    } else {
+                                      await Loading().isshowError(
+                                          'Bạn đã lập phiếu cho sinh viên rồi');
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      color: primaryColor,
+                                    ),
+                                    child: Text(
+                                      'Lập phiếu tiếp nhận',
+                                      style: TextStyle(
+                                        color: whiteColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    bool checkForm =
+                                        await getAllAssignmentSlipForm(
+                                            internshipApplication
+                                                .user.MSSV!) as bool;
+                                    if (checkForm == false) {
+                                      RegisterViewerArguments arguments =
+                                          RegisterViewerArguments(
+                                        internshipApplication.user,
+                                        internshipApplication.Company,
+                                      );
+                                      await Get.toNamed(
+                                        RouteManager.assignmentSlip,
+                                        arguments: arguments,
+                                      );
+                                    } else {
+                                      await Loading().isshowError(
+                                          'Bạn đã lập phiếu cho sinh viên rồi');
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      color: primaryColor,
+                                    ),
+                                    child: Text(
+                                      'Lập phiếu giao việc',
+                                      style: TextStyle(
+                                        color: whiteColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          const SizedBox(),
+                        Text(
+                          'Ngày đăng ký: ${CurrencyFormatter().formattedDatebook(internshipApplication.timestamp)}',
+                          style: Style.subtitleStyle,
+                        ),
+                      ],
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_right_outlined,
+                      color: primaryColor,
                     ),
                   ),
-                ],
-              );
-            } else {
-              return const SizedBox();
-            }
-          }),
-        );
+                ),
+              ),
+            ],
+          );
+          index++;
+          internshipApplications.add(item);
+        });
+        if (internshipApplications.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Chưa có sinh viên đăng ký',
+                style: Style.titleStyle,
+              ),
+            ),
+          );
+        } else {
+          return ListView(
+            children: internshipApplications,
+          );
+        }
       },
     );
   }

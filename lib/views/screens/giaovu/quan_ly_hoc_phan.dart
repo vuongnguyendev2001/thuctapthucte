@@ -189,7 +189,6 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
                       itemBuilder: (context, index) {
                         CourseRegistration courseRegistration =
                             courseRegistrations[index];
-
                         // Kiểm tra xem học kỳ và năm học có trùng với học kỳ và năm học đã chọn không
                         if (courseRegistration.semester == selectedSemester &&
                             courseRegistration.academicYear ==
@@ -274,7 +273,6 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
                                   List<QueryDocumentSnapshot> documents =
                                       snapshot.data!.docs;
                                   List<HocPhan> AllhocPhan = [];
-
                                   for (QueryDocumentSnapshot doc in documents) {
                                     String idDocument = doc.id;
                                     Map<String, dynamic> jsonData =

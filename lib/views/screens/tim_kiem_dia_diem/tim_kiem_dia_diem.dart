@@ -16,12 +16,14 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/constants/ui_helper.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
+import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 
 class TimKiemDiaDiem extends StatefulWidget {
   const TimKiemDiaDiem({super.key});
@@ -93,17 +95,6 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
       });
       print("pdf uploaded successfully");
     }
-  }
-
-  void add_register(UserModel urserModel, CompanyIntern company) async {
-    RegistrationModel data = RegistrationModel(
-        nameCV: fileNamePdf ?? '',
-        urlCV: pdfUrl ?? '',
-        Company: company,
-        user: urserModel,
-        status: 'Đang duyệt',
-        timestamp: Timestamp.now());
-    await _firebaseFirestore.collection("registrations").add(data.toMap());
   }
 
   Future<String?> get_regiter(String? idRegister) async {
@@ -261,6 +252,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                       CompanyIntern company = CompanyIntern.fromMap(data);
                       companies.add(company);
                     }
+
                     // Hiển thị danh sách công ty bằng ListView.builder
                     return ListView.builder(
                       itemCount: companies.length,
@@ -755,8 +747,25 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
     }
   }
 
+  Future<UserModel?> getUserForCompany(CompanyIntern company) async {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(company.idUserCanBo)
+        .get();
+    if (userSnapshot.exists) {
+      UserModel user =
+          UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
+      print(user.userName);
+      return user;
+    } else {
+      print('null');
+      return null; // Không tìm thấy người dùng tương ứng.
+    }
+  }
+
   Future<void> add_register(UserModel urserModel, CompanyIntern company) async {
     RegistrationModel registrationModel = RegistrationModel(
+        positionApply: positionApply.text,
         nameCV: fileNamePdf ?? '',
         urlCV: pdfUrl ?? '',
         Company: company,
@@ -783,181 +792,226 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
     Get.back();
   }
 
+  TextEditingController positionApply = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        color: background,
-        height: 200,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('Hồ sơ của bạn'.toUpperCase(),
-                style: Style.hometitleStyle.copyWith(color: primaryColor)),
-            InkWell(
-              onTap: () async {
-                try {
-                  await Loading().isShowLoading();
-                  await pickFile();
-                } catch (e) {
-                  print(e);
-                } finally {
-                  await Loading().isOffShowLoading();
-                }
-              },
-              child: Container(
-                color: textBoxLite,
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.all(7),
-                          color: whiteColor,
-                          child: Text(
-                            fileNamePdf!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: CircleAvatar(
-                        child: Icon(
-                          Icons.upload_file,
-                          color: whiteColor,
-                        ),
-                        backgroundColor: primaryColor,
-                      ),
-                    )
-                  ],
+    return Scaffold(
+      backgroundColor: background,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Container(
+            color: background,
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('Hồ sơ của bạn'.toUpperCase(),
+                    style: Style.hometitleStyle.copyWith(color: primaryColor)),
+                TextFormReceipt(
+                  lableText: 'Vị trí ứng tuyển', controller: positionApply,
+                  icon: null,
+
+                  // child: Text(
+                  //   fileNamePdf!,
+                  //   maxLines: 1,
+                  //   overflow: TextOverflow.ellipsis,
+                  // ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            pdfUrl != null
-                ? InkWell(
-                    onTap: () {
-                      PdfViewerArguments arguments = PdfViewerArguments(
-                        pdfUrl!,
-                        fileNamePdf!,
-                      );
-                      Get.toNamed(RouteManager.pdfViewer, arguments: arguments);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      width: 115,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: primaryColor,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.remove_red_eye,
-                            color: whiteColor,
-                          ),
-                          Text(
-                            ' Xem lại CV',
-                            style: TextStyle(color: whiteColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                : const SizedBox(),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: Get.width,
-              height: 55,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: Get.width * 0.7,
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () async {
+                    try {
+                      await Loading().isShowLoading();
+                      await pickFile();
+                    } catch (e) {
+                      print(e);
+                    } finally {
+                      await Loading().isOffShowLoading();
+                    }
+                  },
+                  child: Container(
+                    color: textBoxLite,
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       children: [
                         Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              try {
-                                await Loading().isShowLoading();
-                                if (pdfUrl == null) {
-                                  UIHelper.showFlushbar(
-                                    message: 'Vui lòng tải lên CV để ứng tuyển',
-                                    snackBarType: SnackBarType.error,
-                                  );
-                                } else {
-                                  await add_register(
-                                      loggedInUser, companyIntern!);
-                                  // await FirebaseApi()
-                                  //     .sendFirebaseCloudMessage();
-                                }
-                              } catch (e) {
-                                print(e);
-                              } finally {
-                                await Loading().isOffShowLoading();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(Get.width, 44),
-                              elevation: 0.0,
-                              backgroundColor: primaryColor,
-                              side: const BorderSide(
-                                color: Colors.grey,
-                                width: 1.0,
+                          flex: 5,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              padding: const EdgeInsets.all(7),
+                              color: whiteColor,
+                              child: Text(
+                                fileNamePdf!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.check_circle_outline,
-                                  color: backgroundLite,
-                                ),
-                                const SizedBox(
-                                  width: 3,
-                                ),
-                                Text(
-                                  'Ứng tuyển',
-                                  // 'login'.tr.capitalize,
-                                  style: Style.titleStyle.copyWith(
-                                      color: backgroundLite, fontSize: 16),
-                                ),
-                              ],
                             ),
                           ),
                         ),
+                        Expanded(
+                          child: CircleAvatar(
+                            child: Icon(
+                              Icons.upload_file,
+                              color: whiteColor,
+                            ),
+                            backgroundColor: primaryColor,
+                          ),
+                        )
                       ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: CircleAvatar(
-                      child: const Icon(
-                        Icons.close,
-                        size: 20,
+                ),
+                const SizedBox(height: 10),
+                pdfUrl != null
+                    ? InkWell(
+                        onTap: () {
+                          PdfViewerArguments arguments = PdfViewerArguments(
+                            pdfUrl!,
+                            fileNamePdf!,
+                          );
+                          Get.toNamed(RouteManager.pdfViewer,
+                              arguments: arguments);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          width: 115,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            color: primaryColor,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.remove_red_eye,
+                                color: whiteColor,
+                              ),
+                              Text(
+                                ' Xem lại CV',
+                                style: TextStyle(color: whiteColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: Get.width,
+                  height: 55,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        width: Get.width * 0.7,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  try {
+                                    await Loading().isShowLoading();
+                                    if (positionApply.text == '') {
+                                      UIHelper.showFlushbar(
+                                        message:
+                                            'Vui lòng điền vị trí ứng tuyển !',
+                                        snackBarType: SnackBarType.error,
+                                      );
+                                    } else if (pdfUrl == null) {
+                                      UIHelper.showFlushbar(
+                                        message:
+                                            'Vui lòng tải lên CV để ứng tuyển !',
+                                        snackBarType: SnackBarType.error,
+                                      );
+                                    } else {
+                                      // UserModel? userCanBo =
+                                      //     await getUserForCompany(companyIntern!);
+                                      // Notifications notifications = Notifications(
+                                      //   title: 'Bạn có yêu cầu ứng tuyển mới',
+                                      //   body:
+                                      //       '${loggedInUser.userName} đã ứng tuyển !. Kiểm tra ở chức năng "Xét duyệt, Lập phiếu"',
+                                      //   timestamp: Timestamp.now(),
+                                      //   emailUser: userCanBo!.email!,
+                                      // );
+                                      // await FirebaseFirestore.instance
+                                      //     .collection('notifications')
+                                      //     .add(
+                                      //       notifications.toJson(),
+                                      //     );
+                                      // await FirebaseApi().sendFirebaseCloudMessage(
+                                      //   notifications.title,
+                                      //   notifications.body,
+                                      //   userCanBo.fcmToken,
+                                      // );
+                                      await add_register(
+                                        loggedInUser,
+                                        companyIntern!,
+                                      );
+                                    }
+                                  } catch (e) {
+                                    print(e);
+                                  } finally {
+                                    await Loading().isOffShowLoading();
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(Get.width, 44),
+                                  elevation: 0.0,
+                                  backgroundColor: primaryColor,
+                                  side: const BorderSide(
+                                    color: Colors.grey,
+                                    width: 1.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.check_circle_outline,
+                                      color: backgroundLite,
+                                    ),
+                                    const SizedBox(
+                                      width: 3,
+                                    ),
+                                    Text(
+                                      'Ứng tuyển',
+                                      // 'login'.tr.capitalize,
+                                      style: Style.titleStyle.copyWith(
+                                          color: backgroundLite, fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      radius: 20,
-                      backgroundColor: whiteColor,
-                    ),
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: CircleAvatar(
+                          child: const Icon(
+                            Icons.close,
+                            size: 20,
+                          ),
+                          radius: 20,
+                          backgroundColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                // const SizedBox(height: 5),
+                // const Text(
+                //     'Kiểm tra thông tin ứng tuyển ở danh sách địa điểm đăng ký')
+              ],
             ),
-            // const SizedBox(height: 5),
-            // const Text(
-            //     'Kiểm tra thông tin ứng tuyển ở danh sách địa điểm đăng ký')
-          ],
+          ),
         ),
       ),
     );

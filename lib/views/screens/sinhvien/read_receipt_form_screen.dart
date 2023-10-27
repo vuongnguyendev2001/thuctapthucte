@@ -45,6 +45,7 @@ class _ReadReceiptFormScreenState extends State<ReadReceiptFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: background,
       body: StreamBuilder<QuerySnapshot>(
           stream: _receiptFormFirestore,
           builder:
@@ -52,18 +53,19 @@ class _ReadReceiptFormScreenState extends State<ReadReceiptFormScreen> {
             if (snapshot.hasError) {
               return const Text('Something went wrong');
             }
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                loggedInUser.uid == null) {
               return const Center(
                 child: CircularProgressIndicator(
                   color: primaryColor,
                 ),
               );
             }
-            if (!snapshot.hasData) {
-              return Center(
-                child: Image.asset('assets/images/nodata2.jpg'),
-              );
-            }
+            // if (!snapshot.hasData) {
+            //   return Center(
+            //     child: Image.asset('assets/images/nodata2.jpg'),
+            //   );
+            // }
             List<ReceiptForm> receiptFormList = [];
             for (QueryDocumentSnapshot document in snapshot.data!.docs) {
               Map<String, dynamic> data =

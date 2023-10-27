@@ -261,10 +261,9 @@ class LoginService {
     userModel.userName = user.displayName;
     userModel.avatar = user.photoURL;
 
-    return await firebaseFirestore
-        .collection("user")
-        .doc(user.uid)
-        .set(userModel.toMap());
+    return await firebaseFirestore.collection("user").doc(user.uid).set(
+          userModel.toMap(),
+        );
   }
 
   Future<void> postInfoToFireStore(UserModel? userModel) async {

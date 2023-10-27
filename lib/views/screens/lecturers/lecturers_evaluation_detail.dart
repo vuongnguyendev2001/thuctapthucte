@@ -9,8 +9,10 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/lecturers_evaluation_model.dart';
+import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
+import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/widgets/custom_results_evaluation.dart';
@@ -27,7 +29,9 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
   Stream<DocumentSnapshot>? lecturersEvaluationFirestore;
 
   String idDocument = '';
-  String? sumScoreCanBo = ''; // Make sumScoreCanBo nullable
+  String? sumScoreCanBo = '';
+  String? emailStudent;
+  String? fcmTokenStudent;
   sumScoreAndIdDocParameters? scoreAndIdDoc;
   TextEditingController correctFormat = TextEditingController();
   TextEditingController wellPresented = TextEditingController();
@@ -86,7 +90,9 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
     fetchData();
     scoreAndIdDoc = Get.arguments as sumScoreAndIdDocParameters;
     idDocument = scoreAndIdDoc!.idDKHP;
-    sumScoreCanBo = scoreAndIdDoc!.sumScoreCanBo; // Initialize idDocument
+    sumScoreCanBo = scoreAndIdDoc!.sumScoreCanBo;
+    fcmTokenStudent = scoreAndIdDoc!.fcmTokenStudent;
+    emailStudent = scoreAndIdDoc!.emailStudent; // Initialize idDocument
     lecturersEvaluationFirestore = FirebaseFirestore.instance
         .collection('DangKyHocPhan')
         .doc(idDocument)
@@ -142,7 +148,6 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                     TextEditingController(text: lecturersEvaluation.user.MSSV);
                 TextEditingController reportName =
                     TextEditingController(text: 'Sinh viên chưa nộp báo cáo');
-
                 companyValuation = TextEditingController(text: 'Chưa đánh giá');
                 if (lecturersEvaluation.submitReport!.titleReport != null) {
                   reportName = TextEditingController(
@@ -702,6 +707,23 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                                 // Xử lý lỗi nếu có khi cập nhật
                                 print('$error');
                               });
+                              Notifications notification = Notifications(
+                                title: 'Đã có điểm học phần Thực tập thực tế',
+                                body:
+                                    'Kiểm tra điểm học phần ở mục kết quả học tập',
+                                timestamp: Timestamp.now(),
+                                emailUser: emailStudent!,
+                              );
+                              await FirebaseApi().sendFirebaseCloudMessage(
+                                notification.title,
+                                notification.body,
+                                fcmTokenStudent,
+                              );
+                              await FirebaseFirestore.instance
+                                  .collection('notifications')
+                                  .add(
+                                    notification.toJson(),
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),

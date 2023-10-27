@@ -8,10 +8,12 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
+import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/receipt_form.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
 class ReceiptFormScreen extends StatefulWidget {
@@ -415,6 +417,23 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
+                              // Notifications notification = Notifications(
+                              //   title: 'Đã được lập phiếu tiếp nhận',
+                              //   body:
+                              //       'Bạn vừa được lập phiếu tiếp nhận bởi cán bộ hướng dẫn : ${loggedInUser.userName}',
+                              //   timestamp: Timestamp.now(),
+                              //   emailUser: arguments.userModel.email!,
+                              // );
+                              // await FirebaseApi().sendFirebaseCloudMessage(
+                              //   notification.title,
+                              //   notification.body,
+                              //   arguments.userModel.fcmToken,
+                              // );
+                              // await FirebaseFirestore.instance
+                              //     .collection('notifications')
+                              //     .add(
+                              //       notification.toJson(),
+                              //     );
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),

@@ -30,6 +30,7 @@ import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/course_registration.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/learning_outcomes.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/notification_student.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_assignment_slip.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/read_information.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
@@ -90,8 +91,14 @@ class RouteManager {
   static const String lecturersEvaluationDetail = "/lecturersEvaluationDetail";
   static const String assignmentAndReceipt = '/assignmentAndReceipt';
   static const String learningOutcomes = '/learningOutcomes';
+  static const String notificationStudent = '/notificationStudent';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case notificationStudent:
+        return MaterialPageRoute(
+          builder: (_) => const NotificationStudent(),
+          settings: settings,
+        );
       case learningOutcomes:
         return MaterialPageRoute(
           builder: (_) => const LearningOutcomes(),

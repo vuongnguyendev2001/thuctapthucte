@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/all_notification_student.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
+
+import '../sinhvien/notification_student.dart';
+
 class NavbarScreen extends StatefulWidget {
   const NavbarScreen({Key? key}) : super(key: key);
   @override
@@ -20,7 +24,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
   List pages = [
     const HomeScreen(),
     const TimKiemDiaDiem(),
-    const NotificationScreenCanBo(),
+    const AllNotificationStudent(),
     const AccountScreen()
   ];
 

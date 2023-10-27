@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -12,7 +14,7 @@ class FirebaseApi {
     // ignore: unnecessary_null_comparison
     if (message == null) return;
     Get.toNamed(
-      RouteManager.notificationScreenCanBo,
+      RouteManager.notificationStudent,
       arguments: message,
     );
   }
@@ -54,31 +56,33 @@ class FirebaseApi {
     print('Title: ${message.data}');
   }
 
-  Future<void> sendFirebaseCloudMessage() async {
-    final adminEmail = 'tma@gmail.com';
-    final String serverKey =
+  Future<void> sendFirebaseCloudMessage(
+      String? title, String? body, String? fCMTokenUser) async {
+    const adminEmail = 'tma@gmail.com';
+    final fCMToken = await _firebaseMessaging.getToken();
+    const String serverKey =
         'AAAAtDyOrRA:APA91bHKyZ3f1qsilnShunaN2Qb_rlLSZEIYrth9R6ZcQINCF98h4SZuu74BZJ6LJ0zE82-vN8fX94mXG60S128av71bAQqrSpH5CsWhK2Ua8QKwb_iBbMZ5E_sjrSvQHxXDJu_Rdq0E'; // Thay YOUR_SERVER_KEY bằng server key của bạn từ Firebase Console
 
     final Uri url = Uri.parse('https://fcm.googleapis.com/fcm/send');
-
+    String? timeNotification =
+        CurrencyFormatter().formattedDatebook(Timestamp.now());
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'key=$serverKey',
     };
-
     final Map<String, dynamic> data = {
       'notification': {
-        'title': 'Tiêu đề thông báo',
-        'body': 'Nội dung thông báo',
+        'title': title,
+        'body': body,
       },
       'priority': 'high',
       'data': {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'id': '1',
         'status': 'done',
+        'timestamp': timeNotification,
       },
-      'to':
-          '/topics/$adminEmail', // Thay YOUR_FCM_DEVICE_TOKEN bằng token của thiết bị muốn gửi tới
+      'to': fCMTokenUser,
     };
 
     final String jsonData = jsonEncode(data);

@@ -6,7 +6,6 @@ class PdfViewerArguments {
   final String title;
 
   PdfViewerArguments(this.urlCV, this.title);
-  
 }
 
 class ReportPdfViewer {
@@ -37,7 +36,7 @@ class RegisterViewerArguments {
   RegisterViewerArguments(this.userModel, this.companyIntern);
 }
 
-class SinhVienDaDangKyThucTapArguments{
+class SinhVienDaDangKyThucTapArguments {
   final String idHocKiNamHoc;
   final String idAllHocPhan;
 
@@ -46,12 +45,16 @@ class SinhVienDaDangKyThucTapArguments{
     this.idAllHocPhan,
   );
 }
-class sumScoreAndIdDocParameters{
+
+class sumScoreAndIdDocParameters {
   final String sumScoreCanBo;
   final String idDKHP;
-
+  final String fcmTokenStudent;
+  final String emailStudent;
   sumScoreAndIdDocParameters(
     this.sumScoreCanBo,
     this.idDKHP,
+    this.fcmTokenStudent,
+    this.emailStudent,
   );
 }

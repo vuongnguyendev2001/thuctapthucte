@@ -106,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 DropdownMenu<String>(
                   width: Get.width * 0.9,
                   label: const Text('Loại tài khoản'),
-                  leadingIcon: Icon(Icons.person),
+                  leadingIcon: const Icon(Icons.person),
                   textStyle: Style.subtitleStyle,
                   onSelected: (String? value) {
                     // This is called when the user selects an item.

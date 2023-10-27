@@ -108,9 +108,20 @@ class _SubmitReportState extends State<SubmitReport> {
             }
 
             if (snapshot.hasData && !snapshot.data!.exists) {
-              return Text("Document does not exist");
+              return Center(
+                child: Text(
+                  'Bạn chưa đăng ký học phần !',
+                  style: Style.titleStyle,
+                ),
+              );
             }
-
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: primaryColor,
+                ),
+              );
+            }
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;

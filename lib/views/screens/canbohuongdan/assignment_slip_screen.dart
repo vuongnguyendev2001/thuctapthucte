@@ -7,9 +7,11 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
+import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/models/work_content.dart';
+import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
 
@@ -30,6 +32,8 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
     _nameStudentController.text = arguments.userModel.userName!;
     _mssvController.text = arguments.userModel.MSSV!;
     uidStudent = arguments.userModel.uid;
+    emailStudent = arguments.userModel.email;
+    fcmTokenStudent = arguments.userModel.fcmToken;
     getUserForCompany(arguments.companyIntern);
     fetchData();
     for (int i = 0; i < 1; i++) {
@@ -90,6 +94,8 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
   final TextEditingController _nameStudentController = TextEditingController();
   final TextEditingController _mssvController = TextEditingController();
   String? uidStudent;
+  String? emailStudent;
+  String? fcmTokenStudent;
   List<WorkContent> workContentControllers = [];
   // final List<TextEditingController> weekNumberControllers = [];
   int weekNumber = 1;
@@ -376,12 +382,9 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 documentReference.update({
                                   'id': documentId,
                                 }).then((_) {
-                                  // In ID của tài liệu sau khi đã cập nhật
-
                                   print(
                                       'ID của tài liệu vừa được thêm và cập nhật: $documentId');
                                 }).catchError((error) {
-                                  // Xử lý lỗi nếu có khi cập nhật
                                   print(
                                       'Lỗi khi cập nhật ID của tài liệu: $error');
                                 });
@@ -389,6 +392,23 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
+                              Notifications notification = Notifications(
+                                title: 'Đã được lập phiếu giao việc',
+                                body:
+                                    'Bạn vừa được lập phiếu giao việc bởi cán bộ hướng dẫn : ${loggedInUser.userName}',
+                                timestamp: Timestamp.now(),
+                                emailUser: emailStudent!,
+                              );
+                              await FirebaseApi().sendFirebaseCloudMessage(
+                                notification.title,
+                                notification.body,
+                                fcmTokenStudent,
+                              );
+                              await FirebaseFirestore.instance
+                                  .collection('notifications')
+                                  .add(
+                                    notification.toJson(),
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),

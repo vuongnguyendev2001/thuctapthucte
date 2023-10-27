@@ -451,7 +451,6 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
               .map((courseRegistration) => courseRegistration.academicYear)
               .toSet()
               .toList();
-
           return ListView.builder(
             shrinkWrap: true,
             // physics: const NeverScrollableScrollPhysics(),
@@ -459,7 +458,6 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
             itemBuilder: (context, index) {
               CourseRegistration courseRegistration =
                   courseRegistrations[index];
-
               // Kiểm tra xem học kỳ và năm học có trùng với học kỳ và năm học đã chọn không
               if (courseRegistration.semester == selectedSemester &&
                   courseRegistration.academicYear == selectedAcademicYear) {
@@ -545,7 +543,6 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                           HocPhan.fromMap(jsonData);
                                       hocPhanList.add(hocPhan);
                                     }
-
                                     return ListView.builder(
                                       shrinkWrap: true,
                                       physics:
@@ -565,7 +562,6 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                                           .spaceBetween,
                                                   children: [
                                                     Text(hocPhan.tenHocPhan),
-                                                    
                                                   ],
                                                 ),
                                                 subtitle: Column(

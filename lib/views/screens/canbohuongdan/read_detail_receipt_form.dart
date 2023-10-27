@@ -54,7 +54,8 @@ class _ReadDetailReceiptFormScreenState
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              loggedInUser.uid == null) {
             return const Center(
               child: CircularProgressIndicator(
                 color: primaryColor,

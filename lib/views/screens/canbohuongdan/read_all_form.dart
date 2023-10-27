@@ -30,20 +30,20 @@ class _ReadAllFormState extends State<ReadAllForm>
     _tabController = TabController(length: 2, vsync: this);
     fetchData();
   }
+
   Future<void> fetchData() async {
     final updatedUser = await getUserInfo(loggedInUser);
     setState(() {
       loggedInUser = updatedUser;
     });
   }
+
   @override
   void dispose() {
     _tabController.dispose();
 
     super.dispose();
   }
-
-
 
   final Stream<QuerySnapshot> _receiptFormFirestore =
       FirebaseFirestore.instance.collection('ReceiptForm').snapshots();
@@ -140,80 +140,95 @@ class _ReadAllFormState extends State<ReadAllForm>
                           ),
                         );
                       }
-                      List<ReceiptForm> receiptFormList = [];
-                      for (QueryDocumentSnapshot document
-                          in snapshot.data!.docs) {
+
+                      List<QueryDocumentSnapshot> documents =
+                          snapshot.data!.docs;
+                      List<Widget> receiptFormList = [];
+                      int index = 1;
+                      documents.where((document) {
                         Map<String, dynamic> data =
                             document.data() as Map<String, dynamic>;
                         ReceiptForm receiptForm = ReceiptForm.fromMap(data);
-                        receiptFormList.add(receiptForm);
-                      }
-                      return ListView.builder(
-                          itemCount: receiptFormList.length,
-                          itemBuilder: (context, index) {
-                            if (receiptFormList[index].userCanBo!.uid ==
-                                loggedInUser.uid) {
-                              TextEditingController mssvStudent =
-                                  TextEditingController(
-                                      text: receiptFormList[index]
-                                          .userStudent!
-                                          .MSSV);
-                              return Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  InkWell(
-                                    onTap: () async {
-                                      await Get.toNamed(
-                                          RouteManager.readDetailReceiptForm,
-                                          arguments: receiptFormList[index].id);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: SingleChildScrollView(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: Container(
-                                            color: whiteColor,
-                                            child: ListTile(
-                                              title: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'MSSV: ${receiptFormList[index].userStudent!.MSSV}',
-                                                    style: Style
-                                                        .subtitlehomeGiaovuStyle,
-                                                  ),
-                                                  Text(
-                                                    'Tên SV: ${receiptFormList[index].userStudent!.userName}',
-                                                    style: Style
-                                                        .subtitlehomeGiaovuStyle,
-                                                  ),
-                                                ],
-                                              ),
-                                              subtitle: Text(
-                                                'Ngày lập: ${CurrencyFormatter().formattedDatebook(receiptFormList[index].timestamp)}',
-                                                // style: Style.subtitleStyle,
-                                              ),
-                                              trailing: const Icon(
-                                                Icons.arrow_right_outlined,
-                                                color: primaryColor,
-                                              ),
+                        return receiptForm.userCanBo!.uid == loggedInUser.uid;
+                      }).forEach((document) {
+                        Map<String, dynamic> data =
+                            document.data() as Map<String, dynamic>;
+                        ReceiptForm receiptForm = ReceiptForm.fromMap(data);
+                        Widget item = Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                await Get.toNamed(
+                                    RouteManager.readDetailReceiptForm,
+                                    arguments: receiptForm.id);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: SingleChildScrollView(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Container(
+                                      color: whiteColor,
+                                      child: ListTile(
+                                        leading: Text(
+                                          '$index',
+                                          style: Style.subtitleStyle,
+                                        ),
+                                        title: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'MSSV: ${receiptForm.userStudent!.MSSV}',
+                                              style:
+                                                  Style.subtitlehomeGiaovuStyle,
                                             ),
-                                          ),
+                                            Text(
+                                              'Tên SV: ${receiptForm.userStudent!.userName}',
+                                              style:
+                                                  Style.subtitlehomeGiaovuStyle,
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Text(
+                                          'Ngày lập: ${CurrencyFormatter().formattedDatebook(receiptForm.timestamp)}',
+                                          // style: Style.subtitleStyle,
+                                        ),
+                                        trailing: const Icon(
+                                          Icons.arrow_right_outlined,
+                                          color: primaryColor,
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              );
-                            }
-                            return null;
-                          });
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                        index++;
+                        receiptFormList.add(item);
+                      });
+                      if (receiptFormList.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Bạn chưa lập phiếu tiếp nhận nào !',
+                              style: Style.titleStyle,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return ListView(
+                          children: receiptFormList,
+                        );
+                      }
                     }),
                 StreamBuilder<QuerySnapshot>(
                     stream: _assignmentSlipFormFirestore,
@@ -229,74 +244,155 @@ class _ReadAllFormState extends State<ReadAllForm>
                           ),
                         );
                       }
-                      List<AssignmentSlip> assignmentSlipFormList = [];
-                      for (QueryDocumentSnapshot document
-                          in snapshot.data!.docs) {
+
+                      List<QueryDocumentSnapshot> documents =
+                          snapshot.data!.docs;
+                      List<Widget> assignmentSlipFormList = [];
+                      int index = 1;
+                      documents.where((document) {
                         Map<String, dynamic> data =
                             document.data() as Map<String, dynamic>;
                         AssignmentSlip assignmentSlipForm =
                             AssignmentSlip.fromMap(data);
-                        assignmentSlipFormList.add(assignmentSlipForm);
-                      }
-                      return ListView.builder(
-                          itemCount: assignmentSlipFormList.length,
-                          itemBuilder: (context, index) {
-                            if (assignmentSlipFormList[index].userCanBo!.uid ==
-                                loggedInUser.uid) {
-                              return Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  InkWell(
-                                    onTap: () async {
-                                      await Get.toNamed(
-                                          RouteManager.readDetailAssignmentSlip,
-                                          arguments:
-                                              assignmentSlipFormList[index].id);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: Container(
-                                          color: whiteColor,
-                                          child: ListTile(
-                                            title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'MSSV: ${assignmentSlipFormList[index].mssvController.text}',
-                                                  style: Style
-                                                      .subtitlehomeGiaovuStyle,
-                                                ),
-                                                Text(
-                                                  'Tên SV: ${assignmentSlipFormList[index].nameStudentController.text}',
-                                                  style: Style
-                                                      .subtitlehomeGiaovuStyle,
-                                                ),
-                                              ],
-                                            ),
-                                            subtitle: Text(
-                                              'Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList[index].dateTime)}',
-                                              // style: Style.subtitleStyle,
-                                            ),
-                                            trailing: const Icon(
-                                              Icons.arrow_right_outlined,
-                                              color: primaryColor,
-                                            ),
+                        return assignmentSlipForm.userCanBo!.uid ==
+                            loggedInUser.uid;
+                      }).forEach((document) {
+                        Map<String, dynamic> data =
+                            document.data() as Map<String, dynamic>;
+                        AssignmentSlip assignmentSlipForm =
+                            AssignmentSlip.fromMap(data);
+                        Widget item = Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                await Get.toNamed(
+                                    RouteManager.readDetailAssignmentSlip,
+                                    arguments: assignmentSlipForm.id);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Container(
+                                    color: whiteColor,
+                                    child: ListTile(
+                                      leading: Text(
+                                        '$index',
+                                        style: Style.subtitleStyle,
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'MSSV: ${assignmentSlipForm.mssvController.text}',
+                                            style:
+                                                Style.subtitlehomeGiaovuStyle,
                                           ),
-                                        ),
+                                          Text(
+                                            'Tên SV: ${assignmentSlipForm.nameStudentController.text}',
+                                            style:
+                                                Style.subtitlehomeGiaovuStyle,
+                                          ),
+                                        ],
+                                      ),
+                                      subtitle: Text(
+                                        'Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipForm.dateTime)}',
+                                        // style: Style.subtitleStyle,
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.arrow_right_outlined,
+                                        color: primaryColor,
                                       ),
                                     ),
                                   ),
-                                ],
-                              );
-                            }
-                            return null;
-                          });
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                        index++;
+                        assignmentSlipFormList.add(item);
+                      });
+                      if (assignmentSlipFormList.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Bạn chưa lập phiếu giao việc nào !',
+                              style: Style.titleStyle,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return ListView(
+                          children: assignmentSlipFormList,
+                        );
+                      }
+                      // return ListView.builder(
+                      //     itemCount: assignmentSlipFormList.length,
+                      //     itemBuilder: (context, index) {
+                      //       if (assignmentSlipFormList[index].userCanBo!.uid ==
+                      //           loggedInUser.uid) {
+                      //         return Column(
+                      //           children: [
+                      //             const SizedBox(
+                      //               height: 10,
+                      //             ),
+                      //             InkWell(
+                      //               onTap: () async {
+                      //                 await Get.toNamed(
+                      //                     RouteManager.readDetailAssignmentSlip,
+                      //                     arguments:
+                      //                         assignmentSlipFormList[index].id);
+                      //               },
+                      //               child: Padding(
+                      //                 padding: const EdgeInsets.only(
+                      //                     left: 10, right: 10),
+                      //                 child: ClipRRect(
+                      //                   borderRadius: BorderRadius.circular(15),
+                      //                   child: Container(
+                      //                     color: whiteColor,
+                      //                     child: ListTile(
+                      //                       title: Column(
+                      //                         crossAxisAlignment:
+                      //                             CrossAxisAlignment.start,
+                      //                         children: [
+                      //                           Text(
+                      //                             'MSSV: ${assignmentSlipFormList[index].mssvController.text}',
+                      //                             style: Style
+                      //                                 .subtitlehomeGiaovuStyle,
+                      //                           ),
+                      //                           Text(
+                      //                             'Tên SV: ${assignmentSlipFormList[index].nameStudentController.text}',
+                      //                             style: Style
+                      //                                 .subtitlehomeGiaovuStyle,
+                      //                           ),
+                      //                         ],
+                      //                       ),
+                      //                       subtitle: Text(
+                      //                         'Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList[index].dateTime)}',
+                      //                         // style: Style.subtitleStyle,
+                      //                       ),
+                      //                       trailing: const Icon(
+                      //                         Icons.arrow_right_outlined,
+                      //                         color: primaryColor,
+                      //                       ),
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         );
+                      //       }
+                      //       return null;
+                      //     });
                     }),
               ],
             ),

@@ -83,12 +83,22 @@ class CompanyDetail {
   }
 }
 
+List<String> PositioncompanyDetail1 = ['Backend', 'Frontend', 'Mobile'];
+List<String> PositioncompanyDetailPRIMAES = ['Backend', 'Frontend', 'Mobile'];
+List<String> PositionTMA = [
+  'Tester',
+  'Backend',
+  'Frontend',
+  'Fullstack',
+  'Mobile',
+  'UX/UI Designer'
+];
 List<CompanyIntern> companies = [
   CompanyIntern(
       '01',
       'https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBL3F6SXc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--87584e37110f284429335454942adf9a1e133d0d/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oSnlaWE5wZW1WZmRHOWZabWwwV3dkcEFhb3ciLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--bb0ebae071595ab1791dc0ad640ef70a76504047/Purple%202.png',
       'Công ty Silicon Stack Việt Nam',
-      'Thực tập sinh: Backend, Frontend, Mobile',
+      '',
       2000000,
       'TP Hồ Chí Minh',
       companyDetail1,
@@ -97,7 +107,7 @@ List<CompanyIntern> companies = [
       '02',
       'https://media.licdn.com/dms/image/C4E0BAQGhTbNRDPDePg/company-logo_200_200/0/1519873351874?e=1704326400&v=beta&t=W23Dw7mz86OTSrI0bpam6R-Cl5trCJ1fn9TMurTirCc',
       'Công ty TNHH Techbase Việt Nam',
-      'Thực tập sinh',
+      '',
       5000000,
       'TP Hồ Chí Minh',
       companyDetailTechbase,
@@ -106,16 +116,16 @@ List<CompanyIntern> companies = [
       '03',
       'https://cdn-new.topcv.vn/unsafe/140x/filters:format(webp)/https://static.topcv.vn/company_logos/drimaes-vn-6316eb0d809b7.jpg',
       'Công ty PRIMAES',
-      'Thực tập sinh: Backend (NodeJS), Frontend (ReactJS), Mobile (Flutter)',
+      '',
       3000000,
       'TP Cần Thơ',
       companyDetailPRIMAES,
       ''),
   CompanyIntern(
       '04',
-      'https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/283092678_2090494587821782_8679712818922177375_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=AXnNhm2gnhIAX8ewwsE&_nc_ht=scontent-hkg4-1.xx&oh=00_AfALVO4xrZu4WZxcMUgQ2lkP9on_1YhBT6dqvi4gJonpiw&oe=6523592F',
+      'https://cdn-new.topcv.vn/unsafe/140x/filters:format(webp)/https://static.topcv.vn/company_logos/drimaes-vn-6316eb0d809b7.jpg',
       'Công ty cổ phần phần mềm PATSOFT',
-      'Thực tập sinh',
+      '',
       1,
       'TP Cần Thơ',
       companyDetailPATSOFT,
@@ -124,7 +134,7 @@ List<CompanyIntern> companies = [
       '05',
       'https://www.tma.vn/Themes/TMAVN.Theme/Images/TMA-logo2.png',
       'Tập đoàn công nghệ TMA',
-      'Tester, Backend, Frontend, Fullstack, Mobile, UX/UI Designer',
+      '',
       5000000,
       'TP Hồ Chí Minh',
       companyDetail1,
@@ -133,7 +143,7 @@ List<CompanyIntern> companies = [
       '06',
       'https://arena.cusc.vn/logo_cusc.png',
       'Trung Tâm Công Nghệ Phần Mềm CUSC',
-      'Thực tập sinh: Tester, Backend, Frontend',
+      '',
       1,
       'TP Cần Thơ',
       companyDetail1,

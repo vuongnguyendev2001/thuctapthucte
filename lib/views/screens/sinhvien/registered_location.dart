@@ -9,6 +9,7 @@ import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/registration_model.dart';
+import 'package:trungtamgiasu/models/user/intership_appycation_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
@@ -67,7 +68,12 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
-        title: const Text('Công ty đã đăng ký'),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'Công ty đã đăng ký',
+          style: Style.homeTitleStyle,
+        ),
+        backgroundColor: primaryColor,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _usersStream,
@@ -76,59 +82,65 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
             return const Text('Something went wrong');
           }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          List<RegistrationModel> internshipApplications = [];
-          for (QueryDocumentSnapshot document in snapshot.data!.docs) {
-            String documentId = document.id;
-            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            RegistrationModel internshipApplication =
-                RegistrationModel.fromMap(data);
-            internshipApplication.id = documentId;
-            internshipApplications.add(internshipApplication);
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              loggedInUser.uid == null) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
           }
           Map<String, dynamic> dataToUpdate = {
             'status': 'Đã duyệt',
           };
-
-          return ListView.builder(
-            itemCount: internshipApplications.length,
-            itemBuilder: ((context, index) {
-              if (internshipApplications[index].user.uid == loggedInUser.uid) {
-                return Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        JdCompany(
-                            context, internshipApplications[index].Company);
-                      },
-                      child: Container(
-                        color: whiteColor,
-                        child: ListTile(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Ứng tuyển: ${internshipApplications[index].Company.position}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                internshipApplications[index].Company.name,
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  text: 'Trạng thái: ',
-                                  style: Style.subtitleStyle,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          internshipApplications[index].status,
-                                      style: internshipApplications[index]
-                                                  .status ==
-                                              'Đã duyệt'
+          List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+          List<Widget> registeredLocation = [];
+          int index = 1;
+          documents.where((document) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            RegistrationModel internshipApplication =
+                RegistrationModel.fromMap(data);
+            return internshipApplication.user.uid == loggedInUser.uid;
+          }).forEach((document) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            RegistrationModel internshipApplication =
+                RegistrationModel.fromMap(data);
+            Widget item = Column(
+              children: [
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    JdCompany(context, internshipApplication.Company);
+                  },
+                  child: Container(
+                    color: whiteColor,
+                    child: ListTile(
+                      leading: Text(
+                        '$index',
+                        style: Style.subtitleStyle,
+                      ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ứng tuyển: ${internshipApplication.positionApply}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            internshipApplication.Company.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              text: 'Trạng thái: ',
+                              style: Style.subtitleStyle,
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: internshipApplication.status,
+                                  style:
+                                      internshipApplication.status == 'Đã duyệt'
                                           ? Style.subtitleStyle.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: primaryColor,
@@ -137,115 +149,81 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                                               fontWeight: FontWeight.bold,
                                               color: primaryOpacity,
                                             ),
-                                    ),
-                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  PdfViewerArguments arguments =
+                                      PdfViewerArguments(
+                                    internshipApplication.urlCV,
+                                    internshipApplication.nameCV,
+                                  );
+                                  Get.toNamed(RouteManager.pdfViewer,
+                                      arguments: arguments);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    color: primaryColor,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.remove_red_eye,
+                                        color: whiteColor,
+                                      ),
+                                      Text(
+                                        ' Xem CV',
+                                        style: TextStyle(color: whiteColor),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      PdfViewerArguments arguments =
-                                          PdfViewerArguments(
-                                        internshipApplications[index].urlCV,
-                                        internshipApplications[index].nameCV,
-                                      );
-                                      Get.toNamed(RouteManager.pdfViewer,
-                                          arguments: arguments);
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7),
-                                        color: primaryColor,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.remove_red_eye,
-                                            color: whiteColor,
-                                          ),
-                                          Text(
-                                            ' Xem CV',
-                                            style: TextStyle(color: whiteColor),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 15),
-
-                                  // internshipApplications[index].status ==
-                                  //         'Đã duyệt'
-                                  //     ? InkWell(
-                                  //         onTap: () {
-                                  //           // PdfViewerArguments arguments =
-                                  //           //     PdfViewerArguments(
-                                  //           //   internshipApplications[index]
-                                  //           //       .urlCV,
-                                  //           //   internshipApplications[index]
-                                  //           //       .nameCV,
-                                  //           // );
-                                  //           RegisterViewerArguments arguments =
-                                  //               RegisterViewerArguments(
-                                  //             internshipApplications[index]
-                                  //                 .user,
-                                  //             internshipApplications[index]
-                                  //                 .Company,
-                                  //           );
-                                  //           Get.toNamed(
-                                  //             RouteManager.receiptFormScreen,
-                                  //             arguments: arguments,
-                                  //           );
-                                  //         },
-                                  //         child: Container(
-                                  //           padding: const EdgeInsets.all(5),
-                                  //           width: 200,
-                                  //           decoration: BoxDecoration(
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(7),
-                                  //             color: primaryColor,
-                                  //           ),
-                                  //           child: Row(
-                                  //             children: [
-                                  //               Icon(
-                                  //                 Icons.check,
-                                  //                 color: whiteColor,
-                                  //               ),
-                                  //               Text(
-                                  //                 ' Lập phiếu tiếp nhận',
-                                  //                 style: TextStyle(
-                                  //                     color: whiteColor),
-                                  //               )
-                                  //             ],
-                                  //           ),
-                                  //         ),
-                                  //       )
-                                  //     : const SizedBox()
-                                ],
-                              ),
-                              Text(
-                                'Ngày đăng ký: ${CurrencyFormatter().formattedDatebook(internshipApplications[index].timestamp)}',
-                                style: Style.subtitleStyle,
-                              ),
+                              const SizedBox(width: 15),
                             ],
                           ),
-                          trailing: const Icon(
-                            Icons.arrow_right_outlined,
-                            color: primaryColor,
+                          Text(
+                            'Ngày đăng ký: ${CurrencyFormatter().formattedDatebook(internshipApplication.timestamp)}',
+                            style: Style.subtitleStyle,
                           ),
-                        ),
+                        ],
+                      ),
+                      trailing: const Icon(
+                        Icons.arrow_right_outlined,
+                        color: primaryColor,
                       ),
                     ),
-                  ],
-                );
-              } else {
-                return const SizedBox();
-              }
-            }),
-          );
+                  ),
+                ),
+              ],
+            );
+            index++;
+            registeredLocation.add(item);
+          });
+          if (registeredLocation.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Bạn chưa đăng ký công ty thực tập nào !',
+                  style: Style.titleStyle,
+                ),
+              ),
+            );
+          } else {
+            return ListView(
+              children: registeredLocation,
+            );
+          }
         },
       ),
     );
@@ -424,9 +402,6 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                                 EasyLoading.showError('Bạn đã ứng tuyển rồi!');
                               }
                             },
-                            // onPressed: () async {
-
-                            // },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),
                               elevation: 0.0,
