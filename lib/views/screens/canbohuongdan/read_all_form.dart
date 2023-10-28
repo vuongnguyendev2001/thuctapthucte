@@ -140,7 +140,6 @@ class _ReadAllFormState extends State<ReadAllForm>
                           ),
                         );
                       }
-
                       List<QueryDocumentSnapshot> documents =
                           snapshot.data!.docs;
                       List<Widget> receiptFormList = [];
@@ -334,65 +333,6 @@ class _ReadAllFormState extends State<ReadAllForm>
                           children: assignmentSlipFormList,
                         );
                       }
-                      // return ListView.builder(
-                      //     itemCount: assignmentSlipFormList.length,
-                      //     itemBuilder: (context, index) {
-                      //       if (assignmentSlipFormList[index].userCanBo!.uid ==
-                      //           loggedInUser.uid) {
-                      //         return Column(
-                      //           children: [
-                      //             const SizedBox(
-                      //               height: 10,
-                      //             ),
-                      //             InkWell(
-                      //               onTap: () async {
-                      //                 await Get.toNamed(
-                      //                     RouteManager.readDetailAssignmentSlip,
-                      //                     arguments:
-                      //                         assignmentSlipFormList[index].id);
-                      //               },
-                      //               child: Padding(
-                      //                 padding: const EdgeInsets.only(
-                      //                     left: 10, right: 10),
-                      //                 child: ClipRRect(
-                      //                   borderRadius: BorderRadius.circular(15),
-                      //                   child: Container(
-                      //                     color: whiteColor,
-                      //                     child: ListTile(
-                      //                       title: Column(
-                      //                         crossAxisAlignment:
-                      //                             CrossAxisAlignment.start,
-                      //                         children: [
-                      //                           Text(
-                      //                             'MSSV: ${assignmentSlipFormList[index].mssvController.text}',
-                      //                             style: Style
-                      //                                 .subtitlehomeGiaovuStyle,
-                      //                           ),
-                      //                           Text(
-                      //                             'Tên SV: ${assignmentSlipFormList[index].nameStudentController.text}',
-                      //                             style: Style
-                      //                                 .subtitlehomeGiaovuStyle,
-                      //                           ),
-                      //                         ],
-                      //                       ),
-                      //                       subtitle: Text(
-                      //                         'Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList[index].dateTime)}',
-                      //                         // style: Style.subtitleStyle,
-                      //                       ),
-                      //                       trailing: const Icon(
-                      //                         Icons.arrow_right_outlined,
-                      //                         color: primaryColor,
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         );
-                      //       }
-                      //       return null;
-                      //     });
                     }),
               ],
             ),

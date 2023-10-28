@@ -149,16 +149,17 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                 TextEditingController reportName =
                     TextEditingController(text: 'Sinh viên chưa nộp báo cáo');
                 companyValuation = TextEditingController(text: 'Chưa đánh giá');
-                if (lecturersEvaluation.submitReport!.titleReport != null) {
+                if (lecturersEvaluation.submitReport != null) {
                   reportName = TextEditingController(
                       text: lecturersEvaluation.submitReport!.titleReport);
+                  if (sumScoreCanBo != null) {
+                    double sumScoreCanBoString = double.parse(sumScoreCanBo!);
+                    sumCaculator = (sumScoreCanBoString / 100) * 5;
+                    companyValuation =
+                        TextEditingController(text: sumCaculator.toString());
+                  }
                 }
-                if (sumScoreCanBo != null) {
-                  double sumScoreCanBoString = double.parse(sumScoreCanBo!);
-                  sumCaculator = (sumScoreCanBoString / 100) * 5;
-                  companyValuation =
-                      TextEditingController(text: sumCaculator.toString());
-                }
+
                 if (lecturersEvaluation.lecturersEvaluation != null) {
                   correctFormat = TextEditingController(
                       text: lecturersEvaluation

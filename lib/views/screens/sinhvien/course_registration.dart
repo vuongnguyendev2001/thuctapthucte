@@ -6,11 +6,13 @@ import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
+import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/course_register.dart';
 import 'package:trungtamgiasu/models/hoc_phan.dart';
 import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
+import 'package:trungtamgiasu/views/widgets/custom_text_form_field.dart';
 
 class CourseRegistrationScreen extends StatefulWidget {
   const CourseRegistrationScreen({super.key});
@@ -25,7 +27,7 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
   String? selectedSemester;
   String? selectedAcademicYear;
   bool showSearch = false;
-  String? _search;
+  String _search = "";
   UserModel loggedInUser = UserModel();
   late final TabController _tabController;
   @override
@@ -98,13 +100,13 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
           ],
           bottom: showSearch == true
               ? PreferredSize(
-                  preferredSize:
-                      Size.fromHeight(48.0), // Đặt chiều cao của phần bottom
+                  preferredSize: const Size.fromHeight(
+                      48.0), // Đặt chiều cao của phần bottom
                   child: Container(
                     color: whiteColor,
-                    padding: EdgeInsets.all(1),
+                    padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 8.0),
                         hintText: 'Mã học phần',
@@ -112,9 +114,9 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
-                        _search = value;
-                        setState(() {});
-                        print(_search);
+                        setState(() {
+                          _search = value;
+                        });
                       },
                     ),
                   ),
@@ -140,7 +142,7 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
             child: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                DanhSachHocPhan(),
+                ListCourse(),
                 KetQuaDangKyHocPhan(),
               ],
             ),
@@ -150,8 +152,8 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
     );
   }
 
-  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> DanhSachHocPhan() {
-    return StreamBuilder(
+  StreamBuilder<QuerySnapshot<Object?>> ListCourse() {
+    return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('HocKi').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -173,14 +175,13 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
             CourseRegistration courseRegistration =
                 CourseRegistration.fromMap(jsonData);
             courseRegistration.id = idDocument;
+
             courseRegistrations.add(courseRegistration);
           }
-
           List<String> uniqueSemesters = courseRegistrations
               .map((courseRegistration) => courseRegistration.semester)
               .toSet()
               .toList();
-
           List<String> uniqueAcademicYears = courseRegistrations
               .map((courseRegistration) => courseRegistration.academicYear)
               .toSet()
@@ -197,8 +198,6 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
             itemBuilder: (context, index) {
               CourseRegistration courseRegistration =
                   courseRegistrations[index];
-
-              // Kiểm tra xem học kỳ và năm học có trùng với học kỳ và năm học đã chọn không
               if (courseRegistration.semester == selectedSemester &&
                   courseRegistration.academicYear == selectedAcademicYear) {
                 // return InkWell(
@@ -263,7 +262,279 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                               doc.data() as Map<String, dynamic>;
                           HocPhan hocPhan = HocPhan.fromMap(jsonData);
                           hocPhan.id = idDocument;
-                          AllhocPhan.add(hocPhan);
+                          if (hocPhan.maHocPhan
+                              .toLowerCase()
+                              .contains(_search.toLowerCase())) {
+                            AllhocPhan.add(hocPhan);
+                          }
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: AllhocPhan.length,
+                          itemBuilder: (context, index) {
+                            HocPhan hocPhan = AllhocPhan[index];
+                            return Column(
+                              children: [
+                                ListTile(
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(hocPhan.tenHocPhan),
+                                      InkWell(
+                                        onTap: () async {
+                                          try {
+                                            bool? checkDKHP = await getAllDKHP(
+                                                loggedInUser.uid!);
+                                            if (checkDKHP == true) {
+                                              EasyLoading.showError(
+                                                  'Bạn đã đằng ký học phần rồi !');
+                                            } else {
+                                              CollectionReference
+                                                  courseRegistrationsCollection =
+                                                  FirebaseFirestore.instance
+                                                      .collection(
+                                                          'DangKyHocPhan');
+                                              DangKyHocPhan dangKyHocPhan =
+                                                  DangKyHocPhan(
+                                                idHK: courseRegistration.id!,
+                                                idHP: hocPhan.id!,
+                                                user: loggedInUser,
+                                                idGiangVien:
+                                                    hocPhan.idGiangVien,
+                                                locationIntern: false,
+                                                receiptForm: false,
+                                                assignmentSlipForm: false,
+                                                evaluation: false,
+                                                isSubmitReport: false,
+                                              );
+                                              if (loggedInUser != null) {
+                                                await courseRegistrationsCollection
+                                                    .add(dangKyHocPhan.toMap())
+                                                    .then((documentReference) {
+                                                  String documentId =
+                                                      documentReference.id;
+                                                  documentReference.update({
+                                                    'idDKHP': documentId
+                                                  }).then((_) {
+                                                    EasyLoading.showSuccess(
+                                                        'Đăng ký thành công !\n Kiểm ra ở kết quả ĐKHP');
+                                                    print(
+                                                        'ID của tài liệu vừa được thêm và cập nhật: $documentId');
+                                                  }).catchError((error) {
+                                                    print(
+                                                        'Lỗi khi cập nhật ID của tài liệu: $error');
+                                                  });
+                                                }).catchError((error) {
+                                                  print(
+                                                      'Lỗi khi thêm tài liệu: $error');
+                                                });
+                                              } else {
+                                                print(
+                                                    'Biến loggedInUser có giá trị null. Không thể thêm dữ liệu.');
+                                              }
+                                            }
+                                          } catch (e) {
+                                            print('Lỗi: $e');
+                                          }
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            color: primaryColor,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.app_registration,
+                                                color: whiteColor,
+                                              ),
+                                              Text(
+                                                'Đăng ký HP',
+                                                style: TextStyle(
+                                                  color: whiteColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Mã HP'),
+                                          Text(hocPhan.maHocPhan),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Ký hiệu'),
+                                          Text(hocPhan.kyHieu),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Lớp'),
+                                          Text(hocPhan.lop),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Cán bộ giảng dạy'),
+                                          Text(hocPhan.giaoVien),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Divider(),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                );
+              } else {
+                return Container(); // Không hiển thị nếu không trùng
+              }
+            },
+          );
+        }
+      },
+    );
+  }
+
+  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> DanhSachHocPhan() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('HocKi').snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: priceColor,
+          ));
+        } else if (snapshot.hasError) {
+          return Text('Lỗi: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Text('Không có dữ liệu.');
+        } else {
+          List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+          List<CourseRegistration> courseRegistrations = [];
+
+          for (QueryDocumentSnapshot doc in documents) {
+            String idDocument = doc.id;
+            Map<String, dynamic> jsonData = doc.data() as Map<String, dynamic>;
+            CourseRegistration courseRegistration =
+                CourseRegistration.fromMap(jsonData);
+            courseRegistration.id = idDocument;
+
+            courseRegistrations.add(courseRegistration);
+          }
+          List<String> uniqueSemesters = courseRegistrations
+              .map((courseRegistration) => courseRegistration.semester)
+              .toSet()
+              .toList();
+          List<String> uniqueAcademicYears = courseRegistrations
+              .map((courseRegistration) => courseRegistration.academicYear)
+              .toSet()
+              .toList();
+          selectedSemester ??= uniqueSemesters.isNotEmpty
+              ? uniqueSemesters.first
+              : null; // Đặt giá trị đầu tiên nếu không có giá trị đã chọn
+          selectedAcademicYear ??=
+              uniqueAcademicYears.isNotEmpty ? uniqueAcademicYears.first : null;
+          return ListView.builder(
+            shrinkWrap: true,
+            // physics: const NeverScrollableScrollPhysics(),
+            itemCount: courseRegistrations.length,
+            itemBuilder: (context, index) {
+              CourseRegistration courseRegistration =
+                  courseRegistrations[index];
+              if (courseRegistration.semester == selectedSemester &&
+                  courseRegistration.academicYear == selectedAcademicYear) {
+                // return InkWell(
+                //   onTap: () async {
+                //     try {
+                //       final firestore = FirebaseFirestore.instance;
+                //       for (var data in jsonHocPhanData) {
+                //         // Thêm từng phần tử trong danh sách jsonData vào Firestore
+                //         await firestore
+                //             .collection('courseRegistrations')
+                //             .doc(courseRegistration.id)
+                //             .collection('AllCourse')
+                //             .add(data);
+                //       }
+                //       print(
+                //           'Dữ liệu đã được thêm vào Firestore thành công.');
+                //     } catch (e) {
+                //       print('Lỗi: $e');
+                //     }
+                //   },
+                //   child: CircleAvatar(
+                //     backgroundColor: blackColor,
+                //     radius: 17,
+                //     child: const Icon(Icons.add),
+                //   ),
+                // );
+                return SingleChildScrollView(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('HocKi')
+                        .doc(courseRegistration.id)
+                        .collection('AllHocPhan')
+                        .orderBy('maHocPhan')
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Lỗi: ${snapshot.error}');
+                      } else if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return Expanded(
+                          child: SizedBox(
+                            height: Get.height * 0.85,
+                            child: Image.asset(
+                              'assets/images/nodata.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      } else {
+                        List<QueryDocumentSnapshot> documents =
+                            snapshot.data!.docs;
+                        List<HocPhan> AllhocPhan = [];
+                        for (QueryDocumentSnapshot doc in documents) {
+                          String idDocument = doc.id;
+                          Map<String, dynamic> jsonData =
+                              doc.data() as Map<String, dynamic>;
+                          HocPhan hocPhan = HocPhan.fromMap(jsonData);
+                          hocPhan.id = idDocument;
+                          if (hocPhan.maHocPhan
+                              .toLowerCase()
+                              .contains(_search.toLowerCase())) {
+                            AllhocPhan.add(hocPhan);
+                          }
                         }
                         return ListView.builder(
                           shrinkWrap: true,
@@ -419,212 +690,164 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> KetQuaDangKyHocPhan() {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('courseRegistrations')
-          .snapshots(),
+      stream:
+          FirebaseFirestore.instance.collection('DangKyHocPhan').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(
+              color: primaryColor,
+            ),
+          );
         } else if (snapshot.hasError) {
           return Text('Lỗi: ${snapshot.error}');
-        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Text('Không có dữ liệu.');
+        } else if (snapshot.data!.docs.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Bạn chưa đăng ký học phần',
+                style: Style.titleStyle,
+              ),
+            ),
+          );
         } else {
           List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
-          List<CourseRegistration> courseRegistrations = [];
-
+          List<DangKyHocPhan> dangKyHocPhanList = [];
           for (QueryDocumentSnapshot doc in documents) {
-            String idDocument = doc.id;
             Map<String, dynamic> jsonData = doc.data() as Map<String, dynamic>;
-            CourseRegistration courseRegistration =
-                CourseRegistration.fromMap(jsonData);
-            courseRegistration.id = idDocument;
-            courseRegistrations.add(courseRegistration);
+            DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(jsonData);
+            if (dangKyHocPhan.user.uid == loggedInUser.uid) {
+              dangKyHocPhanList.add(dangKyHocPhan);
+            }
           }
-
-          List<String> uniqueSemesters = courseRegistrations
-              .map((courseRegistration) => courseRegistration.semester)
-              .toSet()
-              .toList();
-
-          List<String> uniqueAcademicYears = courseRegistrations
-              .map((courseRegistration) => courseRegistration.academicYear)
-              .toSet()
-              .toList();
+          if (dangKyHocPhanList.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Bạn chưa đăng ký học phần',
+                  style: Style.titleStyle,
+                ),
+              ),
+            );
+          }
           return ListView.builder(
             shrinkWrap: true,
-            // physics: const NeverScrollableScrollPhysics(),
-            itemCount: courseRegistrations.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: dangKyHocPhanList.length,
             itemBuilder: (context, index) {
-              CourseRegistration courseRegistration =
-                  courseRegistrations[index];
-              // Kiểm tra xem học kỳ và năm học có trùng với học kỳ và năm học đã chọn không
-              if (courseRegistration.semester == selectedSemester &&
-                  courseRegistration.academicYear == selectedAcademicYear) {
-                return SingleChildScrollView(
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('DangKyHocPhan')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Expanded(
-                          child: SizedBox(
-                            height: Get.height * 0.85,
-                            child: Image.asset(
-                              'assets/images/nodata.jpg',
-                              fit: BoxFit.cover,
+              DangKyHocPhan dkHocPhan = dangKyHocPhanList[index];
+              return StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('HocKi')
+                    .doc(dkHocPhan.idHK)
+                    .collection('AllHocPhan')
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Lỗi: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Expanded(
+                      child: SizedBox(
+                        height: Get.height * 0.85,
+                        child: Image.asset(
+                          'assets/images/nodata.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else {
+                    List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+                    List<Widget> hocPhanList = [];
+                    documents.where((document) {
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      HocPhan hocPhan = HocPhan.fromMap(data);
+                      // print(hocPhan.id);
+                      return hocPhan.id == dkHocPhan.idHP &&
+                          dkHocPhan.user.uid == loggedInUser.uid;
+                    }).forEach((document) {
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      HocPhan hocPhan = HocPhan.fromMap(data);
+                      print(hocPhan.id);
+                      Widget item = Column(
+                        children: [
+                          ListTile(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(hocPhan.tenHocPhan),
+                              ],
+                            ),
+                            subtitle: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Mã HP'),
+                                    Text(hocPhan.maHocPhan),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Ký hiệu'),
+                                    Text(hocPhan.kyHieu),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Lớp'),
+                                    Text(hocPhan.lop),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Cán bộ giảng dạy'),
+                                    Text(hocPhan.giaoVien),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Lỗi: ${snapshot.error}');
-                      } else if (!snapshot.hasData ||
-                          snapshot.data!.docs.isEmpty) {
-                        return Expanded(
-                          child: SizedBox(
-                            height: Get.height * 0.85,
-                            child: Image.asset(
-                              'assets/images/nodata.jpg',
-                              fit: BoxFit.cover,
-                            ),
+                          const Divider(),
+                        ],
+                      );
+                      index++;
+                      hocPhanList.add(item);
+                    });
+                    if (hocPhanList.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Bạn chưa đăng ký học phần',
+                            style: Style.titleStyle,
                           ),
-                        );
-                      } else {
-                        List<QueryDocumentSnapshot> documents =
-                            snapshot.data!.docs;
-                        List<DangKyHocPhan> dangKyHocPhanList = [];
-                        for (QueryDocumentSnapshot doc in documents) {
-                          Map<String, dynamic> jsonData =
-                              doc.data() as Map<String, dynamic>;
-                          DangKyHocPhan dangKyHocPhan =
-                              DangKyHocPhan.fromMap(jsonData);
-                          dangKyHocPhanList.add(dangKyHocPhan);
-                        }
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: dangKyHocPhanList.length,
-                          itemBuilder: (context, index) {
-                            DangKyHocPhan dkHocPhan = dangKyHocPhanList[index];
-                            return StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection('HocKi')
-                                    .doc(dkHocPhan.idHK)
-                                    .collection('AllHocPhan')
-                                    .snapshots(),
-                                builder: (context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Lỗi: ${snapshot.error}');
-                                  } else if (!snapshot.hasData ||
-                                      snapshot.data!.docs.isEmpty) {
-                                    return Expanded(
-                                      child: SizedBox(
-                                        height: Get.height * 0.85,
-                                        child: Image.asset(
-                                          'assets/images/nodata.jpg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    List<QueryDocumentSnapshot> documents =
-                                        snapshot.data!.docs;
-                                    List<HocPhan> hocPhanList = [];
-                                    for (QueryDocumentSnapshot doc
-                                        in documents) {
-                                      Map<String, dynamic> jsonData =
-                                          doc.data() as Map<String, dynamic>;
-                                      HocPhan hocPhan =
-                                          HocPhan.fromMap(jsonData);
-                                      hocPhanList.add(hocPhan);
-                                    }
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: hocPhanList.length,
-                                      itemBuilder: (context, index) {
-                                        HocPhan hocPhan = hocPhanList[index];
-                                        if (hocPhan.id == dkHocPhan.idHP &&
-                                            dkHocPhan.user.uid ==
-                                                loggedInUser.uid) {
-                                          return Column(
-                                            children: [
-                                              ListTile(
-                                                title: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(hocPhan.tenHocPhan),
-                                                  ],
-                                                ),
-                                                subtitle: Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        const Text('Mã HP'),
-                                                        Text(hocPhan.maHocPhan),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        const Text('Ký hiệu'),
-                                                        Text(hocPhan.kyHieu),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        const Text('Lớp'),
-                                                        Text(hocPhan.lop),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        const Text(
-                                                            'Cán bộ giảng dạy'),
-                                                        Text(hocPhan.giaoVien),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const Divider(),
-                                            ],
-                                          );
-                                        } else {
-                                          return Container();
-                                        }
-                                      },
-                                    );
-                                  }
-                                });
-                          },
-                        );
-                      }
-                    },
-                  ),
-                );
-              } else {
-                return Container(); // Không hiển thị nếu không trùng
-              }
+                        ),
+                      );
+                    } else {
+                      return ListView(
+                        shrinkWrap: true,
+                        children: hocPhanList,
+                      );
+                    }
+                  }
+                },
+              );
             },
           );
         }

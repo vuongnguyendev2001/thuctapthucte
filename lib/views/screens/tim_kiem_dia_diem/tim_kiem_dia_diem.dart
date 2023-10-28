@@ -179,17 +179,17 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
   //     }
   //   }
   // }
-
+  var searchPosition = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: background,
       appBar: AppBar(
-        title: const Text(
+        backgroundColor: primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
           'Danh sách địa điểm thực tập',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-          ),
+          style: Style.homeTitleStyle,
         ),
         centerTitle: true,
         // actions: [
@@ -204,43 +204,39 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
         // ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           children: [
+            const SizedBox(height: 5),
             Container(
               height: 45,
               width: double.infinity,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: HexColor('#F3F6F9'),
+                color: whiteColor,
               ),
               child: TextFormField(
-                controller: _search,
                 onChanged: (value) {
                   setState(() {
-                    search(value);
-                    print(_search.text);
+                    searchPosition = value;
                   });
                 },
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Tìm kiếm',
+                  hintText: 'Vị trí tuyển dụng, công nghệ, ngôn ngữ,...',
                   prefixIcon: Icon(Icons.search_outlined),
                 ),
               ),
             ),
+            const SizedBox(height: 15),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: (_search.text != "")
-                    ? FirebaseFirestore.instance
-                        .collection('companies')
-                        .where('position', isGreaterThanOrEqualTo: _search.text)
-                        .where("position", isLessThan: '${_search.text}z')
-                        .snapshots()
-                    : FirebaseFirestore.instance
-                        .collection("companies")
-                        .snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection("companies")
+                    .orderBy('name')
+                    // .where('position', isGreaterThan: searchPosition)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     // Dữ liệu đã tải thành công từ Firestore
@@ -250,16 +246,19 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                       Map<String, dynamic> data =
                           document.data() as Map<String, dynamic>;
                       CompanyIntern company = CompanyIntern.fromMap(data);
-                      companies.add(company);
-                    }
 
+                      if (company.position
+                          .toLowerCase()
+                          .contains(searchPosition.toLowerCase())) {
+                        companies.add(company);
+                      }
+                    }
                     // Hiển thị danh sách công ty bằng ListView.builder
                     return ListView.builder(
                       itemCount: companies.length,
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
-                            const SizedBox(height: 10),
                             InkWell(
                               onTap: () async {
                                 JdCompany(context, companies, index);
@@ -268,6 +267,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                 padding: const EdgeInsets.all(10),
                                 width: Get.width,
                                 decoration: BoxDecoration(
+                                  color: whiteColor,
                                   border: Border.all(
                                     color: textBoxLite,
                                   ),
@@ -349,7 +349,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 5),
+                            const SizedBox(height: 10),
                           ],
                         );
                       },

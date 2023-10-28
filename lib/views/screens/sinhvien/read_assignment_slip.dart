@@ -244,19 +244,10 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
                   return const SizedBox();
                 });
           } else {
-            return SizedBox(
-              height: Get.height * 0.85,
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/nodata.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                  Text(
-                    'Bạn chưa được lập phiếu giao việc !',
-                    style: Style.titleStyle,
-                  )
-                ],
+            return Center(
+              child: Text(
+                'Bạn chưa được lập phiếu giao việc',
+                style: Style.titleStyle,
               ),
             );
           }

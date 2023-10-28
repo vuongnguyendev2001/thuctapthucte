@@ -15,6 +15,8 @@ class ReadStudentCourse extends StatefulWidget {
 }
 
 class _ReadStudentCourseState extends State<ReadStudentCourse> {
+  bool showSearch = false;
+  String _searchStudent = "";
   final Stream<QuerySnapshot> _readStudentCourseFirestore = FirebaseFirestore
       .instance
       .collection('DangKyHocPhan')
@@ -78,15 +80,15 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
           actions: [
             InkWell(
               onTap: () async {
-                // if (showSearch == false) {
-                //   setState(() {
-                //     showSearch = true;
-                //   });
-                // } else {
-                //   setState(() {
-                //     showSearch = false;
-                //   });
-                // }
+                if (showSearch == false) {
+                  setState(() {
+                    showSearch = true;
+                  });
+                } else {
+                  setState(() {
+                    showSearch = false;
+                  });
+                }
               },
               child: CircleAvatar(
                 backgroundColor: whiteColor,
@@ -98,24 +100,23 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
           ],
           bottom: showSearch == true
               ? PreferredSize(
-                  preferredSize:
-                      Size.fromHeight(48.0), // Đặt chiều cao của phần bottom
+                  preferredSize: const Size.fromHeight(
+                      48.0), // Đặt chiều cao của phần bottom
                   child: Container(
                     color: whiteColor,
-                    padding: EdgeInsets.all(1),
+                    padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 8.0),
                         hintText: 'Mã học phần',
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(),
                       ),
-                      // onChanged: (value) {
-                      //   _search = value;
-                      //   setState(() {});
-                      //   print(_search);
-                      // },
+                      onChanged: (value) {
+                        _searchStudent = value;
+                        setState(() {});
+                      },
                     ),
                   ),
                 )
@@ -142,7 +143,11 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
           List<DangKyHocPhan> dkhpFromMSSVList = [];
           for (DangKyHocPhan dkhp in dkhpList) {
             if (dkhp.idGiangVien == loggedInUser.uid) {
-              dkhpFromMSSVList.add(dkhp);
+              if (dkhp.user.MSSV!
+                  .toLowerCase()
+                  .contains(_searchStudent.toLowerCase())) {
+                dkhpFromMSSVList.add(dkhp);
+              }
             }
           }
           return Padding(
@@ -255,7 +260,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                             child: Checkbox(
                                               checkColor: primaryColor,
                                               fillColor:
-                                                  MaterialStatePropertyAll(
+                                                  const MaterialStatePropertyAll(
                                                 Colors.white70,
                                               ),
                                               value: dkhpFromMSSVList[index]
@@ -277,7 +282,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                             child: Checkbox(
                                                 checkColor: primaryColor,
                                                 fillColor:
-                                                    MaterialStatePropertyAll(
+                                                    const MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
                                                 value: dkhpFromMSSVList[index]
@@ -298,7 +303,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                             child: Checkbox(
                                                 checkColor: primaryColor,
                                                 fillColor:
-                                                    MaterialStatePropertyAll(
+                                                    const MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
                                                 value: dkhpFromMSSVList[index]
@@ -319,7 +324,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                             child: Checkbox(
                                                 checkColor: primaryColor,
                                                 fillColor:
-                                                    MaterialStatePropertyAll(
+                                                    const MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
                                                 value: dkhpFromMSSVList[index]
@@ -340,7 +345,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                             child: Checkbox(
                                                 checkColor: primaryColor,
                                                 fillColor:
-                                                    MaterialStatePropertyAll(
+                                                    const MaterialStatePropertyAll(
                                                   Colors.white70,
                                                 ),
                                                 value: dkhpFromMSSVList[index]
