@@ -103,4 +103,47 @@ class FirebaseApi {
       print('Lỗi: $error');
     }
   }
+
+  Future<void> sendFirebaseCloudMessageToTopic(
+      String? title, String? body, String topicName) async {
+    const String serverKey =
+        'AAAAtDyOrRA:APA91bHKyZ3f1qsilnShunaN2Qb_rlLSZEIYrth9R6ZcQINCF98h4SZuu74BZJ6LJ0zE82-vN8fX94mXG60S128av71bAQqrSpH5CsWhK2Ua8QKwb_iBbMZ5E_sjrSvQHxXDJu_Rdq0E'; // Replace with your server key from Firebase Console
+    final Uri url = Uri.parse('https://fcm.googleapis.com/fcm/send');
+    String timeNotification =
+        CurrencyFormatter().formattedDatebook(Timestamp.now());
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'key=$serverKey',
+    };
+    final Map<String, dynamic> data = {
+      'notification': {
+        'title': title,
+        'body': body,
+      },
+      'priority': 'high',
+      'data': {
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        'id': '1',
+        'status': 'done',
+        'timestamp': timeNotification,
+      },
+      'to': '/topics/$topicName', // Set the topic name here
+    };
+    final String jsonData = jsonEncode(data);
+    try {
+      final http.Response response = await http.post(
+        url,
+        headers: headers,
+        body: jsonData,
+      );
+
+      if (response.statusCode == 200) {
+        print('Success: ${response.body}');
+      } else {
+        print('Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 }

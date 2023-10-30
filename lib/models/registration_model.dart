@@ -12,6 +12,7 @@ class RegistrationModel {
   String urlCV;
   Timestamp? timestamp;
   String positionApply;
+  String idDKHP;
 
   RegistrationModel({
     this.timestamp,
@@ -22,6 +23,7 @@ class RegistrationModel {
     required this.user,
     required this.status,
     required this.positionApply,
+    required this.idDKHP
   });
 
   Map<String, dynamic> toMap() {
@@ -33,7 +35,8 @@ class RegistrationModel {
       'status': status,
       'url': urlCV,
       'name': nameCV,
-      'positionApply': positionApply
+      'positionApply': positionApply,
+      'idDKHP': idDKHP
     };
   }
 
@@ -47,6 +50,7 @@ class RegistrationModel {
       nameCV: map['name'],
       urlCV: map['url'],
       positionApply: map['positionApply'],
+      idDKHP: map['idDKHP'],
     );
   }
 }

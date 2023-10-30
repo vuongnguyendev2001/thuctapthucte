@@ -42,7 +42,7 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
           state:
               _activeCurrentStep <= 0 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 0,
-          title: const Text('Xét duyệt & Lập phiếu tiếp nhận'),
+          title: const Text('Xét duyệt, Lập phiếu tiếp nhận (28/4 - 4/5)'),
           content: const Center(
             child: Text(
                 'Cán bộ sẽ kiểm tra sinh viên đăng ký thực tập, và có thể nhận sinh viên thực tập ở chức năng "Xét duyệt". Sau đó, cán bộ lập phiếu tiếp nhận cho sinh viên. Sau khi lập xong hãy kiểm tra thông tin phiếu ở chức năng "Kiểm tra thông tin phiếu".'),

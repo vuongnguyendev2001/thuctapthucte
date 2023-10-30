@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 
 class LayoutGiaovuScreen extends StatefulWidget {

@@ -32,8 +32,9 @@ class ReportPdfViewer {
 class RegisterViewerArguments {
   final UserModel userModel;
   final CompanyIntern companyIntern;
+  String? idHK;
 
-  RegisterViewerArguments(this.userModel, this.companyIntern);
+  RegisterViewerArguments(this.userModel, this.companyIntern, this.idHK);
 }
 
 class SinhVienDaDangKyThucTapArguments {

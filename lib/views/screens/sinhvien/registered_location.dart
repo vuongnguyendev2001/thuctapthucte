@@ -7,6 +7,7 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/user/intership_appycation_model.dart';
@@ -386,6 +387,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                                   RegisterViewerArguments(
                                 loggedInUser,
                                 companies,
+                                null,
                               );
 
                               bool? registed = await getAllApplications(

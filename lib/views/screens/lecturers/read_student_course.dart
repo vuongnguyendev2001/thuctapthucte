@@ -109,7 +109,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 8.0),
-                        hintText: 'Mã học phần',
+                        hintText: 'Mã số sinh viên hoặc tên sinh viên',
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(),
                       ),
@@ -144,8 +144,11 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
           for (DangKyHocPhan dkhp in dkhpList) {
             if (dkhp.idGiangVien == loggedInUser.uid) {
               if (dkhp.user.MSSV!
-                  .toLowerCase()
-                  .contains(_searchStudent.toLowerCase())) {
+                      .toLowerCase()
+                      .contains(_searchStudent.toLowerCase()) ||
+                  dkhp.user.userName!
+                      .toLowerCase()
+                      .contains(_searchStudent.toLowerCase())) {
                 dkhpFromMSSVList.add(dkhp);
               }
             }

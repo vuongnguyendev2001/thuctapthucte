@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/home_giangvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/account_lectures_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/all_notification_student.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';

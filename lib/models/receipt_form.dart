@@ -15,6 +15,7 @@ class ReceiptForm {
   String? dayPerWeek;
   String? workContent;
   UserModel? userCanBo;
+  String? idHK;
 
   ReceiptForm({
     this.isSalarySelected2,
@@ -29,6 +30,7 @@ class ReceiptForm {
     this.dayPerWeek,
     this.workContent,
     this.userCanBo,
+    this.idHK
   });
 
   // Convert a Map to a ReceiptForm object
@@ -46,6 +48,7 @@ class ReceiptForm {
       dayPerWeek: map['dayPerWeek'],
       workContent: map['workContent'],
       userCanBo: UserModel.fromMap(map['userCanBo']),
+      idHK: map['idHK'],
     );
   }
 
@@ -65,6 +68,7 @@ class ReceiptForm {
       'dayPerWeek': dayPerWeek,
       'workContent': workContent,
       'userCanBo': userCanBo?.toMap(),
+      'idHK': idHK
     };
   }
 }

@@ -33,17 +33,19 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
   String? emailStudent;
   String? fcmTokenStudent;
   sumScoreAndIdDocParameters? scoreAndIdDoc;
-  TextEditingController correctFormat = TextEditingController();
-  TextEditingController wellPresented = TextEditingController();
-  TextEditingController haveAWorkSchedule = TextEditingController();
-  TextEditingController suitableMethod = TextEditingController();
-  TextEditingController companyValuation = TextEditingController();
+  TextEditingController correctFormat = TextEditingController(text: '0.5');
+  TextEditingController wellPresented = TextEditingController(text: '0.5');
+  TextEditingController haveAWorkSchedule = TextEditingController(text: '1.0');
+  TextEditingController suitableMethod = TextEditingController(text: '0.5');
+
   TextEditingController understandingAboutInternLocation =
-      TextEditingController();
-  TextEditingController reinforceTheory = TextEditingController();
-  TextEditingController suitableWorkout = TextEditingController();
-  TextEditingController practicalExperience = TextEditingController();
-  TextEditingController haveContributed = TextEditingController();
+      TextEditingController(text: '0.5');
+  TextEditingController reinforceTheory = TextEditingController(text: '0.5');
+  TextEditingController suitableWorkout = TextEditingController(text: '0.5');
+  TextEditingController practicalExperience =
+      TextEditingController(text: '0.5');
+  TextEditingController haveContributed = TextEditingController(text: '0.5');
+  TextEditingController companyValuation = TextEditingController();
   TextEditingController total = TextEditingController();
   TextEditingController lecturers = TextEditingController();
   TextEditingController scoreTotal = TextEditingController();
@@ -88,6 +90,7 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
   void initState() {
     super.initState();
     fetchData();
+    updateTotal();
     scoreAndIdDoc = Get.arguments as sumScoreAndIdDocParameters;
     idDocument = scoreAndIdDoc!.idDKHP;
     sumScoreCanBo = scoreAndIdDoc!.sumScoreCanBo;

@@ -111,8 +111,10 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
                 Icons.work_outline_rounded,
                 color: primaryColor,
               ),
-              title: 'Quản lý công ty',
-              onTap: () {},
+              title: 'Quản lý thông báo',
+              onTap: () {
+                Get.toNamed(RouteManager.managerNotification);
+              },
             ),
             const SizedBox(height: 10),
             Button_HomeGiaoVu_Screen(
@@ -121,7 +123,8 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
                 color: primaryColor,
               ),
               title: 'Danh sách sinh viên thực tập',
-              onTap: () {},
+              onTap: () {
+              },
             ),
           ],
         ),

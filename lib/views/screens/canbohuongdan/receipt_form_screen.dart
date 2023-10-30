@@ -56,13 +56,15 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
   final TextEditingController _workContentController = TextEditingController();
 
   CompanyIntern? company;
+  String? idHK;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     RegisterViewerArguments? arguments =
         Get.arguments as RegisterViewerArguments?;
-    _nameCompanyController.text = arguments!.companyIntern.name;
+    idHK = arguments!.idHK;
+    _nameCompanyController.text = arguments.companyIntern.name;
     _locationController.text = arguments.companyIntern.companyDetail.address;
     _userNameStudentController.text = arguments.userModel.userName!;
     _idClassController.text = arguments.userModel.idClass!;
@@ -356,12 +358,14 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                                 workContent: _workContentController.text,
                                 userCanBo: loggedInUser,
                                 timestamp: Timestamp.now(),
+                                idHK: idHK,
                               );
                               ResultEvaluation resultEvaluation =
                                   ResultEvaluation(
                                 companyIntern: arguments.companyIntern,
                                 userCanBo: loggedInUser,
                                 userStudent: arguments.userModel,
+                                idHK: idHK,
                               );
                               Map<String, dynamic> dataReceiptForm =
                                   receiptForm.toMap();

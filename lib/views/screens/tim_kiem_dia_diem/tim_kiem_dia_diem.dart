@@ -15,6 +15,7 @@ import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/constants/ui_helper.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
@@ -528,9 +529,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                             onPressed: () async {
                               RegisterViewerArguments arguments =
                                   RegisterViewerArguments(
-                                loggedInUser,
-                                companies[index],
-                              );
+                                      loggedInUser, companies[index], '');
                               bool? registed = await getAllApplications(
                                   loggedInUser.uid!, companies[index].id);
                               if (registed == false) {
@@ -763,15 +762,35 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
     }
   }
 
-  Future<void> add_register(UserModel urserModel, CompanyIntern company) async {
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String userID) async {
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.uid == userID) {
+          return dangKyHocPhan.idHK;
+        }
+      }
+    }
+    return 'No data';
+  }
+
+  Future<void> add_register(
+      UserModel urserModel, CompanyIntern company, String idDHK) async {
     RegistrationModel registrationModel = RegistrationModel(
-        positionApply: positionApply.text,
-        nameCV: fileNamePdf ?? '',
-        urlCV: pdfUrl ?? '',
-        Company: company,
-        user: urserModel,
-        status: 'Đang duyệt',
-        timestamp: Timestamp.now());
+      positionApply: positionApply.text,
+      nameCV: fileNamePdf ?? '',
+      urlCV: pdfUrl ?? '',
+      Company: company,
+      user: urserModel,
+      status: 'Đang duyệt',
+      timestamp: Timestamp.now(),
+      idDKHP: idDHK,
+    );
     await _firebaseFirestore
         .collection("registrations")
         .add(registrationModel.toMap())
@@ -809,6 +828,7 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
               children: [
                 Text('Hồ sơ của bạn'.toUpperCase(),
                     style: Style.hometitleStyle.copyWith(color: primaryColor)),
+                const SizedBox(height: 10),
                 TextFormReceipt(
                   lableText: 'Vị trí ứng tuyển', controller: positionApply,
                   icon: null,
@@ -927,28 +947,34 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
                                         snackBarType: SnackBarType.error,
                                       );
                                     } else {
-                                      // UserModel? userCanBo =
-                                      //     await getUserForCompany(companyIntern!);
-                                      // Notifications notifications = Notifications(
-                                      //   title: 'Bạn có yêu cầu ứng tuyển mới',
-                                      //   body:
-                                      //       '${loggedInUser.userName} đã ứng tuyển !. Kiểm tra ở chức năng "Xét duyệt, Lập phiếu"',
-                                      //   timestamp: Timestamp.now(),
-                                      //   emailUser: userCanBo!.email!,
-                                      // );
-                                      // await FirebaseFirestore.instance
-                                      //     .collection('notifications')
-                                      //     .add(
-                                      //       notifications.toJson(),
-                                      //     );
-                                      // await FirebaseApi().sendFirebaseCloudMessage(
+                                      UserModel? userCanBo =
+                                          await getUserForCompany(
+                                              companyIntern!);
+                                      Notifications notifications =
+                                          Notifications(
+                                        title: 'Bạn có yêu cầu ứng tuyển mới',
+                                        body:
+                                            '${loggedInUser.userName} đã ứng tuyển !. Kiểm tra ở chức năng "Xét duyệt, Lập phiếu"',
+                                        timestamp: Timestamp.now(),
+                                        emailUser: userCanBo!.email!,
+                                      );
+                                      await FirebaseFirestore.instance
+                                          .collection('notifications')
+                                          .add(
+                                            notifications.toJson(),
+                                          );
+                                      // await FirebaseApi()
+                                      //     .sendFirebaseCloudMessage(
                                       //   notifications.title,
                                       //   notifications.body,
                                       //   userCanBo.fcmToken,
                                       // );
+                                      String? idHK =
+                                          await getAllDKHP(loggedInUser.uid!);
                                       await add_register(
                                         loggedInUser,
                                         companyIntern!,
+                                        idHK!,
                                       );
                                     }
                                   } catch (e) {

@@ -32,18 +32,20 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
   bool? strengThenForeignLanguages = false;
   bool? enhanceTeamworkSkills = false;
   TextEditingController sumController = TextEditingController();
-  TextEditingController implementTheRulesWell = TextEditingController();
-  TextEditingController complyWithWorkingHours = TextEditingController();
-  TextEditingController attitude = TextEditingController();
-  TextEditingController positiveInWork = TextEditingController();
-  TextEditingController meetJobRequirements = TextEditingController();
-  TextEditingController spiritOfLearning = TextEditingController();
-  TextEditingController haveSuggestions = TextEditingController();
-  TextEditingController progressReport = TextEditingController();
-  TextEditingController completeTheWork = TextEditingController();
-  TextEditingController workResults = TextEditingController();
+  TextEditingController implementTheRulesWell =
+      TextEditingController(text: '10');
+  TextEditingController complyWithWorkingHours =
+      TextEditingController(text: '10');
+  TextEditingController attitude = TextEditingController(text: '10');
+  TextEditingController positiveInWork = TextEditingController(text: '10');
+  TextEditingController meetJobRequirements = TextEditingController(text: '10');
+  TextEditingController spiritOfLearning = TextEditingController(text: '10');
+  TextEditingController haveSuggestions = TextEditingController(text: '10');
+  TextEditingController progressReport = TextEditingController(text: '10');
+  TextEditingController completeTheWork = TextEditingController(text: '10');
+  TextEditingController workResults = TextEditingController(text: '10');
   TextEditingController otherCommentsAboutStudents = TextEditingController();
-  TextEditingController suggestedComments = TextEditingController();
+  TextEditingController suggestedComments = TextEditingController(text: '10');
   TextEditingController idStudent = TextEditingController();
   void updateSum() {
     double implementTheRulesWellValue =
@@ -75,6 +77,7 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
   @override
   void initState() {
     super.initState();
+    updateSum();
     implementTheRulesWell.addListener(updateSum);
     complyWithWorkingHours.addListener(updateSum);
     attitude.addListener(updateSum);

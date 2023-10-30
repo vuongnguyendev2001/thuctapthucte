@@ -24,10 +24,13 @@ class AssignmentSlipScreen extends StatefulWidget {
 
 class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
   @override
+  String? idHK;
   void initState() {
     super.initState();
+
     RegisterViewerArguments? arguments =
         Get.arguments as RegisterViewerArguments?;
+    idHK = arguments!.idHK;
     _nameCompanyController.text = arguments!.companyIntern.name;
     _nameStudentController.text = arguments.userModel.userName!;
     _mssvController.text = arguments.userModel.MSSV!;
@@ -333,6 +336,7 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 workContentControllers: workContentControllers,
                                 userCanBo: loggedInUser,
                                 dateTime: timestamp!,
+                                idHK: idHK,
                               );
                               AssignmentSlip trackingSheetForm = AssignmentSlip(
                                 mssvController: _mssvController,
@@ -341,6 +345,7 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 nameStudentController: _nameStudentController,
                                 workContentControllers: workContentControllers,
                                 userCanBo: loggedInUser,
+                                idHK: idHK,
                               );
                               Map<String, dynamic> dataassignmentForm =
                                   assignmentForm.toMap();
@@ -392,23 +397,23 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
-                              Notifications notification = Notifications(
-                                title: 'Đã được lập phiếu giao việc',
-                                body:
-                                    'Bạn vừa được lập phiếu giao việc bởi cán bộ hướng dẫn : ${loggedInUser.userName}',
-                                timestamp: Timestamp.now(),
-                                emailUser: emailStudent!,
-                              );
-                              await FirebaseApi().sendFirebaseCloudMessage(
-                                notification.title,
-                                notification.body,
-                                fcmTokenStudent,
-                              );
-                              await FirebaseFirestore.instance
-                                  .collection('notifications')
-                                  .add(
-                                    notification.toJson(),
-                                  );
+                              // Notifications notification = Notifications(
+                              //   title: 'Đã được lập phiếu giao việc',
+                              //   body:
+                              //       'Bạn vừa được lập phiếu giao việc bởi cán bộ hướng dẫn : ${loggedInUser.userName}',
+                              //   timestamp: Timestamp.now(),
+                              //   emailUser: emailStudent!,
+                              // );
+                              // await FirebaseApi().sendFirebaseCloudMessage(
+                              //   notification.title,
+                              //   notification.body,
+                              //   fcmTokenStudent,
+                              // );
+                              // await FirebaseFirestore.instance
+                              //     .collection('notifications')
+                              //     .add(
+                              //       notification.toJson(),
+                              //     );
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),
@@ -434,7 +439,6 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 ),
                                 Text(
                                   'Hoàn thành phiếu',
-                                  // 'login'.tr.capitalize,
                                   style: Style.titleStyle.copyWith(
                                       color: backgroundLite, fontSize: 16),
                                 ),

@@ -79,7 +79,8 @@ class _AllNotificationStudentState extends State<AllNotificationStudent> {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
             Notifications notifications = Notifications.fromJson(data);
-            return notifications.emailUser == loggedInUser.email;
+            return notifications.emailUser == loggedInUser.email ||
+                notifications.emailUser == '';
           }).map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;

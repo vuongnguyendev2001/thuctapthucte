@@ -14,10 +14,12 @@ import 'package:trungtamgiasu/views/screens/canbohuongdan/read_info_company.dart
 import 'package:trungtamgiasu/views/screens/canbohuongdan/results_evaluation_detail.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/tracking_sheet.dart';
 import 'package:trungtamgiasu/views/screens/chatbot/chatbot_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/add_notification.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/manager_notifications.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/quan_ly_hoc_phan.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/sv_da_dk_hp.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/home_giangvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/home/home_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/home_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/lecturers_evaluation.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/lecturers_evaluation_detail.dart';
@@ -92,8 +94,20 @@ class RouteManager {
   static const String assignmentAndReceipt = '/assignmentAndReceipt';
   static const String learningOutcomes = '/learningOutcomes';
   static const String notificationStudent = '/notificationStudent';
+    static const String managerNotification = '/managerNotification';
+    static const String addNotification = '/addNotification';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case addNotification:
+        return MaterialPageRoute(
+          builder: (_) => const AddNotification(),
+          settings: settings,
+        );
+      case managerNotification:
+        return MaterialPageRoute(
+          builder: (_) => const ManagerNotification(),
+          settings: settings,
+        );
       case notificationStudent:
         return MaterialPageRoute(
           builder: (_) => const NotificationStudent(),

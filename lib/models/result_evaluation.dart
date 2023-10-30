@@ -28,6 +28,7 @@ class ResultEvaluation {
   String? completeTheWork;
   String? workResults;
   String? sumScore;
+  String? idHK;
 
   ResultEvaluation({
     this.sumScore,
@@ -55,6 +56,7 @@ class ResultEvaluation {
     this.progressReport,
     this.completeTheWork,
     this.workResults,
+    this.idHK
   });
 
   // Create fromMap method
@@ -85,6 +87,7 @@ class ResultEvaluation {
       progressReport: map['progressReport'],
       completeTheWork: map['completeTheWork'],
       workResults: map['workResults'],
+      idHK: map['idHK'],
     );
   }
 
@@ -116,6 +119,7 @@ class ResultEvaluation {
       'progressReport': progressReport,
       'completeTheWork': completeTheWork,
       'workResults': workResults,
+      'idHK': idHK,
     };
   }
 }
