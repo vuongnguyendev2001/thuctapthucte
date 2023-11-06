@@ -37,6 +37,31 @@ class _HomeGiangvienScreenState extends State<HomeGiangvienScreen> {
     print(loggedInUser);
   }
 
+  List<Step> stepList() => [
+        Step(
+          state:
+              _activeCurrentStep <= 0 ? StepState.editing : StepState.complete,
+          isActive: _activeCurrentStep >= 0,
+          title: const Text('Kiểm tra tiến độ sinh viên'),
+          content: const Center(
+            child: Text(
+              'Giảng viên kiểm tra tiến độ thực tập của sinh viên xem có sinh viên nào bị chậm tiến độ hay không thực hiện thực tập hay không.',
+            ),
+          ),
+        ),
+        Step(
+          state: StepState.complete,
+          isActive: _activeCurrentStep >= 1,
+          title: const Text('Đánh giá kết quả thực tập'),
+          content: const Center(
+            child: Text(
+              'Sau khi sinh viên đã nộp báo cáo và kết thúc thực tập giảng viên sẽ đánh giá kết quả thực tập cho sinh viên',
+            ),
+          ),
+        ),
+      ];
+  int _activeCurrentStep = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,6 +240,93 @@ class _HomeGiangvienScreenState extends State<HomeGiangvienScreen> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text(
+                'Quy trình quản lý thực tập giảng viên',
+                style: Style.hometitleStyle,
+              ),
+            ),
+            Expanded(
+              child: Stepper(
+                type: StepperType.vertical,
+                currentStep: _activeCurrentStep,
+                steps: stepList(),
+                onStepContinue: () {
+                  if (_activeCurrentStep < (stepList().length - 1)) {
+                    setState(() {
+                      _activeCurrentStep += 1;
+                    });
+                  }
+                },
+                onStepCancel: () {
+                  if (_activeCurrentStep == 0) {
+                    return;
+                  }
+                  setState(() {
+                    _activeCurrentStep -= 1;
+                  });
+                },
+                connectorColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      // Color when the step is disabled
+                      return Colors.grey;
+                    } else {
+                      // Color for the active step
+                      return primaryColor;
+                    }
+                  },
+                ),
+                onStepTapped: (int index) {
+                  setState(() {
+                    _activeCurrentStep = index;
+                  });
+                },
+                controlsBuilder:
+                    (BuildContext context, ControlsDetails controlsDetails) {
+                  if (_activeCurrentStep == stepList().length - 1) {
+                    return Container(); // Return an empty container to hide controls on the last step
+                  }
+                  return Row(
+                    children: <Widget>[
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(primaryColor),
+                          textStyle: MaterialStateProperty.all<TextStyle>(
+                            const TextStyle(
+                              fontSize: 16, // Set the font size
+                              fontWeight:
+                                  FontWeight.bold, // Set the font weight
+                              color: Colors.white, // Set the text color
+                            ),
+                          ),
+                        ),
+                        onPressed: controlsDetails.onStepContinue,
+                        child: Text(
+                          'Bước kế tiếp',
+                          style: Style.homesubtitleStyle,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(greyFontColor),
+                        ),
+                        onPressed: controlsDetails.onStepCancel,
+                        child: Text(
+                          'Quay lại',
+                          style: Style.homesubtitleStyle,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],

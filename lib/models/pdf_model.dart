@@ -48,8 +48,8 @@ class SinhVienDaDangKyThucTapArguments {
 }
 
 class sumScoreAndIdDocParameters {
-  final String sumScoreCanBo;
-  final String idDKHP;
+  final String? sumScoreCanBo;
+  final String? idDKHP;
   final String fcmTokenStudent;
   final String emailStudent;
   sumScoreAndIdDocParameters(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/profile_giaovu.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 
 class LayoutGiaovuScreen extends StatefulWidget {
@@ -20,9 +21,9 @@ class _LayoutGiaovuScreenState extends State<LayoutGiaovuScreen> {
 
   List pages = [
     const HomeGiaoVuScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const AccountScreen()
+    // const HomeScreen(),
+    // const HomeScreen(),
+    const AccountGiaoVuScreen()
   ];
 
   // void initState() {
@@ -48,9 +49,9 @@ class _LayoutGiaovuScreenState extends State<LayoutGiaovuScreen> {
         elevation: 1,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Tìm kiếm'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: "Thông báo"),
+          // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Tìm kiếm'),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.notifications), label: "Thông báo"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Cá nhân"),
         ],
       ),

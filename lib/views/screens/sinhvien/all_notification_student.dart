@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/notification.dart';
+import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
 class AllNotificationStudent extends StatefulWidget {
@@ -106,6 +109,40 @@ class _AllNotificationStudentState extends State<AllNotificationStudent> {
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 3),
+                      notifications.urlFile != null
+                          ? InkWell(
+                              onTap: () {
+                                PdfViewerArguments arguments =
+                                    PdfViewerArguments(
+                                  notifications.urlFile!,
+                                  notifications.nameFile!,
+                                );
+                                Get.toNamed(RouteManager.pdfViewer,
+                                    arguments: arguments);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                width: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  color: primaryColor,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.remove_red_eye,
+                                      color: whiteColor,
+                                    ),
+                                    Text(
+                                      ' Xem file',
+                                      style: TextStyle(color: whiteColor),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(

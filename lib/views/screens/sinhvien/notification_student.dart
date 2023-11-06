@@ -5,6 +5,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/controllers/route_manager.dart';
+import 'package:trungtamgiasu/models/pdf_model.dart';
 
 class NotificationStudent extends StatefulWidget {
   const NotificationStudent({super.key});
@@ -58,11 +60,49 @@ class _NotificationStudentState extends State<NotificationStudent> {
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Text(
-                      message?.data['timestamp'],
-                      style: Style.subtitleStyle.copyWith(
-                        fontSize: 10,
-                        color: primaryColor,
+                    message?.data['urlFile'] != null
+                        ? InkWell(
+                            onTap: () {
+                              PdfViewerArguments arguments = PdfViewerArguments(
+                                message?.data['urlFile'],
+                                message?.data['filename'],
+                              );
+                              Get.toNamed(
+                                RouteManager.pdfViewer,
+                                arguments: arguments,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              width: 90,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color: primaryColor,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.remove_red_eye,
+                                    color: whiteColor,
+                                  ),
+                                  Text(
+                                    ' Xem file',
+                                    style: TextStyle(color: whiteColor),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        message?.data['timestamp'],
+                        style: Style.subtitleStyle.copyWith(
+                          fontSize: 10,
+                          color: primaryColor,
+                        ),
+                        textAlign: TextAlign.right,
                       ),
                     ),
                   ],

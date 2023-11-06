@@ -271,6 +271,7 @@ class _ApprovingInternshipsScreenState
                     itemBuilder: (context, index) {
                       CourseRegistration courseRegistration =
                           courseRegistrations[index];
+                          
                       if (courseRegistration.semester == selectedSemester &&
                           courseRegistration.academicYear ==
                               selectedAcademicYear) {
@@ -281,7 +282,6 @@ class _ApprovingInternshipsScreenState
                             if (snapshot.hasError) {
                               return const Text('Something went wrong');
                             }
-
                             if (snapshot.connectionState ==
                                     ConnectionState.waiting ||
                                 loggedInUser.uid == null) {
@@ -383,28 +383,6 @@ class _ApprovingInternshipsScreenState
                                                                 arguments:
                                                                     arguments);
                                                           },
-                                                          // child: ClipRRect(
-                                                          //   borderRadius: BorderRadius.circular(radius),
-                                                          //   child: Container(
-                                                          //     height: 150,
-                                                          //     width: 150,
-                                                          //     color: whiteColor,
-                                                          //     child: Column(
-                                                          //       children: [
-                                                          //         Expanded(
-                                                          //           child: Image.network(
-                                                          //               'https://play-lh.googleusercontent.com/9XKD5S7rwQ6FiPXSyp9SzLXfIue88ntf9sJ9K250IuHTL7pmn2-ZB0sngAX4A2Bw4w=w240-h480-rw'),
-                                                          //         ),
-                                                          //         Text(
-                                                          //           internshipApplication
-                                                          //               .nameCV,
-                                                          //           maxLines: 1,
-                                                          //           overflow: TextOverflow.ellipsis,
-                                                          //         ),
-                                                          //       ],
-                                                          //     ),
-                                                          //   ),
-                                                          // ),
                                                           child: Row(
                                                             children: [
                                                               const Text(
@@ -471,38 +449,36 @@ class _ApprovingInternshipsScreenState
                                                                           .showCupertinoDialog(
                                                                         onComfirm:
                                                                             () async {
-                                                                          // Notifications
-                                                                          //     notification =
-                                                                          //     Notifications(
-                                                                          //   title:
-                                                                          //       'Trúng tuyển thực tập',
-                                                                          //   body:
-                                                                          //       'Bạn đã được duyệt thực tập tại công ty ${internshipApplication.Company.name}',
-                                                                          //   timestamp:
-                                                                          //       Timestamp.now(),
-                                                                          //   emailUser:
-                                                                          //       internshipApplications[
-                                                                          //               index]
-                                                                          //           .user
-                                                                          //           .email!,
-                                                                          // );
-                                                                          // await FirebaseApi()
-                                                                          //     .sendFirebaseCloudMessage(
-                                                                          //   notification.title,
-                                                                          //   notification.body,
-                                                                          //   internshipApplications[
-                                                                          //           index]
-                                                                          //       .user
-                                                                          //       .fcmToken!,
-                                                                          // );
-                                                                          // await FirebaseFirestore
-                                                                          //     .instance
-                                                                          //     .collection(
-                                                                          //         'notifications')
-                                                                          //     .add(
-                                                                          //       notification
-                                                                          //           .toJson(),
-                                                                          //     );
+                                                                          Notifications
+                                                                              notification =
+                                                                              Notifications(
+                                                                            title:
+                                                                                'Trúng tuyển thực tập',
+                                                                            body:
+                                                                                'Bạn đã được duyệt thực tập tại công ty ${internshipApplication.Company.name}',
+                                                                            timestamp:
+                                                                                Timestamp.now(),
+                                                                            emailUser:
+                                                                                internshipApplication
+                                                                                    .user
+                                                                                    .email!,
+                                                                          );
+                                                                          await FirebaseApi()
+                                                                              .sendFirebaseCloudMessage(
+                                                                            notification.title,
+                                                                            notification.body,
+                                                                            internshipApplication
+                                                                                .user
+                                                                                .fcmToken!,
+                                                                          );
+                                                                          await FirebaseFirestore
+                                                                              .instance
+                                                                              .collection(
+                                                                                  'notifications')
+                                                                              .add(
+                                                                                notification
+                                                                                    .toJson(),
+                                                                              );
                                                                           await FirebaseFirestore
                                                                               .instance
                                                                               .collection('registrations')
@@ -744,7 +720,7 @@ class _ApprovingInternshipsScreenState
                                                                       .uid!,
                                                                   internshipApplication
                                                                       .Company
-                                                                      .id) as bool;
+                                                                      .id!) as bool;
 
                                                           if (checkForm ==
                                                               false) {

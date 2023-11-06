@@ -42,7 +42,7 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
           state:
               _activeCurrentStep <= 0 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 0,
-          title: const Text('Xét duyệt, Lập phiếu tiếp nhận (28/4 - 4/5)'),
+          title: const Text('Xét duyệt, Lập phiếu tiếp nhận'),
           content: const Center(
             child: Text(
                 'Cán bộ sẽ kiểm tra sinh viên đăng ký thực tập, và có thể nhận sinh viên thực tập ở chức năng "Xét duyệt". Sau đó, cán bộ lập phiếu tiếp nhận cho sinh viên. Sau khi lập xong hãy kiểm tra thông tin phiếu ở chức năng "Kiểm tra thông tin phiếu".'),
@@ -106,18 +106,32 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('Xin chào,', style: Style.subtitleStyle),
-                  Text(loggedInUser?.userName.toString() ?? 'Người dùng',
-                      style: Style.titleStyle),
+                  loggedInUser!.userName != null
+                      ? Text(loggedInUser?.userName.toString() ?? '',
+                          style: Style.titleStyle)
+                      : Text('Cán bộ', style: Style.titleStyle)
                 ],
               ),
               const SizedBox(width: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: CircleAvatar(
-                  radius: 23,
-                  child: Image.network(loggedInUser?.avatar.toString() ?? ''),
-                ),
-              ),
+              loggedInUser?.avatar != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: CircleAvatar(
+                        radius: 23,
+                        child: Image.network(
+                          loggedInUser?.avatar.toString() ?? '',
+                        ),
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: CircleAvatar(
+                        radius: 23,
+                        child: Image.asset(
+                          'assets/images/user.png',
+                        ),
+                      ),
+                    ),
               const SizedBox(width: 10),
               //     InkWell(
               //       onTap: () async {

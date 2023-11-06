@@ -297,6 +297,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                               color: isMe ? Colors.white : Colors.black87,
                               fontSize: 15.0,
                             ),
+                            textAlign: TextAlign.start,
                           ),
                         ),
                       ),

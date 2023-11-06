@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
-import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/waitting_accept.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/waiting_accept_account.dart';
+import 'package:trungtamgiasu/views/screens/sign_up/sign_up_company.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/approving_internships_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/assignment_slip_screen.dart';
+import 'package:trungtamgiasu/views/screens/canbohuongdan/information_company.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/internship_evaluation.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/read_all_form.dart';
@@ -14,6 +18,7 @@ import 'package:trungtamgiasu/views/screens/canbohuongdan/read_info_company.dart
 import 'package:trungtamgiasu/views/screens/canbohuongdan/results_evaluation_detail.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/tracking_sheet.dart';
 import 'package:trungtamgiasu/views/screens/chatbot/chatbot_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/add_crouse.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/add_notification.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/manager_notifications.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/quan_ly_hoc_phan.dart';
@@ -27,7 +32,7 @@ import 'package:trungtamgiasu/views/screens/lecturers/read_student_course.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/assignment_and_receipt.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/layout_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_screen.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/course_registration.dart';
@@ -94,10 +99,40 @@ class RouteManager {
   static const String assignmentAndReceipt = '/assignmentAndReceipt';
   static const String learningOutcomes = '/learningOutcomes';
   static const String notificationStudent = '/notificationStudent';
-    static const String managerNotification = '/managerNotification';
-    static const String addNotification = '/addNotification';
+  static const String managerNotification = '/managerNotification';
+  static const String addNotification = '/addNotification';
+  static const String addCourse = '/addCourse';
+  static const String informationCompany = '/informationCompany';
+  static const String signUpCompany = '/signUpCompany';
+  static const String waitingAccept = '/waitingAccept';
+  static const String waitingAcceptAccount = '/waitingAcceptAccount';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case waitingAcceptAccount:
+        return MaterialPageRoute(
+          builder: (_) => const WaitingAcceptAccount(),
+          settings: settings,
+        );
+      case waitingAccept:
+        return MaterialPageRoute(
+          builder: (_) => const WaitingAccept(),
+          settings: settings,
+        );
+      case signUpCompany:
+        return MaterialPageRoute(
+          builder: (_) => const SignUpCompany(),
+          settings: settings,
+        );
+      case informationCompany:
+        return MaterialPageRoute(
+          builder: (_) => const InformationCompany(),
+          settings: settings,
+        );
+      case addCourse:
+        return MaterialPageRoute(
+          builder: (_) => const AddCourse(),
+          settings: settings,
+        );
       case addNotification:
         return MaterialPageRoute(
           builder: (_) => const AddNotification(),

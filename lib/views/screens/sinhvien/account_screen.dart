@@ -171,24 +171,24 @@ class _AccountScreenState extends State<AccountScreen> {
                 Get.toNamed(RouteManager.readInformationStudentScreen);
               },
             ),
-            const SizedBox(height: 10),
-            Button_Account_Screen(
-              title: 'Thông tin giảng viên hướng dẫn',
-              icon: const Icon(
-                Icons.article_outlined,
-                color: primaryColor,
-              ),
-              onTap: () async {},
-            ),
-            const SizedBox(height: 10),
-            Button_Account_Screen(
-              title: 'Thông tin cán bộ hướng dẫn',
-              icon: const Icon(
-                Icons.supervised_user_circle_outlined,
-                color: primaryColor,
-              ),
-              onTap: () async {},
-            ),
+            // const SizedBox(height: 10),
+            // Button_Account_Screen(
+            //   title: 'Thông tin giảng viên hướng dẫn',
+            //   icon: const Icon(
+            //     Icons.article_outlined,
+            //     color: primaryColor,
+            //   ),
+            //   onTap: () async {},
+            // ),
+            // const SizedBox(height: 10),
+            // Button_Account_Screen(
+            //   title: 'Thông tin cán bộ hướng dẫn',
+            //   icon: const Icon(
+            //     Icons.supervised_user_circle_outlined,
+            //     color: primaryColor,
+            //   ),
+            //   onTap: () async {},
+            // ),
             const SizedBox(height: 10),
             Button_Account_Screen(
               title: 'Đăng xuất',

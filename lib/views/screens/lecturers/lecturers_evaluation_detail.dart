@@ -85,15 +85,23 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
     });
   }
 
-  double? sumCaculator;
+  double sumScoreCanBoString = 0.0;
+  double sumCaculator = 0.0;
   @override
   void initState() {
     super.initState();
     fetchData();
-    updateTotal();
+
     scoreAndIdDoc = Get.arguments as sumScoreAndIdDocParameters;
-    idDocument = scoreAndIdDoc!.idDKHP;
+    idDocument = scoreAndIdDoc!.idDKHP!;
     sumScoreCanBo = scoreAndIdDoc!.sumScoreCanBo;
+    // print(sumScoreCanBo);
+    if (sumScoreCanBo != 'null') {
+      sumScoreCanBoString = double.parse(sumScoreCanBo!);
+      sumCaculator = (sumScoreCanBoString / 100) * 5;
+      companyValuation.text = sumCaculator.toString();
+      companyValuation.addListener(updateTotal);
+    }
     fcmTokenStudent = scoreAndIdDoc!.fcmTokenStudent;
     emailStudent = scoreAndIdDoc!.emailStudent; // Initialize idDocument
     lecturersEvaluationFirestore = FirebaseFirestore.instance
@@ -110,6 +118,7 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
     suitableWorkout.addListener(updateTotal);
     practicalExperience.addListener(updateTotal);
     haveContributed.addListener(updateTotal);
+    updateTotal();
   }
 
   @override
@@ -162,7 +171,6 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                         TextEditingController(text: sumCaculator.toString());
                   }
                 }
-
                 if (lecturersEvaluation.lecturersEvaluation != null) {
                   correctFormat = TextEditingController(
                       text: lecturersEvaluation
@@ -714,7 +722,7 @@ class _LecturersEvaluationDetailState extends State<LecturersEvaluationDetail> {
                               Notifications notification = Notifications(
                                 title: 'Đã có điểm học phần Thực tập thực tế',
                                 body:
-                                    'Kiểm tra điểm học phần ở mục kết quả học tập',
+                                    'Kiểm tra điểm học phần ở kết quả học tập',
                                 timestamp: Timestamp.now(),
                                 emailUser: emailStudent!,
                               );

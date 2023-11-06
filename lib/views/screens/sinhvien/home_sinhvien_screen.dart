@@ -55,6 +55,51 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'No data';
   }
 
+  List<Step> stepList() => [
+        Step(
+          state:
+              _activeCurrentStep <= 0 ? StepState.editing : StepState.complete,
+          isActive: _activeCurrentStep >= 0,
+          title: const Text('Đăng ký học phần & Đăng ký công ty'),
+          content: const Center(
+            child: Text(
+                'Sinh viên đăng ký đúng nhóm học phần của lớp mình. Sau khi đăng ký thành công, sinh viên sẽ đăng ký công ty thực tập phù hợp và chờ được xét duyệt.'),
+          ),
+        ),
+        Step(
+          state:
+              _activeCurrentStep <= 1 ? StepState.editing : StepState.complete,
+          isActive: _activeCurrentStep >= 1,
+          title: const Text('Kiểm tra phiếu giao việc & tiếp nhận'),
+          content: const Center(
+            child: Text(
+              'Sau khi được xét duyệt bởi công ty, sinh viên sẽ kiểm tra thông tin của phiếu tiếp nhận & giao việc để biết thông tin thực tập.',
+            ),
+          ),
+        ),
+        Step(
+          state:
+              _activeCurrentStep <= 2 ? StepState.editing : StepState.complete,
+          isActive: _activeCurrentStep >= 2,
+          title: const Text('Thực tập & Nộp báo cáo'),
+          content: const Center(
+            child: Text(
+                'Sau khi thực tập xong, sinh viên sẽ nộp báo cáo cho giảng viên chấm điểm.'),
+          ),
+        ),
+        Step(
+          state: StepState.complete,
+          isActive: _activeCurrentStep >= 3,
+          title: const Text('Hoàn thành'),
+          content: const Center(
+            child: Text(
+              'Sinh viên chờ giảng viên lên điểm và xem ở phần "kết quả học tập".',
+            ),
+          ),
+        )
+      ];
+  int _activeCurrentStep = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -307,9 +352,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: ()async {
-                         String? idDKHP = await getAllDKHP(loggedInUser.uid!);
-                        await Get.toNamed(RouteManager.learningOutcomes, arguments: idDKHP);
+                      onTap: () async {
+                        String? idDKHP = await getAllDKHP(loggedInUser.uid!);
+                        await Get.toNamed(RouteManager.learningOutcomes,
+                            arguments: idDKHP);
                       },
                       child: SizedBox(
                         width: 68,
@@ -326,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Kết quả học tập',
                                 style: Style.homesubtitleStyle,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -334,6 +380,93 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: 15),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              'Quy trình thực tập của sinh viên',
+              style: Style.hometitleStyle,
+            ),
+          ),
+          Expanded(
+            child: Stepper(
+              type: StepperType.vertical,
+              currentStep: _activeCurrentStep,
+              steps: stepList(),
+              onStepContinue: () {
+                if (_activeCurrentStep < (stepList().length - 1)) {
+                  setState(() {
+                    _activeCurrentStep += 1;
+                  });
+                }
+              },
+              onStepCancel: () {
+                if (_activeCurrentStep == 0) {
+                  return;
+                }
+                setState(() {
+                  _activeCurrentStep -= 1;
+                });
+              },
+              connectorColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.disabled)) {
+                    // Color when the step is disabled
+                    return Colors.grey;
+                  } else {
+                    // Color for the active step
+                    return primaryColor;
+                  }
+                },
+              ),
+              onStepTapped: (int index) {
+                setState(() {
+                  _activeCurrentStep = index;
+                });
+              },
+              controlsBuilder:
+                  (BuildContext context, ControlsDetails controlsDetails) {
+                if (_activeCurrentStep == stepList().length - 1) {
+                  return Container(); // Return an empty container to hide controls on the last step
+                }
+
+                return Row(
+                  children: <Widget>[
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(primaryColor),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                          const TextStyle(
+                            fontSize: 16, // Set the font size
+                            fontWeight: FontWeight.bold, // Set the font weight
+                            color: Colors.white, // Set the text color
+                          ),
+                        ),
+                      ),
+                      onPressed: controlsDetails.onStepContinue,
+                      child: Text(
+                        'Bước kế tiếp',
+                        style: Style.homesubtitleStyle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(greyFontColor),
+                      ),
+                      onPressed: controlsDetails.onStepCancel,
+                      child: Text(
+                        'Quay lại',
+                        style: Style.homesubtitleStyle,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],

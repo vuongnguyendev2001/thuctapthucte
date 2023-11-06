@@ -64,8 +64,8 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
     RegisterViewerArguments? arguments =
         Get.arguments as RegisterViewerArguments?;
     idHK = arguments!.idHK;
-    _nameCompanyController.text = arguments.companyIntern.name;
-    _locationController.text = arguments.companyIntern.companyDetail.address;
+    _nameCompanyController.text = arguments.companyIntern.name!;
+    _locationController.text = arguments.companyIntern.companyDetail!.address;
     _userNameStudentController.text = arguments.userModel.userName!;
     _idClassController.text = arguments.userModel.idClass!;
     _majorController.text = arguments.userModel.major!;
@@ -421,23 +421,23 @@ class _ReceiptFormScreenState extends State<ReceiptFormScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
-                              // Notifications notification = Notifications(
-                              //   title: 'Đã được lập phiếu tiếp nhận',
-                              //   body:
-                              //       'Bạn vừa được lập phiếu tiếp nhận bởi cán bộ hướng dẫn : ${loggedInUser.userName}',
-                              //   timestamp: Timestamp.now(),
-                              //   emailUser: arguments.userModel.email!,
-                              // );
-                              // await FirebaseApi().sendFirebaseCloudMessage(
-                              //   notification.title,
-                              //   notification.body,
-                              //   arguments.userModel.fcmToken,
-                              // );
-                              // await FirebaseFirestore.instance
-                              //     .collection('notifications')
-                              //     .add(
-                              //       notification.toJson(),
-                              //     );
+                              Notifications notification = Notifications(
+                                title: 'Đã được lập phiếu tiếp nhận',
+                                body:
+                                    'Bạn vừa được lập phiếu tiếp nhận bởi cán bộ hướng dẫn : ${loggedInUser.userName}. Kiểm tra thông tin ở Phiếu tiếp nhận',
+                                timestamp: Timestamp.now(),
+                                emailUser: arguments.userModel.email!,
+                              );
+                              await FirebaseApi().sendFirebaseCloudMessage(
+                                notification.title,
+                                notification.body,
+                                arguments.userModel.fcmToken,
+                              );
+                              await FirebaseFirestore.instance
+                                  .collection('notifications')
+                                  .add(
+                                    notification.toJson(),
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),
@@ -502,14 +502,16 @@ class TextFormReceipt extends StatelessWidget {
   Icon? icon;
   int? maxline;
   bool? isReadOnly;
+  bool? obcureText;
   TextFormReceipt({
     super.key,
     this.onChanged = null,
-    this.maxline = null,
+    this.maxline = 1,
     this.isReadOnly = false,
     required this.lableText,
     required this.controller,
     required this.icon,
+    this.obcureText = false,
   });
 
   @override
@@ -524,18 +526,18 @@ class TextFormReceipt extends StatelessWidget {
         // }
         return null;
       },
+      minLines: 1,
+      obscureText: obcureText!,
       onChanged: onChanged,
       readOnly: isReadOnly ?? false,
-      maxLines: maxline,
       controller: controller,
+      maxLines: maxline,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         prefixIcon: icon,
         prefixIconColor: primaryColor,
-        contentPadding: const EdgeInsets.symmetric(
-            vertical: 8.0,
-            horizontal:
-                8.0), // Điều này sẽ giúp điều chỉnh kích thước của TextFormField.
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
         labelText: lableText,
         labelStyle: const TextStyle(color: blackColor),
         border: OutlineInputBorder(

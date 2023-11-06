@@ -8,6 +8,7 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/constants/ui_helper.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/course_register.dart';
@@ -83,18 +84,6 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
   String _searchStudent = "";
   @override
   Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Colors.blue;
-      }
-      return Colors.red;
-    }
-
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
@@ -267,66 +256,6 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                           ],
                         ),
                       ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Table(
-                    border: TableBorder.all(),
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FixedColumnWidth(30),
-                      1: FixedColumnWidth(70),
-                      2: FixedColumnWidth(135),
-                      3: FixedColumnWidth(50),
-                      4: FixedColumnWidth(50),
-                      5: FlexColumnWidth()
-                    },
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    children: <TableRow>[
-                      TableRow(
-                        children: <Widget>[
-                          Center(
-                            child: Text(
-                              'STT',
-                              style: Style.titleStyle,
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              'MSSV',
-                              style: Style.titleStyle,
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              'Họ & Tên',
-                              style: Style.titleStyle,
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              'Điểm số',
-                              style: Style.titleStyle,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              'Điểm chữ',
-                              textAlign: TextAlign.center,
-                              style: Style.titleStyle,
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              'Chấm điểm',
-                              textAlign: TextAlign.center,
-                              style: Style.titleStyle,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
                 StreamBuilder<QuerySnapshot>(
                   stream: _readStudentCourseFirestore,
                   builder: (BuildContext context,
@@ -361,175 +290,293 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                     }
                     return Column(
                       children: [
+                        const SizedBox(height: 5),
+                        InkWell(
+                          onTap: () {
+                            UIHelper.showCupertinoDialog(
+                              title: 'Thông báo',
+                              isShowClose: true,
+                              message:
+                                  'Khóa điểm sẽ không được chỉnh sửa !\n Bạn có đồng ý không?',
+                              titleConfirm: 'Đồng ý',
+                              titleClose: 'Đóng',
+                              onComfirm: () {
+                                for (DangKyHocPhan dkhp in dkhpFromMSSVList) {
+                                  FirebaseFirestore.instance
+                                      .collection('DangKyHocPhan')
+                                      .doc(dkhp.idDKHP)
+                                      .update({
+                                    "lockScore": true,
+                                  });
+                                }
+                                Get.back();
+                              },
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              color: primaryColor,
+                              width: Get.width * 0.4,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.lock_outline,
+                                    color: whiteColor,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    'Khóa bảng điểm',
+                                    style: Style.homesubtitleStyle,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Table(
+                            border: TableBorder.all(),
+                            columnWidths: const <int, TableColumnWidth>{
+                              0: FixedColumnWidth(30),
+                              1: FixedColumnWidth(70),
+                              2: FixedColumnWidth(135),
+                              3: FixedColumnWidth(50),
+                              4: FixedColumnWidth(50),
+                              5: FlexColumnWidth()
+                            },
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
+                            children: <TableRow>[
+                              TableRow(
+                                children: <Widget>[
+                                  Center(
+                                    child: Text(
+                                      'STT',
+                                      style: Style.titleStyle,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'MSSV',
+                                      style: Style.titleStyle,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Họ & Tên',
+                                      style: Style.titleStyle,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Điểm số',
+                                      style: Style.titleStyle,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Điểm chữ',
+                                      textAlign: TextAlign.center,
+                                      style: Style.titleStyle,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Chấm điểm',
+                                      textAlign: TextAlign.center,
+                                      style: Style.titleStyle,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: courseRegistrations.length,
-                            itemBuilder: (context, index) {
-                              CourseRegistration courseRegistration =
-                                  courseRegistrations[index];
-                              if (courseRegistration.semester ==
-                                      selectedSemester &&
-                                  courseRegistration.academicYear ==
-                                      selectedAcademicYear) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      ListView.builder(
-                                        // physics: const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: dkhpFromMSSVList.length,
-                                        itemBuilder: (context, indexFromMSSV) {
-                                          // double totalWord;
-                                          // if (dkhpFromMSSVList[index].lecturersEvaluation !=
-                                          //     null) {
-                                          //   totalWord = double.parse(dkhpFromMSSVList[index]
-                                          //       .lecturersEvaluation!
-                                          //       .total!);
-                                          // }
-                                          return Table(
-                                            border: TableBorder.all(),
-                                            columnWidths: const <int,
-                                                TableColumnWidth>{
-                                              0: FixedColumnWidth(30),
-                                              1: FixedColumnWidth(70),
-                                              2: FixedColumnWidth(135),
-                                              3: FixedColumnWidth(50),
-                                              4: FixedColumnWidth(50),
-                                              5: FlexColumnWidth()
-                                            },
-                                            defaultVerticalAlignment:
-                                                TableCellVerticalAlignment
-                                                    .middle,
-                                            children: <TableRow>[
-                                              TableRow(
-                                                children: <Widget>[
-                                                  Center(
-                                                    child: Text(
-                                                      '${indexFromMSSV + 1}',
-                                                      style:
-                                                          Style.subtitleStyle,
+                          shrinkWrap: true,
+                          itemCount: courseRegistrations.length,
+                          itemBuilder: (context, index) {
+                            CourseRegistration courseRegistration =
+                                courseRegistrations[index];
+                            if (courseRegistration.semester ==
+                                    selectedSemester &&
+                                courseRegistration.academicYear ==
+                                    selectedAcademicYear) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListView.builder(
+                                      // physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: dkhpFromMSSVList.length,
+                                      itemBuilder: (context, indexFromMSSV) {
+                                        // double totalWord;
+                                        // if (dkhpFromMSSVList[index].lecturersEvaluation !=
+                                        //     null) {
+                                        //   totalWord = double.parse(dkhpFromMSSVList[index]
+                                        //       .lecturersEvaluation!
+                                        //       .total!);
+                                        // }
+                                        return Column(
+                                          children: [
+                                            const SizedBox(height: 8),
+                                            Table(
+                                              border: TableBorder.all(),
+                                              columnWidths: const <int,
+                                                  TableColumnWidth>{
+                                                0: FixedColumnWidth(30),
+                                                1: FixedColumnWidth(70),
+                                                2: FixedColumnWidth(135),
+                                                3: FixedColumnWidth(50),
+                                                4: FixedColumnWidth(50),
+                                                5: FlexColumnWidth()
+                                              },
+                                              defaultVerticalAlignment:
+                                                  TableCellVerticalAlignment
+                                                      .middle,
+                                              children: <TableRow>[
+                                                TableRow(
+                                                  children: <Widget>[
+                                                    Center(
+                                                      child: Text(
+                                                        '${indexFromMSSV + 1}',
+                                                        style:
+                                                            Style.subtitleStyle,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      '${dkhpFromMSSVList[indexFromMSSV].user.MSSV}',
-                                                      style:
-                                                          Style.subtitleStyle,
+                                                    Center(
+                                                      child: Text(
+                                                        '${dkhpFromMSSVList[indexFromMSSV].user.MSSV}',
+                                                        style:
+                                                            Style.subtitleStyle,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(5),
-                                                    child: Text(
-                                                      '${dkhpFromMSSVList[indexFromMSSV].user.userName}',
-                                                      style:
-                                                          Style.subtitleStyle,
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      child: Text(
+                                                        '${dkhpFromMSSVList[indexFromMSSV].user.userName}',
+                                                        style:
+                                                            Style.subtitleStyle,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  dkhpFromMSSVList[
+                                                    dkhpFromMSSVList[
+                                                                    indexFromMSSV]
+                                                                .lecturersEvaluation !=
+                                                            null
+                                                        ? Center(
+                                                            child: Text(
+                                                              '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.total}',
+                                                              style: Style
+                                                                  .subtitleStyle,
+                                                            ),
+                                                          )
+                                                        : Center(
+                                                            child: Text(
+                                                              '-',
+                                                              style: Style
+                                                                  .subtitleStyle,
+                                                            ),
+                                                          ),
+                                                    dkhpFromMSSVList[
+                                                                    indexFromMSSV]
+                                                                .lecturersEvaluation !=
+                                                            null
+                                                        ? Center(
+                                                            child: Text(
+                                                              '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.totalScore}',
+                                                              style: Style
+                                                                  .subtitleStyle,
+                                                            ),
+                                                          )
+                                                        : Center(
+                                                            child: Text(
+                                                              '-',
+                                                              style: Style
+                                                                  .subtitleStyle,
+                                                            ),
+                                                          ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        String? sumScoreCanBo =
+                                                            await getAllcanBoEvaluation(
+                                                                dkhpFromMSSVList[
+                                                                        indexFromMSSV]
+                                                                    .user
+                                                                    .uid!);
+                                                        sumScoreAndIdDocParameters
+                                                            sumScoreAndIdDocs =
+                                                            sumScoreAndIdDocParameters(
+                                                          sumScoreCanBo!,
+                                                          dkhpFromMSSVList[
                                                                   indexFromMSSV]
-                                                              .lecturersEvaluation !=
-                                                          null
-                                                      ? Center(
-                                                          child: Text(
-                                                            '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.total}',
-                                                            style: Style
-                                                                .subtitleStyle,
-                                                          ),
-                                                        )
-                                                      : Center(
-                                                          child: Text(
-                                                            '-',
-                                                            style: Style
-                                                                .subtitleStyle,
-                                                          ),
-                                                        ),
-                                                  dkhpFromMSSVList[
+                                                              .idDKHP!,
+                                                          dkhpFromMSSVList[
                                                                   indexFromMSSV]
-                                                              .lecturersEvaluation !=
-                                                          null
-                                                      ? Center(
-                                                          child: Text(
-                                                            '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.totalScore}',
-                                                            style: Style
-                                                                .subtitleStyle,
+                                                              .user
+                                                              .fcmToken!,
+                                                          dkhpFromMSSVList[
+                                                                  indexFromMSSV]
+                                                              .user
+                                                              .email!,
+                                                        );
+                                                        // print(sumScoreCanBo);
+                                                        if (dkhpFromMSSVList[
+                                                                    indexFromMSSV]
+                                                                .lockScore ==
+                                                            false) {
+                                                          Get.toNamed(
+                                                            RouteManager
+                                                                .lecturersEvaluationDetail,
+                                                            arguments:
+                                                                sumScoreAndIdDocs,
+                                                          );
+                                                        } else {
+                                                          EasyLoading.showError(
+                                                            'Bảng điểm đã bị khóa !',
+                                                          );
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 3.1),
+                                                        color: primaryColor,
+                                                        child: const Center(
+                                                          child: Icon(
+                                                            Icons.edit_rounded,
+                                                            color:
+                                                                backgroundLite,
+                                                            size: 20,
                                                           ),
-                                                        )
-                                                      : Center(
-                                                          child: Text(
-                                                            '-',
-                                                            style: Style
-                                                                .subtitleStyle,
-                                                          ),
-                                                        ),
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      String? sumScoreCanBo =
-                                                          await getAllcanBoEvaluation(
-                                                              dkhpFromMSSVList[
-                                                                      indexFromMSSV]
-                                                                  .user
-                                                                  .uid!);
-                                                      sumScoreAndIdDocParameters
-                                                          sumScoreAndIdDocs =
-                                                          sumScoreAndIdDocParameters(
-                                                        sumScoreCanBo!,
-                                                        dkhpFromMSSVList[
-                                                                indexFromMSSV]
-                                                            .idDKHP!,
-                                                        dkhpFromMSSVList[
-                                                                indexFromMSSV]
-                                                            .user
-                                                            .fcmToken!,
-                                                        dkhpFromMSSVList[
-                                                                indexFromMSSV]
-                                                            .user
-                                                            .email!,
-                                                      );
-                                                      // print(sumScoreCanBo);
-                                                      // if (sumScoreCanBo !=
-                                                      //     "null") {
-                                                      Get.toNamed(
-                                                        RouteManager
-                                                            .lecturersEvaluationDetail,
-                                                        arguments:
-                                                            sumScoreAndIdDocs,
-                                                      );
-                                                      // } else {
-                                                      //   EasyLoading.showError(
-                                                      //     'Sinh viên chưa nộp báo cáo !',
-                                                      //   );
-                                                      // }
-                                                    },
-                                                    child: Container(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 3.1),
-                                                      color: primaryColor,
-                                                      child: const Center(
-                                                        child: Icon(
-                                                          Icons.edit_rounded,
-                                                          color: backgroundLite,
-                                                          size: 20,
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                            }),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ],
                     );
                   },

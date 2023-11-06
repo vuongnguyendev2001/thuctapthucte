@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/enums/snack_bar_type.dart';
@@ -245,7 +246,10 @@ class _SubmitReportState extends State<SubmitReport> {
                                                   fileNamePdf!,
                                                 ).toMap()
                                               },
-                                            );
+                                            ).then((_) {
+                                              EasyLoading.showSuccess(
+                                                  'Nộp thành công');
+                                            });
                                           }
                                         } catch (e) {
                                           print(e);

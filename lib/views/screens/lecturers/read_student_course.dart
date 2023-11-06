@@ -4,6 +4,7 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
+import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
@@ -52,6 +53,27 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
       }
     }
     return false;
+  }
+
+  final Stream<QuerySnapshot> _usersStream =
+      FirebaseFirestore.instance.collection('registrations').snapshots();
+  CollectionReference internshipApplicationsCollection =
+      FirebaseFirestore.instance.collection('registrations');
+  Future<String?> getAllApplications(String userID) async {
+    QuerySnapshot querySnapshot = await internshipApplicationsCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        RegistrationModel internshipApplication =
+            RegistrationModel.fromMap(data);
+        if (internshipApplication.user.uid == userID &&
+            internshipApplication.status == "Đã duyệt") {
+          return internshipApplication.Company.id;
+        }
+      }
+    }
+    return 'null';
   }
 
   @override
@@ -107,10 +129,19 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                     padding: const EdgeInsets.all(10),
                     child: TextField(
                       decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primaryColor,
+                            width: 2,
+                          ),
+                        ),
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 8.0),
                         hintText: 'Mã số sinh viên hoặc tên sinh viên',
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: primaryColor,
+                        ),
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
@@ -162,9 +193,8 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                   border: TableBorder.all(),
                   columnWidths: const <int, TableColumnWidth>{
                     0: FixedColumnWidth(30),
-                    1: FixedColumnWidth(75),
-                    2: FixedColumnWidth(150),
-                    3: FlexColumnWidth()
+                    1: FixedColumnWidth(170),
+                    2: FlexColumnWidth()
                   },
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: <TableRow>[
@@ -173,12 +203,6 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                         Center(
                           child: Text(
                             'STT',
-                            style: Style.titleStyle,
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            'MSSV',
                             style: Style.titleStyle,
                           ),
                         ),
@@ -207,9 +231,8 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                           border: TableBorder.all(),
                           columnWidths: const <int, TableColumnWidth>{
                             0: FixedColumnWidth(30),
-                            1: FixedColumnWidth(75),
-                            2: FixedColumnWidth(150),
-                            3: FlexColumnWidth()
+                            1: FixedColumnWidth(170),
+                            2: FlexColumnWidth()
                           },
                           defaultVerticalAlignment:
                               TableCellVerticalAlignment.middle,
@@ -222,12 +245,6 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                     style: Style.subtitleStyle,
                                   ),
                                 ),
-                                Center(
-                                  child: Text(
-                                    '${dkhpFromMSSVList[index].user.MSSV}',
-                                    style: Style.subtitleStyle,
-                                  ),
-                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 3),
                                   child: Column(
@@ -235,7 +252,11 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${dkhpFromMSSVList[index].user.userName}',
+                                        'MS: ${dkhpFromMSSVList[index].user.MSSV}',
+                                        style: Style.subtitleStyle,
+                                      ),
+                                      Text(
+                                        'Tên: ${dkhpFromMSSVList[index].user.userName}',
                                         style: Style.subtitleStyle,
                                       ),
                                       Text(
@@ -256,108 +277,182 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: Checkbox(
-                                              checkColor: primaryColor,
-                                              fillColor:
-                                                  const MaterialStatePropertyAll(
-                                                Colors.white70,
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child: Checkbox(
+                                                  checkColor: primaryColor,
+                                                  fillColor:
+                                                      const MaterialStatePropertyAll(
+                                                    Colors.white70,
+                                                  ),
+                                                  value: dkhpFromMSSVList[index]
+                                                      .locationIntern,
+                                                  onChanged: null,
+                                                ),
                                               ),
-                                              value: dkhpFromMSSVList[index]
-                                                  .locationIntern,
-                                              onChanged: null,
+                                              Text(
+                                                'Nơi thực tập',
+                                                style: Style.subtitleStyle,
+                                              ),
+                                            ],
+                                          ),
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 8.0),
+                                            child: Icon(
+                                              Icons.visibility_rounded,
+                                              color: primaryColor,
                                             ),
                                           ),
-                                          Text(
-                                            'Nơi thực tập',
-                                            style: Style.subtitleStyle,
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child: Checkbox(
+                                                    checkColor: primaryColor,
+                                                    fillColor:
+                                                        const MaterialStatePropertyAll(
+                                                      Colors.white70,
+                                                    ),
+                                                    value:
+                                                        dkhpFromMSSVList[index]
+                                                            .receiptForm,
+                                                    onChanged: null),
+                                              ),
+                                              Text(
+                                                'Phiếu tiếp nhận',
+                                                style: Style.subtitleStyle,
+                                              ),
+                                            ],
+                                          ),
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 8.0),
+                                            child: Icon(
+                                              Icons.visibility_rounded,
+                                              color: primaryColor,
+                                            ),
                                           ),
                                         ],
                                       ),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: Checkbox(
-                                                checkColor: primaryColor,
-                                                fillColor:
-                                                    const MaterialStatePropertyAll(
-                                                  Colors.white70,
-                                                ),
-                                                value: dkhpFromMSSVList[index]
-                                                    .receiptForm,
-                                                onChanged: null),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child: Checkbox(
+                                                    checkColor: primaryColor,
+                                                    fillColor:
+                                                        const MaterialStatePropertyAll(
+                                                      Colors.white70,
+                                                    ),
+                                                    value:
+                                                        dkhpFromMSSVList[index]
+                                                            .assignmentSlipForm,
+                                                    onChanged: null),
+                                              ),
+                                              Text(
+                                                'Phiếu giao việc',
+                                                style: Style.subtitleStyle,
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            'Phiếu tiếp nhận',
-                                            style: Style.subtitleStyle,
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 8.0),
+                                            child: Icon(
+                                              Icons.visibility_rounded,
+                                              color: primaryColor,
+                                            ),
                                           ),
                                         ],
                                       ),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: Checkbox(
-                                                checkColor: primaryColor,
-                                                fillColor:
-                                                    const MaterialStatePropertyAll(
-                                                  Colors.white70,
-                                                ),
-                                                value: dkhpFromMSSVList[index]
-                                                    .assignmentSlipForm,
-                                                onChanged: null),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child: Checkbox(
+                                                    checkColor: primaryColor,
+                                                    fillColor:
+                                                        const MaterialStatePropertyAll(
+                                                      Colors.white70,
+                                                    ),
+                                                    value:
+                                                        dkhpFromMSSVList[index]
+                                                            .evaluation,
+                                                    onChanged: null),
+                                              ),
+                                              Text(
+                                                'Cán bộ đánh giá',
+                                                style: Style.subtitleStyle,
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            'Phiếu giao việc',
-                                            style: Style.subtitleStyle,
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 8.0),
+                                            child: Icon(
+                                              Icons.visibility_rounded,
+                                              color: primaryColor,
+                                            ),
                                           ),
                                         ],
                                       ),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: Checkbox(
-                                                checkColor: primaryColor,
-                                                fillColor:
-                                                    const MaterialStatePropertyAll(
-                                                  Colors.white70,
-                                                ),
-                                                value: dkhpFromMSSVList[index]
-                                                    .evaluation,
-                                                onChanged: null),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child: Checkbox(
+                                                    checkColor: primaryColor,
+                                                    fillColor:
+                                                        const MaterialStatePropertyAll(
+                                                      Colors.white70,
+                                                    ),
+                                                    value:
+                                                        dkhpFromMSSVList[index]
+                                                            .isSubmitReport,
+                                                    onChanged: null),
+                                              ),
+                                              Text(
+                                                'Nộp báo cáo',
+                                                style: Style.subtitleStyle,
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            'Cán bộ đánh giá',
-                                            style: Style.subtitleStyle,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: Checkbox(
-                                                checkColor: primaryColor,
-                                                fillColor:
-                                                    const MaterialStatePropertyAll(
-                                                  Colors.white70,
-                                                ),
-                                                value: dkhpFromMSSVList[index]
-                                                    .isSubmitReport,
-                                                onChanged: null),
-                                          ),
-                                          Text(
-                                            'Nộp báo cáo',
-                                            style: Style.subtitleStyle,
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 8.0),
+                                            child: Icon(
+                                              Icons.visibility_rounded,
+                                              color: primaryColor,
+                                            ),
                                           ),
                                         ],
                                       ),

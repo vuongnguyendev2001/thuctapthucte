@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trungtamgiasu/views/screens/account/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/profile_canbo_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';

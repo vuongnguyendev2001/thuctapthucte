@@ -43,6 +43,15 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
     }
   }
 
+  String idHocKi = '';
+  String? getidHocKi(String? idHocKiStream) {
+    setState(() {
+      idHocKi = idHocKiStream!;
+    });
+    print(idHocKi);
+    return idHocKi;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +66,8 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
         actions: [
           InkWell(
             onTap: () async {
-              await addDataToFirestore();
+              // await addDataToFirestore();
+              Get.toNamed(RouteManager.addCourse);
             },
             child: CircleAvatar(
               backgroundColor: whiteColor,
@@ -90,12 +100,10 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
               courseRegistration.id = idDocument;
               courseRegistrations.add(courseRegistration);
             }
-
             List<String> uniqueSemesters = courseRegistrations
                 .map((courseRegistration) => courseRegistration.semester)
                 .toSet()
                 .toList();
-
             List<String> uniqueAcademicYears = courseRegistrations
                 .map((courseRegistration) => courseRegistration.academicYear)
                 .toSet()
@@ -106,6 +114,7 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
             selectedAcademicYear ??= uniqueAcademicYears.isNotEmpty
                 ? uniqueAcademicYears.first
                 : null;
+
             return Column(
               children: [
                 // const SizedBox(height: 10),
@@ -193,7 +202,6 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
                         if (courseRegistration.semester == selectedSemester &&
                             courseRegistration.academicYear ==
                                 selectedAcademicYear) {
-                          print(courseRegistration.id);
                           // return InkWell(
                           //   onTap: () async {
                           //     try {
@@ -291,6 +299,10 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
                                       return Column(
                                         children: [
                                           ListTile(
+                                            leading: Text(
+                                              '${index + 1}',
+                                              style: Style.subtitleStyle,
+                                            ),
                                             title: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment

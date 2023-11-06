@@ -49,8 +49,7 @@ class LoginService {
 
   Future<void> signUpAccount(String emailAddress, String password) async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
@@ -141,10 +140,10 @@ class LoginService {
     }
   }
 
-  Future<String> checkUserType() async {
-    final user = FirebaseAuth.instance.currentUser;
+  Future<String> checkUserType(String? uid) async {
+    // final user = FirebaseAuth.instance.currentUser;
     final userDoc =
-        FirebaseFirestore.instance.collection('user').doc(user!.uid);
+        FirebaseFirestore.instance.collection('user').doc(uid);
     final userData = await userDoc.get();
     if (userData.exists) {
       final userType = userData.data()?['type'];

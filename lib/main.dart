@@ -5,13 +5,19 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'controllers/route_manager.dart';
 import 'firebase_options.dart';
+import 'services/get_current_user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
+  final updatedUser = await getUserInfo(loggedInUser);
+  if (updatedUser.uid == "1hTWuEYv9nYt3GLomYkrNrn79ny2") {
+    await FirebaseApi().unsubscribeToTopic();
+  } else {
+    await FirebaseApi().initNotifications();
+  }
   runApp(const MyApp());
 }
 

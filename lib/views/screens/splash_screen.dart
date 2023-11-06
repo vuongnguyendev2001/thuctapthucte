@@ -5,7 +5,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/login_service.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_giangvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/layout/layout_giaovu_screen.dart';
+import 'package:trungtamgiasu/views/screens/giaovu/layout_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/layout/layout_nhanvien_screen.dart';
 import 'package:trungtamgiasu/views/screens/splash_screen2.dart';
 

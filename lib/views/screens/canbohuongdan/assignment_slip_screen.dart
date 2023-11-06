@@ -31,7 +31,7 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
     RegisterViewerArguments? arguments =
         Get.arguments as RegisterViewerArguments?;
     idHK = arguments!.idHK;
-    _nameCompanyController.text = arguments!.companyIntern.name;
+    _nameCompanyController.text = arguments.companyIntern.name!;
     _nameStudentController.text = arguments.userModel.userName!;
     _mssvController.text = arguments.userModel.MSSV!;
     uidStudent = arguments.userModel.uid;
@@ -397,23 +397,23 @@ class _AssignmentSlipScreenState extends State<AssignmentSlipScreen> {
                                 // Xử lý lỗi nếu có khi thêm tài liệu
                                 print('Lỗi khi thêm tài liệu: $error');
                               });
-                              // Notifications notification = Notifications(
-                              //   title: 'Đã được lập phiếu giao việc',
-                              //   body:
-                              //       'Bạn vừa được lập phiếu giao việc bởi cán bộ hướng dẫn : ${loggedInUser.userName}',
-                              //   timestamp: Timestamp.now(),
-                              //   emailUser: emailStudent!,
-                              // );
-                              // await FirebaseApi().sendFirebaseCloudMessage(
-                              //   notification.title,
-                              //   notification.body,
-                              //   fcmTokenStudent,
-                              // );
-                              // await FirebaseFirestore.instance
-                              //     .collection('notifications')
-                              //     .add(
-                              //       notification.toJson(),
-                              //     );
+                              Notifications notification = Notifications(
+                                title: 'Đã được lập phiếu giao việc',
+                                body:
+                                    'Bạn vừa được lập phiếu giao việc bởi cán bộ hướng dẫn : ${loggedInUser.userName}. Kiểm tra thông tin ở Phiếu giao việc',
+                                timestamp: Timestamp.now(),
+                                emailUser: emailStudent!,
+                              );
+                              await FirebaseApi().sendFirebaseCloudMessage(
+                                notification.title,
+                                notification.body,
+                                fcmTokenStudent,
+                              );
+                              await FirebaseFirestore.instance
+                                  .collection('notifications')
+                                  .add(
+                                    notification.toJson(),
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width, 44),

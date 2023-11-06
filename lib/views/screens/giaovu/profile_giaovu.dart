@@ -10,14 +10,14 @@ import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/services/login_service.dart';
 
-class AccountLecturersScreen extends StatefulWidget {
-  const AccountLecturersScreen({super.key});
+class AccountGiaoVuScreen extends StatefulWidget {
+  const AccountGiaoVuScreen({super.key});
 
   @override
-  State<AccountLecturersScreen> createState() => _AccountLecturersScreenState();
+  State<AccountGiaoVuScreen> createState() => _AccountGiaoVuScreenState();
 }
 
-class _AccountLecturersScreenState extends State<AccountLecturersScreen> {
+class _AccountGiaoVuScreenState extends State<AccountGiaoVuScreen> {
   @override
   UserModel loggedInUser = UserModel();
   String? email, avatarUser, name;
@@ -42,7 +42,7 @@ class _AccountLecturersScreenState extends State<AccountLecturersScreen> {
         backgroundColor: primaryColor,
         automaticallyImplyLeading: false,
         title: Text(
-          'Thông tin cán bộ',
+          'Thông tin sinh viên',
           style: Style.hometitleStyle.copyWith(color: whiteColor),
         ),
         centerTitle: true,
@@ -109,29 +109,6 @@ class _AccountLecturersScreenState extends State<AccountLecturersScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Icons.article_outlined,
-                                color: primaryColor,
-                              ),
-                              const SizedBox(width: 5),
-                              RichText(
-                                text: TextSpan(
-                                  text: 'Mã Cán Bộ: ',
-                                  style: Style.titleStyle,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: user.MSCB,
-                                        style: Style.titleStyle.copyWith(
-                                          color: primaryColor,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Row(
-                            children: [
-                              const Icon(
                                 Icons.email_outlined,
                                 color: primaryColor,
                               ),
@@ -146,30 +123,6 @@ class _AccountLecturersScreenState extends State<AccountLecturersScreen> {
                                         style: Style.titleStyle.copyWith(
                                           color: primaryColor,
                                         )),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.phone_android_outlined,
-                                color: primaryColor,
-                              ),
-                              const SizedBox(width: 5),
-                              RichText(
-                                text: TextSpan(
-                                  text: 'SĐT: ',
-                                  style: Style.titleStyle,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: user.phoneNumber,
-                                      style: Style.titleStyle.copyWith(
-                                        color: primaryColor,
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -195,6 +148,24 @@ class _AccountLecturersScreenState extends State<AccountLecturersScreen> {
             //     Get.toNamed(RouteManager.readInformationStudentScreen);
             //   },
             // ),
+            // const SizedBox(height: 10),
+            // Button_Account_Screen(
+            //   title: 'Thông tin giảng viên hướng dẫn',
+            //   icon: const Icon(
+            //     Icons.article_outlined,
+            //     color: primaryColor,
+            //   ),
+            //   onTap: () async {},
+            // ),
+            // const SizedBox(height: 10),
+            // Button_Account_Screen(
+            //   title: 'Thông tin cán bộ hướng dẫn',
+            //   icon: const Icon(
+            //     Icons.supervised_user_circle_outlined,
+            //     color: primaryColor,
+            //   ),
+            //   onTap: () async {},
+            // ),
             const SizedBox(height: 10),
             Button_Account_Screen(
               title: 'Đăng xuất',
@@ -213,6 +184,136 @@ class _AccountLecturersScreenState extends State<AccountLecturersScreen> {
       ),
     );
   }
+
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     backgroundColor: background,
+  //     appBar: AppBar(
+  //       backgroundColor: primaryColor,
+  //       automaticallyImplyLeading: false,
+  //       title: Text(
+  //         'Thông tin sinh viên',
+  //         style: Style.hometitleStyle.copyWith(color: whiteColor),
+  //       ),
+  //       centerTitle: true,
+  //     ),
+  //     body: Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           avatarUser != null
+  //               ? Padding(
+  //                   padding: const EdgeInsets.only(left: 10),
+  //                   child: ClipRRect(
+  //                     borderRadius: BorderRadius.circular(35),
+  //                     child: CircleAvatar(
+  //                       radius: 35,
+  //                       child: Image.network(avatarUser.toString()),
+  //                     ),
+  //                   ),
+  //                 )
+  //               : Padding(
+  //                   padding: const EdgeInsets.only(left: 10),
+  //                   child: ClipRRect(
+  //                     borderRadius: BorderRadius.circular(35),
+  //                     child: CircleAvatar(
+  //                       radius: 35,
+  //                       child: Image.asset('assets/images/user.png'),
+  //                     ),
+  //                   ),
+  //                 ),
+  //           const SizedBox(width: 10),
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               // Row(
+  //               //   children: [
+  //               //     const Icon(
+  //               //       Icons.account_circle_outlined,
+  //               //       color: primaryColor,
+  //               //     ),
+  //               //     const SizedBox(width: 5),
+  //               //     Text(
+  //               //       loggedInUser.userName!,
+  //               //       style: Style.titleStyle,
+  //               //     ),
+  //               //   ],
+  //               // ),
+  //               const SizedBox(height: 2),
+  //               Row(
+  //                 children: [
+  //                   const Icon(
+  //                     Icons.article_outlined,
+  //                     color: primaryColor,
+  //                   ),
+  //                   const SizedBox(width: 5),
+  //                   // Text(
+  //                   //   'Lớp: ${loggedInUser.idClass!}',
+  //                   //   style: Style.titleStyle,
+  //                   // ),
+  //                 ],
+  //               ),
+  //               Row(
+  //                 children: [
+  //                   const Icon(
+  //                     Icons.email_outlined,
+  //                     color: primaryColor,
+  //                   ),
+  //                   const SizedBox(width: 5),
+  //                   Text(
+  //                     'Gmail: $email',
+  //                     style: Style.titleStyle,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //           const SizedBox(height: 15),
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.circular(10),
+  //             child: Container(
+  //               color: whiteColor,
+  //               child: Column(
+  //                 children: [
+  //                   GestureDetector(
+  //                     onTap: () async {
+  //                       await LoginService().handleGoogleSignOut();
+  //                       await LoginService().handleSignOut();
+  //                       await Get.offAllNamed(RouteManager.loginScreen);
+  //                     },
+  //                     child: Container(
+  //                       padding: const EdgeInsets.all(10),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Row(
+  //                             children: [
+  //                               Icon(Icons.logout_outlined),
+  //                               SizedBox(width: 5),
+  //                               Text(
+  //                                 'Đăng xuất',
+  //                                 style: Style.subtitleStyle,
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           Icon(
+  //                             Icons.keyboard_arrow_right_outlined,
+  //                             size: 26,
+  //                           )
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 class Button_Account_Screen extends StatelessWidget {

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -6,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
+import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:trungtamgiasu/services/login_service.dart';
@@ -20,7 +22,7 @@ class ProfileCanBoScreen extends StatefulWidget {
 class _ProfileCanBoScreenState extends State<ProfileCanBoScreen> {
   @override
   UserModel loggedInUser = UserModel();
-  String? email, avatarUser, name;
+  String? email, avatarUser, name, uid;
   void initState() {
     super.initState();
     fetchData();
@@ -29,10 +31,27 @@ class _ProfileCanBoScreenState extends State<ProfileCanBoScreen> {
   Future<void> fetchData() async {
     final updatedUser = await getUserInfo(loggedInUser);
     setState(() {
-      // loggedInUser = updatedUser;
+      uid = updatedUser.uid;
       avatarUser = updatedUser.avatar;
       email = updatedUser.email;
     });
+  }
+
+  CollectionReference companiesCollection =
+      FirebaseFirestore.instance.collection('companies');
+  Future<CompanyIntern?> getInformationCompany(String? userID) async {
+    QuerySnapshot querySnapshot = await companiesCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        CompanyIntern companyIntern = CompanyIntern.fromMap(data);
+        if (companyIntern.idUserCanBo == userID) {
+          return companyIntern;
+        }
+      }
+    }
+    return null;
   }
 
   Widget build(BuildContext context) {
@@ -99,10 +118,15 @@ class _ProfileCanBoScreenState extends State<ProfileCanBoScreen> {
                                 color: primaryColor,
                               ),
                               const SizedBox(width: 5),
-                              Text(
-                                user.userName!,
-                                style: Style.titleStyle,
-                              ),
+                              user.userName != null
+                                  ? Text(
+                                      user.userName!,
+                                      style: Style.titleStyle,
+                                    )
+                                  : Text(
+                                      'Cán bộ',
+                                      style: Style.titleStyle,
+                                    ),
                             ],
                           ),
                           const SizedBox(height: 2),
@@ -155,7 +179,13 @@ class _ProfileCanBoScreenState extends State<ProfileCanBoScreen> {
                 Icons.article_outlined,
                 color: primaryColor,
               ),
-              onTap: () async {},
+              onTap: () async {
+                CompanyIntern? companyIntern = await getInformationCompany(uid);
+                Get.toNamed(
+                  RouteManager.informationCompany,
+                  arguments: companyIntern,
+                );
+              },
             ),
             const SizedBox(height: 10),
             Button_Account_Screen(

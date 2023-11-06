@@ -1,34 +1,28 @@
 class CompanyIntern {
-  String id;
-  String logo;
-  String name;
-  String position;
-  double salary;
-  String location;
-  CompanyDetail companyDetail;
+  String? id;
+  String? logo;
+  String? name;
+  String? position;
+  double? salary;
+  String? location;
+  CompanyDetail? companyDetail;
   String? idUserCanBo;
+  String? status;
 
-  CompanyIntern(
-    this.id,
-    this.logo,
-    this.name,
-    this.position,
-    this.salary,
-    this.location,
-    this.companyDetail,
-    this.idUserCanBo,
-  );
+  CompanyIntern(this.id, this.logo, this.name, this.position, this.salary,
+      this.location, this.companyDetail, this.idUserCanBo, this.status);
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'logo': logo,
-      'name': name,
-      'position': position,
-      'salary': salary,
-      'location': location,
-      'companyDetail': companyDetail.toMap(),
-      'idUserCanBo': idUserCanBo
+      'id': id ?? '',
+      'logo': logo ?? '',
+      'name': name ?? '',
+      'position': position ?? '',
+      'salary': salary ?? '',
+      'location': location ?? '',
+      'companyDetail': companyDetail?.toMap() ?? {},
+      'idUserCanBo': idUserCanBo ?? '',
+      'status': status ?? '',
     };
   }
 
@@ -40,8 +34,11 @@ class CompanyIntern {
       map['position'],
       map['salary'],
       map['location'],
-      CompanyDetail.fromMap(map['companyDetail']),
+      CompanyDetail.fromMap(
+        map['companyDetail'] ?? {},
+      ),
       map['idUserCanBo'],
+      map['status'],
     );
   }
 }
@@ -95,58 +92,65 @@ List<String> PositionTMA = [
 ];
 List<CompanyIntern> companies = [
   CompanyIntern(
-      '01',
+      '',
       'https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBL3F6SXc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--87584e37110f284429335454942adf9a1e133d0d/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oSnlaWE5wZW1WZmRHOWZabWwwV3dkcEFhb3ciLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--bb0ebae071595ab1791dc0ad640ef70a76504047/Purple%202.png',
       'Công ty Silicon Stack Việt Nam',
-      '',
+      'Thực tập sinh: Backend, Frontend, Mobile',
       2000000,
       'TP Hồ Chí Minh',
       companyDetail1,
+      '',
       ''),
   CompanyIntern(
-      '02',
+      '',
       'https://media.licdn.com/dms/image/C4E0BAQGhTbNRDPDePg/company-logo_200_200/0/1519873351874?e=1704326400&v=beta&t=W23Dw7mz86OTSrI0bpam6R-Cl5trCJ1fn9TMurTirCc',
       'Công ty TNHH Techbase Việt Nam',
-      '',
+      'Thực tập sinh: Backend, Frontend, Mobile',
       5000000,
       'TP Hồ Chí Minh',
       companyDetailTechbase,
+      '',
       ''),
   CompanyIntern(
-      '03',
+      '',
       'https://cdn-new.topcv.vn/unsafe/140x/filters:format(webp)/https://static.topcv.vn/company_logos/drimaes-vn-6316eb0d809b7.jpg',
       'Công ty PRIMAES',
-      '',
+      'Thực tập sinh: Backend (NodeJS), Frontend (ReactJS), Mobile (Flutter)',
       3000000,
       'TP Cần Thơ',
       companyDetailPRIMAES,
+      '',
       ''),
   CompanyIntern(
-      '04',
-      'https://cdn-new.topcv.vn/unsafe/140x/filters:format(webp)/https://static.topcv.vn/company_logos/drimaes-vn-6316eb0d809b7.jpg',
-      'Công ty cổ phần phần mềm PATSOFT',
       '',
+      'https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/283092678_2090494587821782_8679712818922177375_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_ohc=jf9gzJP-PGIAX9vNnDb&_nc_ht=scontent-tpe1-1.xx&oh=00_AfCiKUTFCfleE3eDKLKe_i5aSN6fM_W9ythA7ADNTcT0Pg&oe=6546F1AF',
+      'Công ty cổ phần phần mềm PATSOFT',
+      'Tester, Backend, Frontend, Fullstack, Mobile, UX/UI Designer',
       1,
       'TP Cần Thơ',
       companyDetailPATSOFT,
+      '',
       ''),
   CompanyIntern(
-      '05',
-      'https://www.tma.vn/Themes/TMAVN.Theme/Images/TMA-logo2.png',
-      'Tập đoàn công nghệ TMA',
-      '',
-      5000000,
-      'TP Hồ Chí Minh',
-      companyDetail1,
-      '0he8Ib5cP4YqrEciWtBu3221kU03'),
+    '',
+    'https://www.tma.vn/Themes/TMAVN.Theme/Images/TMA-logo2.png',
+    'Tập đoàn công nghệ TMA',
+    'Tester, Backend, Frontend, Fullstack, Mobile, UX/UI Designer',
+    5000000,
+    'TP Hồ Chí Minh',
+    companyDetail1,
+    '0he8Ib5cP4YqrEciWtBu3221kU03',
+    '',
+  ),
   CompanyIntern(
-      '06',
+      '',
       'https://arena.cusc.vn/logo_cusc.png',
       'Trung Tâm Công Nghệ Phần Mềm CUSC',
-      '',
-      1,
+      'Thực tập sinh: Tester, Backend, Frontend',
+      5000000,
       'TP Cần Thơ',
       companyDetail1,
+      '9VoZm10UQGThlYGK5nmiHmRHZSe2',
       ''),
 ];
 

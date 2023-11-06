@@ -308,6 +308,7 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                                                 assignmentSlipForm: false,
                                                 evaluation: false,
                                                 isSubmitReport: false,
+                                                lockScore: false,
                                               );
                                               if (loggedInUser != null) {
                                                 await courseRegistrationsCollection

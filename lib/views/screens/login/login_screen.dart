@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import '../../../constants/color.dart';
@@ -38,6 +40,23 @@ class _LoginScreenState extends State<LoginScreen> {
     isShowPass = true;
     // currentUser = getUserInfo();
     // print(currentUser.email);
+  }
+
+  CollectionReference companiesCollection =
+      FirebaseFirestore.instance.collection('companies');
+  Future<CompanyIntern?> getInformationCompany(String? userID) async {
+    QuerySnapshot querySnapshot = await companiesCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        CompanyIntern companyIntern = CompanyIntern.fromMap(data);
+        if (companyIntern.idUserCanBo == userID) {
+          return companyIntern;
+        }
+      }
+    }
+    return null;
   }
 
   @override
@@ -218,16 +237,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           await Loading().isShowLoading();
                           await LoginService().signInAccount(
                               emailController.text, passwordController.text);
-                          final userType = await LoginService().checkUserType();
-                          if (userType == 'Giáo vụ') {
-                            Get.toNamed(RouteManager.layoutGiaovuScreen);
-                          } else if (userType == 'Sinh viên') {
-                            Get.toNamed(RouteManager.layoutScreen);
-                          } else if (userType == 'Giảng viên') {
-                            Get.toNamed(RouteManager.layoutGiangvienScreen);
-                          } else if (userType == 'Nhân viên') {
-                            Get.toNamed(RouteManager.layoutNhanvienScreen);
-                          }
+                           FirebaseAuth.instance.authStateChanges().listen(
+                            (User? user) async {
+                              if (user != null) {
+                                print(user.uid);
+                                final userType = await LoginService()
+                                    .checkUserType(user.uid);
+                                CompanyIntern? companyIntern =
+                                    await getInformationCompany(user.uid);
+                                if (userType == 'Giáo vụ') {
+                                  await Get.offAllNamed(
+                                      RouteManager.layoutGiaovuScreen);
+                                } else if (userType == 'Sinh viên') {
+                                  await Get.offAllNamed(
+                                      RouteManager.layoutScreen);
+                                } else if (userType == 'Giảng viên') {
+                                  await Get.offAllNamed(
+                                      RouteManager.layoutGiangvienScreen);
+                                } else if (userType == 'Nhân viên') {
+                                  if (companyIntern == null) {
+                                    await Get.toNamed(
+                                        RouteManager.waitingAccept);
+                                  } else {
+                                    await Get.offAllNamed(
+                                        RouteManager.layoutNhanvienScreen);
+                                  }
+                                }
+                              }
+                            },
+                          );
                         } catch (e) {
                           UIHelper.showFlushbar(
                             message: 'Có lỗi xãy ra. Vui lòng thử lại !',
@@ -277,14 +315,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               // /// Social login
-              // const SizedBox(height: 15),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
                         // print(currentUser.email);
-                        Get.toNamed(RouteManager.signUpScreen);
+                        Get.toNamed(RouteManager.signUpCompany);
                         // try {
                         // await Loading().isShowLoading();
                         //   // await LoginService().sendOTP(emailController.text);
@@ -310,7 +348,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       child: Text(
-                        'Đăng kí tài khoản',
+                        'Đăng kí tài khoản công ty',
                         // 'login'.tr.capitalize,
                         style: Style.titleStyle.copyWith(color: backgroundLite),
                       ),
@@ -318,7 +356,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   /// Google

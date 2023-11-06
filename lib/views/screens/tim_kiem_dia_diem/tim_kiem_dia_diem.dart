@@ -55,15 +55,24 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
         FirebaseFirestore.instance.collection('companies');
     for (var company in companies) {
       Map<String, dynamic> companyData = company.toMap();
-      await companyCollection.add(companyData);
+      await companyCollection.add(companyData).then(
+        (documentReference) {
+          String documentId = documentReference.id;
+          documentReference.update(
+            {
+              'id': documentId,
+            },
+          );
+        },
+      );
     }
   }
 
   void search(String keyword) {
     companies.clear();
     for (CompanyIntern company in companies) {
-      if (company.name.toLowerCase().contains(keyword.toLowerCase()) ||
-          company.location.toLowerCase().contains(keyword.toLowerCase())) {
+      if (company.name!.toLowerCase().contains(keyword.toLowerCase()) ||
+          company.location!.toLowerCase().contains(keyword.toLowerCase())) {
         companies.add(company);
       }
     }
@@ -247,14 +256,13 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                       Map<String, dynamic> data =
                           document.data() as Map<String, dynamic>;
                       CompanyIntern company = CompanyIntern.fromMap(data);
-
-                      if (company.position
+                      if (company.position!
                           .toLowerCase()
                           .contains(searchPosition.toLowerCase())) {
                         companies.add(company);
                       }
                     }
-                    // Hiển thị danh sách công ty bằng ListView.builder
+
                     return ListView.builder(
                       itemCount: companies.length,
                       itemBuilder: (context, index) {
@@ -276,17 +284,17 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                 ),
                                 child: Row(
                                   children: [
-                                    companies[index].logo != null
+                                    companies[index].logo! != ''
                                         ? SizedBox(
                                             child: Image.network(
-                                              companies[index].logo,
+                                              companies[index].logo!,
                                               height: 55,
                                               width: 55,
                                             ),
                                           )
                                         : SizedBox(
                                             child: Image.asset(
-                                              'assets/loading.jpg',
+                                              'assets/images/logo-ctu.png',
                                               height: 55,
                                               width: 55,
                                             ),
@@ -298,14 +306,16 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            companies[index].position,
+                                            companies[index].position!,
                                             style: Style.titleStyle
                                                 .copyWith(fontSize: 14),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           Text(
-                                            companies[index].name.toUpperCase(),
+                                            companies[index]
+                                                .name!
+                                                .toUpperCase(),
                                             style: Style.titlegreyStyle,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -318,12 +328,12 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                                 size: 20,
                                               ),
                                               Text(
-                                                companies[index].salary > 1
+                                                companies[index].salary! > 1
                                                     ? CurrencyFormatter
                                                         .convertPrice(
                                                             price:
                                                                 companies[index]
-                                                                    .salary)
+                                                                    .salary!)
                                                     : 'Thỏa thuận',
                                                 style: Style.priceStyle,
                                               ),
@@ -337,7 +347,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                                 size: 20,
                                               ),
                                               Text(
-                                                companies[index].location,
+                                                companies[index].location!,
                                                 style: Style.titlegreyStyle,
                                               ),
                                             ],
@@ -402,23 +412,35 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              companies[index].position,
+                              companies[index].position!,
                               style: Style.titleStyle,
                             ),
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                SizedBox(
-                                  child: Image.network(
-                                    companies[index].logo,
-                                    height: 55,
-                                    width: 55,
-                                  ),
-                                ),
+                                companies[index].logo! != ''
+                                    ? SizedBox(
+                                        child: Image.network(
+                                          companies[index].logo!,
+                                          height: 55,
+                                          width: 55,
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        child: Image.asset(
+                                          'assets/images/logo-ctu.png',
+                                          height: 55,
+                                          width: 55,
+                                        ),
+                                      ),
                                 const SizedBox(width: 10),
-                                Text(
-                                  companies[index].name.toUpperCase(),
-                                  style: Style.titlegreyStyle,
+                                Expanded(
+                                  child: SizedBox(
+                                    child: Text(
+                                      companies[index].name!.toUpperCase(),
+                                      style: Style.titlegreyStyle,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -435,7 +457,9 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                           children: [
                             Text('Vị trí thực tập: ', style: Style.titleStyle),
                             Text(
-                              companies[index].companyDetail.internshipPosition,
+                              companies[index]
+                                  .companyDetail!
+                                  .internshipPosition,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -452,7 +476,9 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                             Text('Thời gian thực tập: ',
                                 style: Style.titleStyle),
                             Text(
-                              companies[index].companyDetail.internshipDuration,
+                              companies[index]
+                                  .companyDetail!
+                                  .internshipDuration,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -468,7 +494,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                           children: [
                             Text('Quyền lợi: ', style: Style.titleStyle),
                             Text(
-                              companies[index].companyDetail.benefits,
+                              companies[index].companyDetail!.benefits,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -485,7 +511,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                             Text('Địa điểm thực tập: ',
                                 style: Style.titleStyle),
                             Text(
-                              companies[index].companyDetail.address,
+                              companies[index].companyDetail!.address,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -501,7 +527,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                           children: [
                             Text('Nhận hồ sơ: ', style: Style.titleStyle),
                             Text(
-                              companies[index].companyDetail.applicationMethod,
+                              companies[index].companyDetail!.applicationMethod,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -531,7 +557,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                   RegisterViewerArguments(
                                       loggedInUser, companies[index], '');
                               bool? registed = await getAllApplications(
-                                  loggedInUser.uid!, companies[index].id);
+                                  loggedInUser.uid!, companies[index].id!);
                               if (registed == false) {
                                 showModalBottomSheet(
                                     context: context,
@@ -952,9 +978,10 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
                                               companyIntern!);
                                       Notifications notifications =
                                           Notifications(
-                                        title: 'Bạn có yêu cầu ứng tuyển mới',
+                                        title:
+                                            'Công ty nhận được yêu cầu ứng tuyển mới',
                                         body:
-                                            '${loggedInUser.userName} đã ứng tuyển !. Kiểm tra ở chức năng "Xét duyệt, Lập phiếu"',
+                                            '${loggedInUser.userName} đã ứng tuyển. Kiểm tra ở chức năng "Xét duyệt, Lập phiếu"',
                                         timestamp: Timestamp.now(),
                                         emailUser: userCanBo!.email!,
                                       );
@@ -963,12 +990,12 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
                                           .add(
                                             notifications.toJson(),
                                           );
-                                      // await FirebaseApi()
-                                      //     .sendFirebaseCloudMessage(
-                                      //   notifications.title,
-                                      //   notifications.body,
-                                      //   userCanBo.fcmToken,
-                                      // );
+                                      await FirebaseApi()
+                                          .sendFirebaseCloudMessage(
+                                        notifications.title,
+                                        notifications.body,
+                                        userCanBo.fcmToken,
+                                      );
                                       String? idHK =
                                           await getAllDKHP(loggedInUser.uid!);
                                       await add_register(

@@ -45,7 +45,7 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
   TextEditingController completeTheWork = TextEditingController(text: '10');
   TextEditingController workResults = TextEditingController(text: '10');
   TextEditingController otherCommentsAboutStudents = TextEditingController();
-  TextEditingController suggestedComments = TextEditingController(text: '10');
+  TextEditingController suggestedComments = TextEditingController();
   TextEditingController idStudent = TextEditingController();
   void updateSum() {
     double implementTheRulesWellValue =
@@ -99,7 +99,6 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
   CollectionReference DKHPCollection =
       FirebaseFirestore.instance.collection('DangKyHocPhan');
   Future<String?> getAllDKHP(String userID) async {
-    int count = 0;
     QuerySnapshot querySnapshot = await DKHPCollection.get();
     if (querySnapshot.docs.isNotEmpty) {
       List<QueryDocumentSnapshot> documents = querySnapshot.docs;

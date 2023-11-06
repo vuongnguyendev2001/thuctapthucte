@@ -54,7 +54,6 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         RegistrationModel internshipApplication =
             RegistrationModel.fromMap(data);
-
         if (internshipApplication.user.uid == userID &&
             internshipApplication.Company.id == companyID) {
           return true;
@@ -129,7 +128,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            internshipApplication.Company.name,
+                            internshipApplication.Company.name!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -256,7 +255,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              companies.position,
+                              companies.position!,
                               style: Style.titleStyle,
                             ),
                             const SizedBox(height: 10),
@@ -264,14 +263,14 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                               children: [
                                 SizedBox(
                                   child: Image.network(
-                                    companies.logo,
+                                    companies.logo!,
                                     height: 55,
                                     width: 55,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 Text(
-                                  companies.name.toUpperCase(),
+                                  companies.name!.toUpperCase(),
                                   style: Style.titlegreyStyle,
                                 ),
                               ],
@@ -289,7 +288,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                           children: [
                             Text('Vị trí thực tập: ', style: Style.titleStyle),
                             Text(
-                              companies.companyDetail.internshipPosition,
+                              companies.companyDetail!.internshipPosition,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -306,7 +305,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                             Text('Thời gian thực tập: ',
                                 style: Style.titleStyle),
                             Text(
-                              companies.companyDetail.internshipDuration,
+                              companies.companyDetail!.internshipDuration,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -322,7 +321,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                           children: [
                             Text('Quyền lợi: ', style: Style.titleStyle),
                             Text(
-                              companies.companyDetail.benefits,
+                              companies.companyDetail!.benefits,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -339,7 +338,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                             Text('Địa điểm thực tập: ',
                                 style: Style.titleStyle),
                             Text(
-                              companies.companyDetail.address,
+                              companies.companyDetail!.address,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -355,7 +354,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                           children: [
                             Text('Nhận hồ sơ: ', style: Style.titleStyle),
                             Text(
-                              companies.companyDetail.applicationMethod,
+                              companies.companyDetail!.applicationMethod,
                               style: Style.subtitleStyle,
                             ),
                           ],
@@ -391,7 +390,7 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                               );
 
                               bool? registed = await getAllApplications(
-                                  loggedInUser.uid!, companies.id);
+                                  loggedInUser.uid!, companies.id!);
                               if (registed == false) {
                                 showModalBottomSheet(
                                     context: context,

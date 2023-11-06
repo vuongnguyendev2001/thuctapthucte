@@ -15,6 +15,7 @@ class DangKyHocPhan {
   LecturersEvaluation? lecturersEvaluation;
   bool? isSubmitReport;
   ReportPdfViewer? submitReport;
+  bool? lockScore;
 
   DangKyHocPhan({
     this.idGiangVien,
@@ -29,6 +30,7 @@ class DangKyHocPhan {
     this.lecturersEvaluation,
     this.submitReport,
     this.isSubmitReport,
+    this.lockScore,
   });
 
   factory DangKyHocPhan.fromMap(Map<String, dynamic> map) {
@@ -38,18 +40,18 @@ class DangKyHocPhan {
       idHK: map['idHK'] ?? '',
       idHP: map['idHP'] ?? '',
       user: UserModel.fromMap(map['user'] ?? ''),
-      locationIntern: map['locationIntern'] ?? '',
-      receiptForm: map['receiptForm'] ?? '',
-      assignmentSlipForm: map['assignmentSlipForm'] ?? '',
-      evaluation: map['evaluation'] ?? '',
+      locationIntern: map['locationIntern'] ?? false,
+      receiptForm: map['receiptForm'] ?? false,
+      assignmentSlipForm: map['assignmentSlipForm'] ?? false,
+      evaluation: map['evaluation'] ?? false,
       lecturersEvaluation: map['lecturersEvaluation'] != null
           ? LecturersEvaluation.fromMap(map['lecturersEvaluation'])
           : null,
       submitReport: map['submitReport'] != null
           ? ReportPdfViewer.fromMap(map['submitReport'])
           : null,
-      isSubmitReport:
-          map['isSubmitReport'], // Create LecturersEvaluation if not null
+      isSubmitReport: map['isSubmitReport'] ?? false,
+      lockScore: map['lockScore'] ?? false,
     );
   }
 
@@ -66,7 +68,8 @@ class DangKyHocPhan {
       'evaluation': evaluation,
       'lecturersEvaluation': lecturersEvaluation?.toMap(),
       'submitReport': submitReport?.toMap(),
-      'isSubmitReport': isSubmitReport
+      'isSubmitReport': isSubmitReport,
+      'lockScore': lockScore
     };
   }
 }

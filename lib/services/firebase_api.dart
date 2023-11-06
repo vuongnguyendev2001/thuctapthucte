@@ -7,6 +7,8 @@ import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:trungtamgiasu/models/pdf_model.dart';
+
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -48,6 +50,7 @@ class FirebaseApi {
     final fCMToken = await _firebaseMessaging.getToken();
     print('Token: $fCMToken');
     initPushNotifications();
+    subscribeToTopic();
   }
 
   Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -56,12 +59,36 @@ class FirebaseApi {
     print('Title: ${message.data}');
   }
 
+// Đăng ký thiết bị cho topic
+  void subscribeToTopic() async {
+    await FirebaseMessaging.instance
+        .subscribeToTopic('all')
+        .then(
+          (_) => print('Đăng ký Thành công'),
+        )
+        .catchError((error) {
+      print('Lỗi: $error');
+    });
+  }
+
+  //Hủy Đăng ký thiết bị cho topic
+  Future<void> unsubscribeToTopic() async {
+    await FirebaseMessaging.instance
+        .unsubscribeFromTopic('all')
+        .then(
+          (_) => print('Hủy thành công'),
+        )
+        .catchError((error) {
+      print('Lỗi: $error');
+    });
+  }
+
+  String serverKey =
+      'AAAAtDyOrRA:APA91bHKyZ3f1qsilnShunaN2Qb_rlLSZEIYrth9R6ZcQINCF98h4SZuu74BZJ6LJ0zE82-vN8fX94mXG60S128av71bAQqrSpH5CsWhK2Ua8QKwb_iBbMZ5E_sjrSvQHxXDJu_Rdq0E';
   Future<void> sendFirebaseCloudMessage(
       String? title, String? body, String? fCMTokenUser) async {
-    const adminEmail = 'tma@gmail.com';
-    final fCMToken = await _firebaseMessaging.getToken();
-    const String serverKey =
-        'AAAAtDyOrRA:APA91bHKyZ3f1qsilnShunaN2Qb_rlLSZEIYrth9R6ZcQINCF98h4SZuu74BZJ6LJ0zE82-vN8fX94mXG60S128av71bAQqrSpH5CsWhK2Ua8QKwb_iBbMZ5E_sjrSvQHxXDJu_Rdq0E'; // Thay YOUR_SERVER_KEY bằng server key của bạn từ Firebase Console
+    final fCMToken = await _firebaseMessaging
+        .getToken(); // Thay YOUR_SERVER_KEY bằng server key của bạn từ Firebase Console
 
     final Uri url = Uri.parse('https://fcm.googleapis.com/fcm/send');
     String? timeNotification =
@@ -104,10 +131,9 @@ class FirebaseApi {
     }
   }
 
-  Future<void> sendFirebaseCloudMessageToTopic(
-      String? title, String? body, String topicName) async {
-    const String serverKey =
-        'AAAAtDyOrRA:APA91bHKyZ3f1qsilnShunaN2Qb_rlLSZEIYrth9R6ZcQINCF98h4SZuu74BZJ6LJ0zE82-vN8fX94mXG60S128av71bAQqrSpH5CsWhK2Ua8QKwb_iBbMZ5E_sjrSvQHxXDJu_Rdq0E'; // Replace with your server key from Firebase Console
+  Future<void> sendFirebaseCloudMessageToTopic(String? title, String? body,
+      String topicName, String? urlFile, String? filename) async {
+    // Replace with your server key from Firebase Console
     final Uri url = Uri.parse('https://fcm.googleapis.com/fcm/send');
     String timeNotification =
         CurrencyFormatter().formattedDatebook(Timestamp.now());
@@ -126,6 +152,8 @@ class FirebaseApi {
         'id': '1',
         'status': 'done',
         'timestamp': timeNotification,
+        'urlFile': urlFile,
+        'filename': filename,
       },
       'to': '/topics/$topicName', // Set the topic name here
     };
@@ -136,7 +164,6 @@ class FirebaseApi {
         headers: headers,
         body: jsonData,
       );
-
       if (response.statusCode == 200) {
         print('Success: ${response.body}');
       } else {

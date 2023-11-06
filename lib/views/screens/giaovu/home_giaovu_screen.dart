@@ -89,9 +89,9 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
                 Icons.manage_accounts_outlined,
                 color: primaryColor,
               ),
-              title: 'Quản lý tài khoản',
+              title: 'Xét duyệt tài khoản công ty',
               onTap: () {
-                Get.toNamed(RouteManager.signUpScreen);
+                Get.toNamed(RouteManager.waitingAcceptAccount);
               },
             ),
             const SizedBox(height: 10),
@@ -108,7 +108,7 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
             const SizedBox(height: 10),
             Button_HomeGiaoVu_Screen(
               icon: const Icon(
-                Icons.work_outline_rounded,
+                Icons.notifications_outlined,
                 color: primaryColor,
               ),
               title: 'Quản lý thông báo',
@@ -119,11 +119,12 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
             const SizedBox(height: 10),
             Button_HomeGiaoVu_Screen(
               icon: const Icon(
-                Icons.work_outline_rounded,
+                Icons.work_outline,
                 color: primaryColor,
               ),
-              title: 'Danh sách sinh viên thực tập',
+              title: 'Danh sách công ty',
               onTap: () {
+                Get.toNamed(RouteManager.timKiemDiaDiem);
               },
             ),
           ],
