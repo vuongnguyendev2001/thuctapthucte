@@ -3,6 +3,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/waitting_accept.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/waiting_accept_account.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/lectures_read_evaluation.dart';
 import 'package:trungtamgiasu/views/screens/sign_up/sign_up_company.dart';
 import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/canbohuongdan/approving_internships_screen.dart';
@@ -106,8 +107,14 @@ class RouteManager {
   static const String signUpCompany = '/signUpCompany';
   static const String waitingAccept = '/waitingAccept';
   static const String waitingAcceptAccount = '/waitingAcceptAccount';
+  static const String lectureReadResultsEvaluation = '/lectureReadResultsEvaluation';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case lectureReadResultsEvaluation:
+        return MaterialPageRoute(
+          builder: (_) => const LectureReadResultsEvaluation(),
+          settings: settings,
+        );
       case waitingAcceptAccount:
         return MaterialPageRoute(
           builder: (_) => const WaitingAcceptAccount(),
