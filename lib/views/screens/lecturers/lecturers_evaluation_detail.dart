@@ -14,7 +14,7 @@ import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/widgets/custom_results_evaluation.dart';
 
 class LecturersEvaluationDetail extends StatefulWidget {

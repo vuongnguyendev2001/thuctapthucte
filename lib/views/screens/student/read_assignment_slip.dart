@@ -11,7 +11,7 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class ReadAssignmentSlip extends StatefulWidget {
   ReadAssignmentSlip({
@@ -231,8 +231,16 @@ class _ReadAssignmentSlipState extends State<ReadAssignmentSlip> {
                               ),
                               Align(
                                 alignment: Alignment.centerRight,
-                                child: Text(
-                                  "Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList[index].dateTime)}",
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Người lập: ${assignmentSlipFormList[index].userCanBo!.userName}",
+                                    ),
+                                    Text(
+                                      "Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList[index].dateTime)}",
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

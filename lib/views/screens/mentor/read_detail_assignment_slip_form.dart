@@ -9,7 +9,7 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class ReadDetailAssignmentSlipForm extends StatefulWidget {
   const ReadDetailAssignmentSlipForm({super.key});
@@ -192,8 +192,16 @@ class _ReadDetailAssignmentSlipFormState
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      'Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList.dateTime)}',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Người lập: ${assignmentSlipFormList.nameCanBoController.text}",
+                        ),
+                        Text(
+                          'Ngày lập: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList.dateTime)}',
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 10),

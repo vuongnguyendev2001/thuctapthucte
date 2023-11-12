@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/student/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/profile_giaovu.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/student/home_sinhvien_screen.dart';
 
 class LayoutGiaovuScreen extends StatefulWidget {
   const LayoutGiaovuScreen({Key? key}) : super(key: key);

@@ -8,7 +8,7 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class InformationCompany extends StatefulWidget {
   const InformationCompany({super.key});

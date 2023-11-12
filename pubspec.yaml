@@ -55,6 +55,9 @@ dependencies:
   easy_pdf_viewer: ^1.0.7
   firebase_messaging: ^14.6.9
   http: ^1.1.0
+  calendar_date_picker2: ^0.5.3
+  flutter_localization: ^0.1.14
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:

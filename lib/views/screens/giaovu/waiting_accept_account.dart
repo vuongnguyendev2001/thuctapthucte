@@ -9,7 +9,7 @@ import 'package:trungtamgiasu/constants/ui_helper.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
+import 'package:trungtamgiasu/views/screens/search_company/search_company.dart';
 
 class WaitingAcceptAccount extends StatefulWidget {
   const WaitingAcceptAccount({super.key});

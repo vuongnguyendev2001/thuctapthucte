@@ -13,7 +13,7 @@ import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
 import 'package:trungtamgiasu/services/firebase_api.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class AddNotification extends StatefulWidget {
   const AddNotification({super.key});

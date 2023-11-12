@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
@@ -248,7 +249,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
         }
       }
     }
-    return 'null';
+    return null;
   }
 
   CollectionReference assignmentSlipCollection =
@@ -265,7 +266,7 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
         }
       }
     }
-    return 'null';
+    return null;
   }
 
   CollectionReference readValuationCollection =
@@ -277,28 +278,17 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
       for (QueryDocumentSnapshot document in documents) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         ResultEvaluation resultEvaluation = ResultEvaluation.fromMap(data);
-        if (resultEvaluation.userStudent!.uid == userID) {
+        if (resultEvaluation.userStudent!.uid == userID &&
+            resultEvaluation.suggestedComments != null) {
           return resultEvaluation.id;
         }
       }
     }
-    return 'null';
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Colors.blue;
-      }
-      return Colors.red;
-    }
-
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
@@ -518,8 +508,15 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                       dkhpFromMSSVList[index]
                                                           .user
                                                           .uid!);
-                                              JdCompany(
-                                                  context, companyIntern!);
+                                              if (companyIntern != null) {
+                                                // ignore: use_build_context_synchronously
+                                                JdCompany(
+                                                    context, companyIntern);
+                                              } else {
+                                                EasyLoading.showError(
+                                                  'Chưa có dữ liệu',
+                                                );
+                                              }
                                             },
                                             child: const Padding(
                                               padding:
@@ -565,10 +562,16 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                       dkhpFromMSSVList[index]
                                                           .user
                                                           .uid!);
-                                              Get.toNamed(
-                                                  RouteManager
-                                                      .readDetailReceiptForm,
-                                                  arguments: idReceptForm);
+                                              if (idReceptForm != null) {
+                                                Get.toNamed(
+                                                    RouteManager
+                                                        .readDetailReceiptForm,
+                                                    arguments: idReceptForm);
+                                              } else {
+                                                EasyLoading.showError(
+                                                  'Chưa có dữ liệu',
+                                                );
+                                              }
                                             },
                                             child: const Padding(
                                               padding:
@@ -614,11 +617,17 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                       dkhpFromMSSVList[index]
                                                           .user
                                                           .MSSV!);
-                                              Get.toNamed(
-                                                RouteManager
-                                                    .readDetailAssignmentSlip,
-                                                arguments: idAssignmentSlip,
-                                              );
+                                              if (idAssignmentSlip != null) {
+                                                Get.toNamed(
+                                                  RouteManager
+                                                      .readDetailAssignmentSlip,
+                                                  arguments: idAssignmentSlip,
+                                                );
+                                              } else {
+                                                EasyLoading.showError(
+                                                  'Chưa có dữ liệu',
+                                                );
+                                              }
                                             },
                                             child: const Padding(
                                               padding:
@@ -665,11 +674,17 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                     .user
                                                     .uid!,
                                               );
-                                              Get.toNamed(
-                                                RouteManager
-                                                    .lectureReadResultsEvaluation,
-                                                arguments: idResultValuation,
-                                              );
+                                              if (idResultValuation != null) {
+                                                Get.toNamed(
+                                                  RouteManager
+                                                      .lectureReadResultsEvaluation,
+                                                  arguments: idResultValuation,
+                                                );
+                                              } else {
+                                                EasyLoading.showError(
+                                                  'Chưa có dữ liệu',
+                                                );
+                                              }
                                             },
                                             child: const Padding(
                                               padding:
@@ -710,19 +725,27 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              PdfViewerArguments arguments =
-                                                  PdfViewerArguments(
-                                                dkhpFromMSSVList[index]
-                                                    .submitReport!
-                                                    .urlReport,
-                                                dkhpFromMSSVList[index]
-                                                    .submitReport!
-                                                    .titleReport,
-                                              );
-                                              Get.toNamed(
-                                                RouteManager.pdfViewer,
-                                                arguments: arguments,
-                                              );
+                                              if (dkhpFromMSSVList[index]
+                                                      .submitReport !=
+                                                  null) {
+                                                PdfViewerArguments arguments =
+                                                    PdfViewerArguments(
+                                                  dkhpFromMSSVList[index]
+                                                      .submitReport!
+                                                      .urlReport,
+                                                  dkhpFromMSSVList[index]
+                                                      .submitReport!
+                                                      .titleReport,
+                                                );
+                                                Get.toNamed(
+                                                  RouteManager.pdfViewer,
+                                                  arguments: arguments,
+                                                );
+                                              } else {
+                                                EasyLoading.showError(
+                                                  'Chưa có dữ liệu',
+                                                );
+                                              }
                                             },
                                             child: const Padding(
                                               padding:

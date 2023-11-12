@@ -61,19 +61,39 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('Xin chào,', style: Style.subtitleStyle),
-                  Text(loggedInUser.userName.toString(),
-                      style: Style.titleStyle),
+                  Text(
+                    'Xin chào,',
+                    style: Style.subtitleStyle,
+                  ),
+                  loggedInUser.userName != null
+                      ? Text(loggedInUser.userName.toString(),
+                          style: Style.titleStyle)
+                      : Text(
+                          "Đang tải",
+                          style: Style.titleStyle,
+                        ),
                 ],
               ),
               const SizedBox(width: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: CircleAvatar(
-                  radius: 23,
-                  child: Image.network(loggedInUser.avatar.toString()),
-                ),
-              ),
+              loggedInUser.avatar != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: CircleAvatar(
+                        radius: 23,
+                        child: Image.network(
+                          loggedInUser?.avatar.toString() ?? '',
+                        ),
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: CircleAvatar(
+                        radius: 23,
+                        child: Image.asset(
+                          'assets/images/user.png',
+                        ),
+                      ),
+                    ),
               const SizedBox(width: 10),
             ],
           ),
@@ -92,6 +112,17 @@ class _HomeGiaoVuScreenState extends State<HomeGiaoVuScreen> {
               title: 'Xét duyệt tài khoản công ty',
               onTap: () {
                 Get.toNamed(RouteManager.waitingAcceptAccount);
+              },
+            ),
+            const SizedBox(height: 10),
+            Button_HomeGiaoVu_Screen(
+              icon: const Icon(
+                Icons.timeline_outlined,
+                color: primaryColor,
+              ),
+              title: 'Quản lý mốc thời gian',
+              onTap: () {
+                Get.toNamed(RouteManager.managementTime);
               },
             ),
             const SizedBox(height: 10),
@@ -149,8 +180,12 @@ class Button_HomeGiaoVu_Screen extends StatelessWidget {
   Function()? onTap;
   String? title;
   Icon? icon;
-  Button_HomeGiaoVu_Screen({Key? key, this.onTap, this.title, this.icon})
-      : super(key: key);
+  Button_HomeGiaoVu_Screen({
+    Key? key,
+    this.onTap,
+    this.title,
+    this.icon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -169,8 +204,10 @@ class Button_HomeGiaoVu_Screen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        icon!,
-                        const SizedBox(width: 5),
+                        icon != null ? icon! : const SizedBox(),
+                        icon != null
+                            ? const SizedBox(width: 5)
+                            : const SizedBox(),
                         Text(
                           title!,
                           style: Style.subtitlehomeGiaovuStyle,

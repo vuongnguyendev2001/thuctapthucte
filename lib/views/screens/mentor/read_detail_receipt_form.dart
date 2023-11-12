@@ -10,7 +10,7 @@ import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/receipt_form.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class ReadDetailReceiptFormScreen extends StatefulWidget {
   const ReadDetailReceiptFormScreen({super.key});
@@ -271,8 +271,16 @@ class _ReadDetailReceiptFormScreenState
                     const SizedBox(height: 5),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        "Ngày lập: ${CurrencyFormatter().formattedDatebook(receiptFormList.timestamp)}",
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Người lập: ${receiptFormList.userCanBo!.userName}",
+                          ),
+                          Text(
+                            "Ngày lập: ${CurrencyFormatter().formattedDatebook(receiptFormList.timestamp)}",
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 10),

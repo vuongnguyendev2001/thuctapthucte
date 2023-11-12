@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
+import 'package:trungtamgiasu/models/timeline_student.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
@@ -26,8 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
     fetchData();
+    timeLine();
   }
 
   Future<void> fetchData() async {
@@ -55,12 +58,89 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'No data';
   }
 
+  String startDateRegisterCourseAndCompany = "Chưa đặt thời gian";
+  String endDateRegisterCourseAndCompany = "";
+  String startDateCheckReceiptAndAssignment = "Chưa đặt thời gian";
+  String endDateCheckReceiptAndAssignment = "";
+  String startDateStartIntern = "Chưa đặt thời gian";
+  String endDateStartIntern = "";
+  String startDateSubmitReport = "Chưa đặt thời gian";
+  String endDateSubmitReport = "";
+  String startDateHaveScore = "Chưa đặt thời gian";
+  String endDateHaveScore = "";
+  DateTimeRange selectionDate = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now(),
+  );
+  void timeLine() {
+    FirebaseFirestore.instance
+        .collection("ManagementTimeline")
+        .doc("sinhvien")
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          setState(() {
+            TimelineStudentModel timelineStudentModel =
+                TimelineStudentModel.fromJson(data);
+            startDateRegisterCourseAndCompany = CurrencyFormatter()
+                .formattedDate(
+                    timelineStudentModel.courseRegisterAndCompany!.startDate);
+            endDateRegisterCourseAndCompany = CurrencyFormatter().formattedDate(
+                timelineStudentModel.courseRegisterAndCompany!.endDate);
+            startDateCheckReceiptAndAssignment = CurrencyFormatter()
+                .formattedDate(
+                    timelineStudentModel.checkReceiptAndAssignment!.startDate);
+            endDateCheckReceiptAndAssignment = CurrencyFormatter()
+                .formattedDate(
+                    timelineStudentModel.checkReceiptAndAssignment!.endDate);
+            startDateStartIntern = CurrencyFormatter()
+                .formattedDate(timelineStudentModel.startIntern!.startDate);
+            endDateStartIntern = CurrencyFormatter().formattedDate(
+              timelineStudentModel.startIntern!.endDate,
+            );
+            startDateSubmitReport = CurrencyFormatter()
+                .formattedDate(timelineStudentModel.submitReport!.startDate);
+            startDateSubmitReport = CurrencyFormatter().formattedDate(
+              timelineStudentModel.submitReport!.endDate,
+            );
+            endDateSubmitReport = CurrencyFormatter()
+                .formattedDate(timelineStudentModel.submitReport!.endDate);
+            startDateHaveScore = CurrencyFormatter()
+                .formattedDate(timelineStudentModel.haveScore!.startDate);
+            endDateHaveScore = CurrencyFormatter().formattedDate(
+              timelineStudentModel.haveScore!.endDate,
+            );
+          });
+        } else {
+          print('Document data is null');
+        }
+      } else {
+        print('Document have on the database');
+      }
+    });
+  }
+
   List<Step> stepList() => [
         Step(
           state:
               _activeCurrentStep <= 0 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 0,
-          title: const Text('Đăng ký học phần & Đăng ký công ty'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Đăng ký học phần & Đăng ký công ty'),
+              Text(
+                '$startDateRegisterCourseAndCompany đến $endDateRegisterCourseAndCompany',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
                 'Sinh viên đăng ký đúng nhóm học phần của lớp mình. Sau khi đăng ký thành công, sinh viên sẽ đăng ký công ty thực tập phù hợp và chờ được xét duyệt.'),
@@ -70,7 +150,19 @@ class _HomeScreenState extends State<HomeScreen> {
           state:
               _activeCurrentStep <= 1 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 1,
-          title: const Text('Kiểm tra phiếu giao việc & tiếp nhận'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Kiểm tra phiếu giao việc & tiếp nhận'),
+              Text(
+                '$startDateCheckReceiptAndAssignment đến $endDateCheckReceiptAndAssignment',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
               'Sau khi được xét duyệt bởi công ty, sinh viên sẽ kiểm tra thông tin của phiếu tiếp nhận & giao việc để biết thông tin thực tập.',
@@ -81,7 +173,44 @@ class _HomeScreenState extends State<HomeScreen> {
           state:
               _activeCurrentStep <= 2 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 2,
-          title: const Text('Thực tập & Nộp báo cáo'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text('Bắt đầu thực tập (8 tuần)'),
+              Text(
+                '$startDateStartIntern đến $endDateStartIntern',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
+          content: const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Sinh viên bắt đầu quá trình đi thực tập.',
+              textAlign: TextAlign.start,
+            ),
+          ),
+        ),
+        Step(
+          state:
+              _activeCurrentStep <= 3 ? StepState.editing : StepState.complete,
+          isActive: _activeCurrentStep >= 3,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Nộp báo cáo thực tập'),
+              Text(
+                '$startDateSubmitReport đến $endDateSubmitReport',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
                 'Sau khi thực tập xong, sinh viên sẽ nộp báo cáo cho giảng viên chấm điểm.'),
@@ -89,8 +218,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Step(
           state: StepState.complete,
-          isActive: _activeCurrentStep >= 3,
-          title: const Text('Hoàn thành'),
+          isActive: _activeCurrentStep >= 4,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Kết quả học tập'),
+              Text(
+                '$startDateHaveScore đến $endDateHaveScore',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
               'Sinh viên chờ giảng viên lên điểm và xem ở phần "kết quả học tập".',
@@ -147,53 +288,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Image.asset('assets/images/user.png'),
                       ),
                     ),
-              const SizedBox(width: 10),
-              //     InkWell(
-              //       onTap: () async {
-              //         await LoginService().handleGoogleSignOut();
-              //         await LoginService().handleSignOut();
-              //         await Get.offAllNamed(RouteManager.loginScreen);
-              //       },
-              //       child: ClipRRect(
-              //         borderRadius: BorderRadius.circular(10),
-              //         child: Container(
-              //           height: 37,
-              //           width: 37,
-              //           color: cardsLite,
-              //           child: Image(
-              //             image: SvgImage.asset(
-              //               'assets/icon_svg/Buy.svg',
-              //               currentColor: blackColor,
-              //             ),
-              //             height: 18,
-              //             width: 18,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 15),
-              //     InkWell(
-              //       onTap: () {
-              //         print(user);
-              //       },
-              //       child: ClipRRect(
-              //         borderRadius: BorderRadius.circular(10),
-              //         child: Container(
-              //           height: 37,
-              //           width: 37,
-              //           color: cardsLite,
-              //           child: Image(
-              //             image: SvgImage.asset(
-              //               'assets/icon_svg/Notification.svg',
-              //               currentColor: blackColor,
-              //             ),
-              //             height: 18,
-              //             width: 18,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 20),
             ],
           ),
         ],
@@ -204,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 color: accentColor,
@@ -292,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: accentColor,
@@ -475,7 +569,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           Get.toNamed(RouteManager.chatbotScreen);
         },
-        backgroundColor: whiteColor,
+        backgroundColor: Colors.white24,
         child: SvgPicture.asset(
           'assets/icon_svg/question.svg',
           width: 45, // Kích thước chiều rộng

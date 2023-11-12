@@ -24,7 +24,7 @@ import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class TimKiemDiaDiem extends StatefulWidget {
   const TimKiemDiaDiem({super.key});

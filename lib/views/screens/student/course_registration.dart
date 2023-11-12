@@ -107,10 +107,19 @@ class _CourseRegistrationScreenState extends State<CourseRegistrationScreen>
                     padding: const EdgeInsets.all(10),
                     child: TextField(
                       decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primaryColor,
+                            width: 2,
+                          ),
+                        ),
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 8.0),
                         hintText: 'Mã học phần',
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: primaryColor,
+                        ),
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {

@@ -13,7 +13,7 @@ import 'package:trungtamgiasu/models/registration_model.dart';
 import 'package:trungtamgiasu/models/user/intership_appycation_model.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
+import 'package:trungtamgiasu/views/screens/search_company/search_company.dart';
 
 import '../../../controllers/route_manager.dart';
 import '../../../models/company_intern.dart';

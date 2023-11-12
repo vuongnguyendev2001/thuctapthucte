@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/profile_canbo_screen.dart';
+import 'package:trungtamgiasu/views/screens/student/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/notification_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/profile_canbo_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/home_nhanvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/all_notification_student.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/home_nhanvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/student/all_notification_student.dart';
+import 'package:trungtamgiasu/views/screens/student/home_sinhvien_screen.dart';
 
 class LayoutNhanvienScreen extends StatefulWidget {
   const LayoutNhanvienScreen({Key? key}) : super(key: key);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_image/flutter_svg_image.dart';
 import 'package:get/get.dart';
+import 'package:trungtamgiasu/models/timeline_mentor.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
 
@@ -28,6 +29,7 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
   void initState() {
     super.initState();
     fetchData();
+    timeLine();
   }
 
   Future<void> fetchData() async {
@@ -37,12 +39,66 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
     });
   }
 
+  //Mentor
+  String startDateAcceptStudent = "Chưa đặt thời gian";
+  String endDateAcceptStudent = "";
+  String startDateReceptAndAssignmentForm = "Chưa đặt thời gian";
+  String endDateReceptAndAssignmentForm = "";
+  String startDateEvaluationIntern = "Chưa đặt thời gian";
+  String endDateEvaluationIntern = "";
+  void timeLine() {
+    FirebaseFirestore.instance
+        .collection("ManagementTimeline")
+        .doc("canbohuongdan")
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          setState(() {
+            TimelineMentor timelineMentor = TimelineMentor.fromJson(data);
+            startDateAcceptStudent = CurrencyFormatter()
+                .formattedDate(timelineMentor.acceptStudent!.startDate);
+            endDateAcceptStudent = CurrencyFormatter()
+                .formattedDate(timelineMentor.acceptStudent!.endDate);
+            startDateReceptAndAssignmentForm = CurrencyFormatter()
+                .formattedDate(
+                    timelineMentor.receptAndAssignmentForm!.startDate);
+            endDateReceptAndAssignmentForm = CurrencyFormatter()
+                .formattedDate(timelineMentor.receptAndAssignmentForm!.endDate);
+            startDateEvaluationIntern = CurrencyFormatter()
+                .formattedDate(timelineMentor.evaluationIntern!.startDate);
+            endDateEvaluationIntern = CurrencyFormatter()
+                .formattedDate(timelineMentor.evaluationIntern!.endDate);
+          });
+        } else {
+          print('Document data is null');
+        }
+      } else {
+        print('Document have on the database');
+      }
+    });
+  }
+
   List<Step> stepList() => [
         Step(
           state:
               _activeCurrentStep <= 0 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 0,
-          title: const Text('Xét duyệt, Lập phiếu tiếp nhận'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Xét duyệt sinh viên thực tập'),
+              Text(
+                '$startDateAcceptStudent đến $endDateAcceptStudent',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
                 'Cán bộ sẽ kiểm tra sinh viên đăng ký thực tập, và có thể nhận sinh viên thực tập ở chức năng "Xét duyệt". Sau đó, cán bộ lập phiếu tiếp nhận cho sinh viên. Sau khi lập xong hãy kiểm tra thông tin phiếu ở chức năng "Kiểm tra thông tin phiếu".'),
@@ -52,7 +108,19 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
           state:
               _activeCurrentStep <= 1 ? StepState.editing : StepState.complete,
           isActive: _activeCurrentStep >= 1,
-          title: const Text('Lập phiếu giao việc'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Lập phiếu tiếp nhận & giao việc'),
+              Text(
+                '$startDateReceptAndAssignmentForm đến $endDateReceptAndAssignmentForm',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
               'Cán bộ sẽ tiến hành lập phiếu giao việc chi tiết cho sinh viên ở chức năng "Lập phiếu". Sau khi lập xong hãy kiểm tra thông tin phiếu ở chức năng "Kiểm tra thông tin phiếu".',
@@ -60,25 +128,26 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
           ),
         ),
         Step(
-          state:
-              _activeCurrentStep <= 2 ? StepState.editing : StepState.complete,
+          state: StepState.complete,
           isActive: _activeCurrentStep >= 2,
-          title: const Text('Đánh giá thực tập'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Đánh giá thực tập'),
+              Text(
+                '$startDateEvaluationIntern đến $endDateEvaluationIntern',
+                style: Style.homesubtitleStyle.copyWith(
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
           content: const Center(
             child: Text(
                 'Sau khi sinh viên hoàn thành quá trình thực tập, cán bộ sẽ nhận xét và đánh giá quá trình thực tập của sinh viên dựa trên phiếu giao việc và chấm điểm vào phiếu đánh giá ở chức năng "Đánh giá thực tập".'),
           ),
         ),
-        Step(
-          state: StepState.complete,
-          isActive: _activeCurrentStep >= 3,
-          title: const Text('Hoàn thành'),
-          content: const Center(
-            child: Text(
-              'Chân thành cảm ơn quý cán bộ đã hoàn thành nhiệm vụ trong đợt thực tập này.',
-            ),
-          ),
-        )
       ];
   int _activeCurrentStep = 0;
   @override
@@ -196,14 +265,14 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
               ),
               child: Column(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Get.toNamed(RouteManager.duyetThucTap);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed(RouteManager.duyetThucTap);
+                        },
+                        child: Container(
                           alignment: Alignment.center,
                           width: 75,
                           child: Column(
@@ -223,58 +292,58 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
                             ],
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            await Get.toNamed(RouteManager.readAllForm);
-                          },
-                          child: SizedBox(
-                            width: 105,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icon_svg/list.svg',
-                                  width: 45, // Kích thước chiều rộng
-                                  height: 45, // Kích thước chiều cao
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          await Get.toNamed(RouteManager.readAllForm);
+                        },
+                        child: SizedBox(
+                          width: 105,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/list.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                child: Text(
+                                  'Kiểm tra thông tin phiếu',
+                                  style: Style.homesubtitleStyle,
                                 ),
-                                SizedBox(
-                                  child: Text(
-                                    'Kiểm tra thông tin phiếu',
-                                    style: Style.homesubtitleStyle,
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(
-                              RouteManager.internshipEvaluationScreen,
-                            );
-                          },
-                          child: SizedBox(
-                            width: 65,
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icon_svg/note.svg',
-                                  width: 45, // Kích thước chiều rộng
-                                  height: 45, // Kích thước chiều cao
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(
+                            RouteManager.internshipEvaluationScreen,
+                          );
+                        },
+                        child: SizedBox(
+                          width: 65,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon_svg/note.svg',
+                                width: 45, // Kích thước chiều rộng
+                                height: 45, // Kích thước chiều cao
+                              ),
+                              SizedBox(
+                                height: 40,
+                                child: Text(
+                                  'Đánh giá thực tập',
+                                  style: Style.homesubtitleStyle,
                                 ),
-                                SizedBox(
-                                  height: 40,
-                                  child: Text(
-                                    'Đánh giá thực tập',
-                                    style: Style.homesubtitleStyle,
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class AddCourse extends StatefulWidget {
   const AddCourse({super.key});

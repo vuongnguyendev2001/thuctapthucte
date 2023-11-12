@@ -3,8 +3,8 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/read_assignment_slip.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/read_receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/student/read_assignment_slip.dart';
+import 'package:trungtamgiasu/views/screens/student/read_receipt_form_screen.dart';
 
 class AssignmentAndReceipt extends StatefulWidget {
   const AssignmentAndReceipt({super.key});

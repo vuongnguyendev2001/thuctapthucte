@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/account_screen.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/notification_screen.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/all_notification_student.dart';
-import 'package:trungtamgiasu/views/screens/sinhvien/home_sinhvien_screen.dart';
-import 'package:trungtamgiasu/views/screens/tim_kiem_dia_diem/tim_kiem_dia_diem.dart';
+import 'package:trungtamgiasu/views/screens/student/account_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/notification_screen.dart';
+import 'package:trungtamgiasu/views/screens/student/all_notification_student.dart';
+import 'package:trungtamgiasu/views/screens/student/home_sinhvien_screen.dart';
+import 'package:trungtamgiasu/views/screens/search_company/search_company.dart';
 
-import '../sinhvien/notification_student.dart';
+import '../student/notification_student.dart';
 
 class NavbarScreen extends StatefulWidget {
   const NavbarScreen({Key? key}) : super(key: key);

@@ -90,7 +90,6 @@ class _QuanLyHocPhanState extends State<QuanLyHocPhan> {
           } else {
             List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
             List<CourseRegistration> courseRegistrations = [];
-
             for (QueryDocumentSnapshot doc in documents) {
               String idDocument = doc.id;
               Map<String, dynamic> jsonData =

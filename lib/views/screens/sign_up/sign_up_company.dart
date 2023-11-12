@@ -12,7 +12,7 @@ import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/widgets/custom_text_form_field.dart';
 
 import '../../../constants/style.dart';

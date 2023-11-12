@@ -11,7 +11,7 @@ import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/result_evaluation.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/widgets/custom_results_evaluation.dart';
 
 class ResultsEvaluationDetail extends StatefulWidget {
@@ -585,6 +585,23 @@ class _ResultsEvaluationDetailState extends State<ResultsEvaluationDetail> {
                           lableText: null,
                           icon: null,
                         ),
+                        const SizedBox(height: 5),
+                        resultEvaluationList.timestamp != null
+                            ? Align(
+                                alignment: Alignment.centerRight,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Người lập: ${resultEvaluationList.userCanBo!.userName}",
+                                    ),
+                                    Text(
+                                      'Ngày lập: ${CurrencyFormatter().formattedDatebook(resultEvaluationList.timestamp)}',
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(),
                         const SizedBox(height: 10),
                       ],
                     ),

@@ -9,10 +9,9 @@ class CurrencyFormatter {
   static String numFormat({required num number}) {
     return NumberFormat(null, 'vi').format(number).replaceAll('.', ',');
   }
-    String formattedDate(timeStamp) {
-    var dateFormTimeStamp =
-        DateTime.fromMillisecondsSinceEpoch(timeStamp.seconds * 1000);
-    return DateFormat('dd/MM/yyyy').format(dateFormTimeStamp);
+
+  String formattedDate(timeStamp) {
+    return DateFormat('dd/MM/yyyy').format(timeStamp);
   }
 
   String formattedDatebook(timeStamp) {

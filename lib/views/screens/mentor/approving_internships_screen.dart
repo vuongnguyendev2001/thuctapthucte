@@ -107,12 +107,10 @@ class _ApprovingInternshipsScreenState
         ReceiptForm receiptForm = ReceiptForm.fromMap(data);
         if (receiptForm.userStudent!.uid == userID &&
             receiptForm.companyIntern!.id == companyID) {
-          print('true');
           return true;
         }
       }
     }
-    print('false');
     return false;
   }
 
@@ -126,12 +124,11 @@ class _ApprovingInternshipsScreenState
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         AssignmentSlip receiptForm = AssignmentSlip.fromMap(data);
         if (receiptForm.mssvController.text == MSSV) {
-          print('true');
           return true;
         }
       }
     }
-    print('false');
+
     return false;
   }
 
@@ -271,7 +268,7 @@ class _ApprovingInternshipsScreenState
                     itemBuilder: (context, index) {
                       CourseRegistration courseRegistration =
                           courseRegistrations[index];
-                          
+
                       if (courseRegistration.semester == selectedSemester &&
                           courseRegistration.academicYear ==
                               selectedAcademicYear) {
@@ -459,25 +456,19 @@ class _ApprovingInternshipsScreenState
                                                                             timestamp:
                                                                                 Timestamp.now(),
                                                                             emailUser:
-                                                                                internshipApplication
-                                                                                    .user
-                                                                                    .email!,
+                                                                                internshipApplication.user.email!,
                                                                           );
                                                                           await FirebaseApi()
                                                                               .sendFirebaseCloudMessage(
                                                                             notification.title,
                                                                             notification.body,
-                                                                            internshipApplication
-                                                                                .user
-                                                                                .fcmToken!,
+                                                                            internshipApplication.user.fcmToken!,
                                                                           );
                                                                           await FirebaseFirestore
                                                                               .instance
-                                                                              .collection(
-                                                                                  'notifications')
+                                                                              .collection('notifications')
                                                                               .add(
-                                                                                notification
-                                                                                    .toJson(),
+                                                                                notification.toJson(),
                                                                               );
                                                                           await FirebaseFirestore
                                                                               .instance
@@ -721,18 +712,17 @@ class _ApprovingInternshipsScreenState
                                                                   internshipApplication
                                                                       .Company
                                                                       .id!) as bool;
-
                                                           if (checkForm ==
                                                               false) {
                                                             RegisterViewerArguments
                                                                 arguments =
                                                                 RegisterViewerArguments(
-                                                              internshipApplication
-                                                                  .user,
-                                                              internshipApplication
-                                                                  .Company,
-                                                                  internshipApplication.idDKHP
-                                                            );
+                                                                    internshipApplication
+                                                                        .user,
+                                                                    internshipApplication
+                                                                        .Company,
+                                                                    internshipApplication
+                                                                        .idDKHP);
                                                             await Get.toNamed(
                                                               RouteManager
                                                                   .receiptFormScreen,
@@ -783,12 +773,12 @@ class _ApprovingInternshipsScreenState
                                                             RegisterViewerArguments
                                                                 arguments =
                                                                 RegisterViewerArguments(
-                                                              internshipApplication
-                                                                  .user,
-                                                              internshipApplication
-                                                                  .Company,
-                                                                  internshipApplication.idDKHP
-                                                            );
+                                                                    internshipApplication
+                                                                        .user,
+                                                                    internshipApplication
+                                                                        .Company,
+                                                                    internshipApplication
+                                                                        .idDKHP);
                                                             await Get.toNamed(
                                                               RouteManager
                                                                   .assignmentSlip,

@@ -10,7 +10,7 @@ import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/course_register.dart';
 import 'package:trungtamgiasu/models/receipt_form.dart';
 import 'package:trungtamgiasu/services/get_current_user.dart';
-import 'package:trungtamgiasu/views/screens/canbohuongdan/receipt_form_screen.dart';
+import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 
 class ReadAllForm extends StatefulWidget {
   const ReadAllForm({super.key});
@@ -59,7 +59,7 @@ class _ReadAllFormState extends State<ReadAllForm>
       .snapshots();
   String _search = '';
   String? selectedSemester;
-    String? selectedAcademicYear;
+  String? selectedAcademicYear;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

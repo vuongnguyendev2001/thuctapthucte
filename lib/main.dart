@@ -6,6 +6,9 @@ import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'controllers/route_manager.dart';
 import 'firebase_options.dart';
 import 'services/get_current_user.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +21,10 @@ void main() async {
   } else {
     await FirebaseApi().initNotifications();
   }
+
+  supportedLocales:
+  [const Locale('en'), const Locale('fr')];
+  await initializeDateFormatting('vi_VN', null);
   runApp(const MyApp());
 }
 
@@ -28,6 +35,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('vi', ''),// arabic, no country code
+      ],
       builder: EasyLoading.init(),
       initialRoute: RouteManager.splashScreen,
       onGenerateRoute: RouteManager.generateRoute,
