@@ -680,7 +680,7 @@ class _ApprovingInternshipsScreenState
                                                                       FontWeight
                                                                           .bold,
                                                                   color:
-                                                                      primaryColor,
+                                                                      dashTeal,
                                                                 )
                                                               : Style
                                                                   .subtitleStyle
@@ -697,8 +697,11 @@ class _ApprovingInternshipsScreenState
                                               ),
                                               const SizedBox(height: 2),
                                               if (internshipApplication
-                                                      .status ==
-                                                  'Đã duyệt')
+                                                          .status ==
+                                                      'Đã duyệt' &&
+                                                  internshipApplication
+                                                          .checkFormAssignment ==
+                                                      false)
                                                 Row(
                                                   children: [
                                                     Expanded(

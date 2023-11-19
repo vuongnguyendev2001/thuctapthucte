@@ -550,21 +550,21 @@ class _WaitingAcceptAccountState extends State<WaitingAcceptAccount>
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                        width: Get.width,
-                        padding: const EdgeInsets.all(10),
-                        color: whiteColor,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Nhận hồ sơ: ', style: Style.titleStyle),
-                            Text(
-                              companies[index].companyDetail!.applicationMethod,
-                              style: Style.subtitleStyle,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   width: Get.width,
+                      //   padding: const EdgeInsets.all(10),
+                      //   color: whiteColor,
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text('Nhận hồ sơ: ', style: Style.titleStyle),
+                      //       Text(
+                      //         companies[index].companyDetail!.applicationMethod,
+                      //         style: Style.subtitleStyle,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -582,12 +582,12 @@ class _WaitingAcceptAccountState extends State<WaitingAcceptAccount>
                       UIHelper.showCupertinoDialog(
                         onComfirm: () {
                           CompanyIntern companyIntern = companies[index];
-                          // FirebaseFirestore.instance
-                          //     .collection('companies')
-                          //     .doc(companies[index].id!)
-                          //     .set(
-                          //       companyIntern.toMap(),
-                          //     );
+                          FirebaseFirestore.instance
+                              .collection('companies')
+                              .doc(companies[index].id!)
+                              .set(
+                                companyIntern.toMap(),
+                              );
                           FirebaseFirestore.instance
                               .collection('waitingReview')
                               .doc(companyIntern.id!)

@@ -27,7 +27,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   final TextEditingController countryController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  String gmail = '@gmail.com';
+  final TextEditingController passwordController =
+      TextEditingController(text: '123456');
   var phone = "";
   final GlobalKey<FormState> _formKeyOtp = GlobalKey();
   final _auth = FirebaseAuth.instance;
@@ -236,8 +238,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         try {
                           await Loading().isShowLoading();
                           await LoginService().signInAccount(
-                              emailController.text, passwordController.text);
-                           FirebaseAuth.instance.authStateChanges().listen(
+                              emailController.text + gmail,
+                              passwordController.text);
+                          FirebaseAuth.instance.authStateChanges().listen(
                             (User? user) async {
                               if (user != null) {
                                 print(user.uid);
@@ -322,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         // print(currentUser.email);
-                        Get.toNamed(RouteManager.signUpCompany);
+                        Get.toNamed(RouteManager.signUpScreen);
                         // try {
                         // await Loading().isShowLoading();
                         //   // await LoginService().sendOTP(emailController.text);

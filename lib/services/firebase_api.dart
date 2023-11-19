@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
@@ -60,7 +62,7 @@ class FirebaseApi {
   }
 
 // Đăng ký thiết bị cho topic
-  void subscribeToTopic() async {
+  Future<void> subscribeToTopic() async {
     await FirebaseMessaging.instance
         .subscribeToTopic('all')
         .then(
@@ -172,5 +174,26 @@ class FirebaseApi {
     } catch (error) {
       print('Error: $error');
     }
+  }
+
+  static Future<void> scheduleDailyNotification(
+      DateTime scheduledTime, Function callback) async {
+    // Lấy thời gian hiện tại
+    DateTime now = DateTime.now();
+
+    // Tính toán thời gian còn lại cho đến khi thông báo được gửi
+    Duration timeUntilNotification = scheduledTime.difference(now);
+
+    // Nếu thời gian đã qua, thì đặt lại cho ngày kế tiếp
+    if (timeUntilNotification.isNegative) {
+      scheduledTime = scheduledTime.add(Duration(days: 1));
+      timeUntilNotification = scheduledTime.difference(now);
+    }
+
+    Timer.periodic(timeUntilNotification, (Timer timer) {
+      callback();
+      // Hủy timer sau khi gọi callback
+      timer.cancel();
+    });
   }
 }

@@ -74,7 +74,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                 borderRadius: BorderRadius.circular(35),
                                 child: CircleAvatar(
                                   radius: 35,
-                                  child: Image.network(user.avatar.toString()),
+                                  child: Image.network(
+                                    user.avatar.toString(),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             )

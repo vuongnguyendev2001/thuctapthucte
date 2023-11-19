@@ -13,6 +13,8 @@ class RegistrationModel {
   Timestamp? timestamp;
   String positionApply;
   String idDKHP;
+  bool? checkFormReceipt;
+  bool? checkFormAssignment;
 
   RegistrationModel({
     this.timestamp,
@@ -23,7 +25,9 @@ class RegistrationModel {
     required this.user,
     required this.status,
     required this.positionApply,
-    required this.idDKHP
+    required this.idDKHP,
+    this.checkFormReceipt,
+    this.checkFormAssignment,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,7 +40,9 @@ class RegistrationModel {
       'url': urlCV,
       'name': nameCV,
       'positionApply': positionApply,
-      'idDKHP': idDKHP
+      'idDKHP': idDKHP,
+      'checkFormReceipt': checkFormReceipt,
+      'checkFormAssignment': checkFormAssignment
     };
   }
 
@@ -51,6 +57,8 @@ class RegistrationModel {
       urlCV: map['url'],
       positionApply: map['positionApply'],
       idDKHP: map['idDKHP'],
+      checkFormReceipt: map['checkFormReceipt'],
+      checkFormAssignment: map['checkFormAssignment'],
     );
   }
 }

@@ -573,6 +573,21 @@ class _LectureReadResultsEvaluationState
                       icon: null,
                     ),
                     const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Người lập: ${resultEvaluationList.userCanBo!.userName}",
+                          ),
+                          Text(
+                            'Ngày lập: ${CurrencyFormatter().formattedDatebook(resultEvaluationList.timestamp)}',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),

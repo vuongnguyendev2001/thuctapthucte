@@ -22,7 +22,15 @@ class AddNotification extends StatefulWidget {
   State<AddNotification> createState() => _AddNotificationState();
 }
 
+const List<String> list = <String>[
+  'Sinh viên',
+  'Giảng viên',
+  'Giáo vụ',
+  'Nhân viên'
+];
+
 class _AddNotificationState extends State<AddNotification> {
+  String dropdownValue = list.first;
   final TextEditingController title = TextEditingController();
   final TextEditingController body = TextEditingController();
   final TextEditingController topic = TextEditingController();
@@ -175,13 +183,18 @@ class _AddNotificationState extends State<AddNotification> {
                     pdfUrl!,
                     fileNamePdf!,
                   );
-                  await FirebaseApi().sendFirebaseCloudMessageToTopic(
+                  // DateTime scheduledTime = DateTime(2023, 11, 19, 8, 37, 0);
+                  // FirebaseApi.scheduleDailyNotification(scheduledTime, () {
+                  FirebaseApi().sendFirebaseCloudMessageToTopic(
                     title.text,
                     body.text,
                     'all',
                     pdfUrl ?? '',
                     fileNamePdf ?? '',
                   );
+                  //   print(
+                  //       "Thông báo đã được gửi lúc 8:00 sáng ngày 19/11/2023");
+                  // });
                   Notifications notifications = Notifications(
                     title: title.text,
                     body: body.text,

@@ -345,9 +345,8 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                               0: FixedColumnWidth(30),
                               1: FixedColumnWidth(70),
                               2: FixedColumnWidth(135),
-                              3: FixedColumnWidth(50),
-                              4: FixedColumnWidth(50),
-                              5: FlexColumnWidth()
+                              3: FixedColumnWidth(65),
+                              4: FlexColumnWidth()
                             },
                             defaultVerticalAlignment:
                                 TableCellVerticalAlignment.middle,
@@ -374,16 +373,9 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                                   ),
                                   Center(
                                     child: Text(
-                                      'Điểm số',
+                                      'Điểm số/chữ',
                                       style: Style.titleStyle,
                                       textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      'Điểm chữ',
-                                      textAlign: TextAlign.center,
-                                      style: Style.titleStyle,
                                     ),
                                   ),
                                   Center(
@@ -436,9 +428,8 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                                                 0: FixedColumnWidth(30),
                                                 1: FixedColumnWidth(70),
                                                 2: FixedColumnWidth(135),
-                                                3: FixedColumnWidth(50),
-                                                4: FixedColumnWidth(50),
-                                                5: FlexColumnWidth()
+                                                3: FixedColumnWidth(70),
+                                                4: FlexColumnWidth()
                                               },
                                               defaultVerticalAlignment:
                                                   TableCellVerticalAlignment
@@ -461,51 +452,33 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                                                       ),
                                                     ),
                                                     Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      child: Text(
-                                                        '${dkhpFromMSSVList[indexFromMSSV].user.userName}',
-                                                        style:
-                                                            Style.subtitleStyle,
-                                                      ),
-                                                    ),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5),
+                                                        child: Text(
+                                                            '${dkhpFromMSSVList[indexFromMSSV].user.userName}',
+                                                            style: Style
+                                                                .subtitleStyle)),
                                                     dkhpFromMSSVList[
                                                                     indexFromMSSV]
                                                                 .lecturersEvaluation !=
                                                             null
                                                         ? Center(
                                                             child: Text(
-                                                              '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.total}',
-                                                              style: Style
-                                                                  .subtitleStyle,
-                                                            ),
+                                                                '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.totalScore}'
+                                                                ' (${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.total})',
+                                                                style: Style
+                                                                    .subtitleStyle
+                                                                    .copyWith(
+                                                                        color:
+                                                                            primaryColor,
+                                                                        fontWeight:
+                                                                            FontWeight.w700)),
                                                           )
                                                         : Center(
-                                                            child: Text(
-                                                              '-',
-                                                              style: Style
-                                                                  .subtitleStyle,
-                                                            ),
-                                                          ),
-                                                    dkhpFromMSSVList[
-                                                                    indexFromMSSV]
-                                                                .lecturersEvaluation !=
-                                                            null
-                                                        ? Center(
-                                                            child: Text(
-                                                              '${dkhpFromMSSVList[indexFromMSSV].lecturersEvaluation!.totalScore}',
-                                                              style: Style
-                                                                  .subtitleStyle,
-                                                            ),
-                                                          )
-                                                        : Center(
-                                                            child: Text(
-                                                              '-',
-                                                              style: Style
-                                                                  .subtitleStyle,
-                                                            ),
-                                                          ),
+                                                            child: Text('-',
+                                                                style: Style
+                                                                    .subtitleStyle)),
                                                     InkWell(
                                                       onTap: () async {
                                                         String? sumScoreCanBo =
@@ -530,7 +503,6 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                                                               .user
                                                               .email!,
                                                         );
-                                                        // print(sumScoreCanBo);
                                                         if (dkhpFromMSSVList[
                                                                     indexFromMSSV]
                                                                 .lockScore ==
@@ -553,13 +525,25 @@ class _LecturersEvaluationState extends State<LecturersEvaluation> {
                                                                     .symmetric(
                                                                 vertical: 3.1),
                                                         color: primaryColor,
-                                                        child: const Center(
-                                                          child: Icon(
-                                                            Icons.edit_rounded,
-                                                            color:
-                                                                backgroundLite,
-                                                            size: 20,
-                                                          ),
+                                                        child: Center(
+                                                          child: dkhpFromMSSVList[
+                                                                          indexFromMSSV]
+                                                                      .lockScore ==
+                                                                  false
+                                                              ? const Icon(
+                                                                  Icons
+                                                                      .edit_rounded,
+                                                                  color:
+                                                                      backgroundLite,
+                                                                  size: 20,
+                                                                )
+                                                              : const Icon(
+                                                                  Icons
+                                                                      .lock_outline,
+                                                                  color:
+                                                                      backgroundLite,
+                                                                  size: 20,
+                                                                ),
                                                         ),
                                                       ),
                                                     ),

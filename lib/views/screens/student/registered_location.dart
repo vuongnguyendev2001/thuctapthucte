@@ -345,21 +345,21 @@ class _RegisteredLocationScreenState extends State<RegisteredLocationScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                        width: Get.width,
-                        padding: const EdgeInsets.all(10),
-                        color: whiteColor,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Nhận hồ sơ: ', style: Style.titleStyle),
-                            Text(
-                              companies.companyDetail!.applicationMethod,
-                              style: Style.subtitleStyle,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   width: Get.width,
+                      //   padding: const EdgeInsets.all(10),
+                      //   color: whiteColor,
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text('Nhận hồ sơ: ', style: Style.titleStyle),
+                      //       Text(
+                      //         companies.companyDetail!.applicationMethod,
+                      //         style: Style.subtitleStyle,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

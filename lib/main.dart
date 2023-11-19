@@ -15,13 +15,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotifications();
   final updatedUser = await getUserInfo(loggedInUser);
   if (updatedUser.uid == "1hTWuEYv9nYt3GLomYkrNrn79ny2") {
     await FirebaseApi().unsubscribeToTopic();
   } else {
-    await FirebaseApi().initNotifications();
+    await FirebaseApi().subscribeToTopic();
   }
-
   supportedLocales:
   [const Locale('en'), const Locale('fr')];
   await initializeDateFormatting('vi_VN', null);
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('vi', ''),// arabic, no country code
+        Locale('vi', ''), // arabic, no country code
       ],
       builder: EasyLoading.init(),
       initialRoute: RouteManager.splashScreen,

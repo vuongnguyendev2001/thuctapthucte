@@ -301,6 +301,7 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                           ),
                                     const SizedBox(width: 15),
                                     Expanded(
+                                      flex: 8,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -356,6 +357,38 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                                         // Hiển thị các thông tin khác của công ty
                                       ),
                                     ),
+                                    loggedInUser.type == 'Giáo vụ'
+                                        ? Expanded(
+                                            flex: 1,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                UIHelper.showCupertinoDialog(
+                                                    message:
+                                                        'Xóa dữ liệu công ty',
+                                                    titleConfirm: 'Đồng ý',
+                                                    titleClose: 'Hủy bỏ',
+                                                    title: 'Thông báo',
+                                                    isShowClose: true,
+                                                    onComfirm: () {
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              "companies")
+                                                          .doc(companies[index]
+                                                              .id)
+                                                          .delete()
+                                                          .then((_) {
+                                                        EasyLoading.showSuccess(
+                                                            "Xóa dữ liệu công ty thành công");
+                                                        Get.back();
+                                                      });
+                                                    });
+                                              },
+                                              child: const SizedBox(
+                                                child:
+                                                    Icon(Icons.delete_outline),
+                                              ),
+                                            ))
+                                        : const SizedBox.shrink()
                                   ],
                                 ),
                               ),
@@ -517,22 +550,22 @@ class _TimKiemDiaDiemState extends State<TimKiemDiaDiem> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        width: Get.width,
-                        padding: const EdgeInsets.all(10),
-                        color: whiteColor,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Nhận hồ sơ: ', style: Style.titleStyle),
-                            Text(
-                              companies[index].companyDetail!.applicationMethod,
-                              style: Style.subtitleStyle,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // const SizedBox(height: 10),
+                      // Container(
+                      //   width: Get.width,
+                      //   padding: const EdgeInsets.all(10),
+                      //   color: whiteColor,
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text('Nhận hồ sơ: ', style: Style.titleStyle),
+                      //       Text(
+                      //         companies[index].companyDetail!.applicationMethod,
+                      //         style: Style.subtitleStyle,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
