@@ -1,5 +1,3 @@
-import 'package:trungtamgiasu/models/course_register.dart';
-
 class UserModel {
   String? avatar;
   String? uid;

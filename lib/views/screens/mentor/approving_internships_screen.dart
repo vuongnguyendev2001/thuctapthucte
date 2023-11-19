@@ -458,6 +458,9 @@ class _ApprovingInternshipsScreenState
                                                                             emailUser:
                                                                                 internshipApplication.user.email!,
                                                                           );
+                                                                          print(internshipApplication
+                                                                              .user
+                                                                              .fcmToken!);
                                                                           await FirebaseApi()
                                                                               .sendFirebaseCloudMessage(
                                                                             notification.title,
@@ -697,11 +700,8 @@ class _ApprovingInternshipsScreenState
                                               ),
                                               const SizedBox(height: 2),
                                               if (internshipApplication
-                                                          .status ==
-                                                      'Đã duyệt' &&
-                                                  internshipApplication
-                                                          .checkFormAssignment ==
-                                                      false)
+                                                      .status ==
+                                                  'Đã duyệt')
                                                 Row(
                                                   children: [
                                                     Expanded(

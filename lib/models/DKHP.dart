@@ -16,22 +16,23 @@ class DangKyHocPhan {
   bool? isSubmitReport;
   ReportPdfViewer? submitReport;
   bool? lockScore;
+  bool? evaluationWork;
 
-  DangKyHocPhan({
-    this.idGiangVien,
-    this.idDKHP,
-    required this.idHK,
-    required this.idHP,
-    required this.user,
-    this.locationIntern,
-    this.receiptForm,
-    this.assignmentSlipForm,
-    this.evaluation,
-    this.lecturersEvaluation,
-    this.submitReport,
-    this.isSubmitReport,
-    this.lockScore,
-  });
+  DangKyHocPhan(
+      {this.idGiangVien,
+      this.idDKHP,
+      required this.idHK,
+      required this.idHP,
+      required this.user,
+      this.locationIntern,
+      this.receiptForm,
+      this.assignmentSlipForm,
+      this.evaluation,
+      this.lecturersEvaluation,
+      this.submitReport,
+      this.isSubmitReport,
+      this.lockScore,
+      this.evaluationWork});
 
   factory DangKyHocPhan.fromMap(Map<String, dynamic> map) {
     return DangKyHocPhan(
@@ -52,6 +53,7 @@ class DangKyHocPhan {
           : null,
       isSubmitReport: map['isSubmitReport'] ?? false,
       lockScore: map['lockScore'] ?? false,
+      evaluationWork: map['evaluationWork'] ?? false,
     );
   }
 
@@ -69,7 +71,8 @@ class DangKyHocPhan {
       'lecturersEvaluation': lecturersEvaluation?.toMap(),
       'submitReport': submitReport?.toMap(),
       'isSubmitReport': isSubmitReport,
-      'lockScore': lockScore
+      'lockScore': lockScore,
+      'evaluationWork': evaluationWork
     };
   }
 }

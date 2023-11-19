@@ -7,6 +7,7 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/constants/style.dart';
+import 'package:trungtamgiasu/models/DKHP.dart';
 import 'package:trungtamgiasu/models/assignment_slip.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
 import 'package:trungtamgiasu/models/work_content.dart';
@@ -28,11 +29,37 @@ class _TrackingSheetScreenState extends State<TrackingSheetScreen> {
   @override
   void initState() {
     super.initState();
+    fetchData();
     idDocument = Get.arguments as String; // Initialize idDocument
     _assignmentSlipFormFirestore = FirebaseFirestore.instance
         .collection('TrackingSheet')
         .doc(idDocument)
         .snapshots();
+  }
+
+  Future<void> fetchData() async {
+    final updatedUser = await getUserInfo(loggedInUser);
+    setState(() {
+      loggedInUser = updatedUser;
+    });
+  }
+
+  CollectionReference DKHPCollection =
+      FirebaseFirestore.instance.collection('DangKyHocPhan');
+  Future<String?> getAllDKHP(String MSSV) async {
+    QuerySnapshot querySnapshot = await DKHPCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        DangKyHocPhan dangKyHocPhan = DangKyHocPhan.fromMap(data);
+        if (dangKyHocPhan.user.MSSV == MSSV) {
+          print(dangKyHocPhan.idDKHP);
+          return dangKyHocPhan.idDKHP;
+        }
+      }
+    }
+    return 'No data';
   }
 
   @override
@@ -251,112 +278,133 @@ class _TrackingSheetScreenState extends State<TrackingSheetScreen> {
                           assignmentSlipFormList.dateTime != null
                               ? Align(
                                   alignment: Alignment.centerRight,
-                                  child: Text(
-                                    'Lần cuối đánh giá: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList.dateTime)}',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Người đánh giá: ${assignmentSlipFormList.userCanBo!.userName}',
+                                      ),
+                                      Text(
+                                        'Ngày đánh giá: ${CurrencyFormatter().formattedDatebook(assignmentSlipFormList.dateTime)}',
+                                      ),
+                                    ],
                                   ),
                                 )
                               : const SizedBox(),
-                          const SizedBox(height: 50)
+                          const SizedBox(height: 60)
                         ],
                       ),
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    width: Get.width,
-                    height: 55,
-                    color: greyFontColor,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          width: Get.width * 0.7,
+                loggedInUser.uid == assignmentSlipFormList.userCanBo!.uid
+                    ? Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          width: Get.width,
+                          height: 55,
+                          color: greyFontColor,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    List<WorkContent>? workContentNew =
-                                        assignmentSlipFormList
-                                            .workContentControllers;
-                                    List<Map<String, dynamic>>?
-                                        workContentMaps =
-                                        workContentNew?.map((workContent) {
-                                      return workContent
-                                          .toMap(); // Convert each WorkContent object to a Map
-                                    }).toList();
-                                    await FirebaseFirestore.instance
-                                        .collection('TrackingSheet')
-                                        .doc(idDocument)
-                                        .update({
-                                      "workContentControllers": workContentMaps,
-                                      "dateTime": Timestamp.now()
-                                    }).then((_) {
-                                      // In ID của tài liệu sau khi đã cập nhật
-                                      Loading().isShowSuccess(
-                                          'Đã lưu thông tin phiếu');
-                                    }).catchError((error) {
-                                      // Xử lý lỗi nếu có khi cập nhật
-                                      print(
-                                          'Lỗi khi cập nhật ID của tài liệu: $error');
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(Get.width, 44),
-                                    elevation: 0.0,
-                                    backgroundColor: primaryColor,
-                                    side: const BorderSide(
-                                      color: Colors.grey,
-                                      width: 1.0,
+                              SizedBox(
+                                height: 50,
+                                width: Get.width * 0.7,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          List<WorkContent>? workContentNew =
+                                              assignmentSlipFormList
+                                                  .workContentControllers;
+                                          List<Map<String, dynamic>>?
+                                              workContentMaps = workContentNew
+                                                  ?.map((workContent) {
+                                            return workContent
+                                                .toMap(); // Convert each WorkContent object to a Map
+                                          }).toList();
+                                          await FirebaseFirestore.instance
+                                              .collection('TrackingSheet')
+                                              .doc(idDocument)
+                                              .update({
+                                            "workContentControllers":
+                                                workContentMaps,
+                                            "dateTime": Timestamp.now()
+                                          }).then((_) async {
+                                            String? idDKHP = await getAllDKHP(
+                                                assignmentSlipFormList
+                                                    .mssvController.text);
+                                            await FirebaseFirestore.instance
+                                                .collection('DangKyHocPhan')
+                                                .doc(idDKHP)
+                                                .update(
+                                                    {'evaluationWork': true});
+                                            Loading().isShowSuccess(
+                                                'Đã lưu thông tin phiếu');
+                                          }).catchError((error) {
+                                            // Xử lý lỗi nếu có khi cập nhật
+                                            print(
+                                                'Lỗi khi cập nhật ID của tài liệu: $error');
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(Get.width, 44),
+                                          elevation: 0.0,
+                                          backgroundColor: primaryColor,
+                                          side: const BorderSide(
+                                            color: Colors.grey,
+                                            width: 1.0,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                              Icons.check_circle_outline,
+                                              color: backgroundLite,
+                                            ),
+                                            const SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text(
+                                              'Hoàn thành phiếu',
+                                              // 'login'.tr.capitalize,
+                                              style: Style.titleStyle.copyWith(
+                                                  color: backgroundLite,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.check_circle_outline,
-                                        color: backgroundLite,
-                                      ),
-                                      const SizedBox(
-                                        width: 3,
-                                      ),
-                                      Text(
-                                        'Hoàn thành phiếu',
-                                        // 'login'.tr.capitalize,
-                                        style: Style.titleStyle.copyWith(
-                                            color: backgroundLite,
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
+                                  ],
                                 ),
                               ),
+                              InkWell(
+                                onTap: () => Navigator.pop(context),
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: whiteColor,
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 20,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
-                        InkWell(
-                          onTap: () => Navigator.pop(context),
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: whiteColor,
-                            child: const Icon(
-                              Icons.close,
-                              size: 20,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      )
+                    : const SizedBox.shrink(),
               ],
             );
           },

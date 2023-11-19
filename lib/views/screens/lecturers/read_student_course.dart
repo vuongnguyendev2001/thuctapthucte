@@ -287,6 +287,23 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
     return null;
   }
 
+  CollectionReference valuationWorkCollection =
+      FirebaseFirestore.instance.collection('TrackingSheet');
+  Future<String?> getAllEvaluationWork(String MSSV) async {
+    QuerySnapshot querySnapshot = await valuationWorkCollection.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+      for (QueryDocumentSnapshot document in documents) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        AssignmentSlip resultEvaluation = AssignmentSlip.fromMap(data);
+        if (resultEvaluation.mssvController.text == MSSV) {
+          return resultEvaluation.id;
+        }
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -622,6 +639,62 @@ class _ReadStudentCourseState extends State<ReadStudentCourse> {
                                                   RouteManager
                                                       .readDetailAssignmentSlip,
                                                   arguments: idAssignmentSlip,
+                                                );
+                                              } else {
+                                                EasyLoading.showError(
+                                                  'Chưa có dữ liệu',
+                                                );
+                                              }
+                                            },
+                                            child: const Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 8.0),
+                                              child: Icon(
+                                                Icons.visibility_rounded,
+                                                color: primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child: Checkbox(
+                                                    checkColor: primaryColor,
+                                                    fillColor:
+                                                        const MaterialStatePropertyAll(
+                                                      Colors.white70,
+                                                    ),
+                                                    value:
+                                                        dkhpFromMSSVList[index]
+                                                            .evaluationWork,
+                                                    onChanged: null),
+                                              ),
+                                              Text(
+                                                'Đánh giá giao việc',
+                                                style: Style.subtitleStyle,
+                                              ),
+                                            ],
+                                          ),
+                                          InkWell(
+                                            onTap: () async {
+                                              String? idTrackingSheet =
+                                                  await getAllEvaluationWork(
+                                                      dkhpFromMSSVList[index]
+                                                          .user
+                                                          .MSSV!);
+                                              if (idTrackingSheet != null) {
+                                                Get.toNamed(
+                                                  RouteManager
+                                                      .trackingSheetScreen,
+                                                  arguments: idTrackingSheet,
                                                 );
                                               } else {
                                                 EasyLoading.showError(
