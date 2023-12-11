@@ -46,6 +46,7 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
   String endDateReceptAndAssignmentForm = "";
   String startDateEvaluationIntern = "Chưa đặt thời gian";
   String endDateEvaluationIntern = "";
+  DateTime? endDateAcceptStudentDateTime;
   void timeLine() {
     FirebaseFirestore.instance
         .collection("ManagementTimeline")
@@ -62,6 +63,8 @@ class _HomeNhanVienScreenState extends State<HomeNhanVienScreen> {
                 .formattedDate(timelineMentor.acceptStudent!.startDate);
             endDateAcceptStudent = CurrencyFormatter()
                 .formattedDate(timelineMentor.acceptStudent!.endDate);
+            endDateAcceptStudentDateTime =
+                timelineMentor.acceptStudent!.endDate;
             startDateReceptAndAssignmentForm = CurrencyFormatter()
                 .formattedDate(
                     timelineMentor.receptAndAssignmentForm!.startDate);

@@ -12,9 +12,12 @@ import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
 import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
+import 'package:trungtamgiasu/models/notification.dart';
+import 'package:trungtamgiasu/models/notification_model.dart';
 import 'package:trungtamgiasu/models/timeline_lecturers.dart';
 import 'package:trungtamgiasu/models/timeline_mentor.dart';
 import 'package:trungtamgiasu/models/timeline_student.dart';
+import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/home_giaovu_screen.dart';
 import 'package:trungtamgiasu/views/screens/giaovu/widgets/button_management_time.dart';
 
@@ -65,9 +68,13 @@ class _ManagementTimeState extends State<ManagementTime> {
       appBar: AppBar(
         backgroundColor: primaryColor,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          'Quản lý mốc thời gian',
-          style: Style.homeTitleStyle,
+        title: Column(
+          children: [
+            Text(
+              'Quản lý mốc thời gian',
+              style: Style.homeTitleStyle,
+            ),
+          ],
         ),
         centerTitle: true,
       ),
@@ -195,17 +202,41 @@ class _ManagementTimeState extends State<ManagementTime> {
                                       .update({
                                     "courseRegisterAndCompany":
                                         timeline.toJson()
-                                  }).then(
-                                    (_) => EasyLoading.showSuccess(
-                                            'Đặt thời gian thành công !')
-                                        .catchError(
-                                      (error) {
-                                        // Handle the error
-                                        print(
-                                            'Error while updating document: $error');
-                                      },
-                                    ),
-                                  );
+                                  }).then((_) {
+                                    DateTime scheduledTime = _endDate
+                                        .subtract(const Duration(days: 1))
+                                        .add(const Duration(
+                                            hours: 13,
+                                            minutes: 16,
+                                            seconds: 0));
+                                    print(scheduledTime);
+                                    Notifications notifications = Notifications(
+                                      id: 'students',
+                                      title:
+                                          'Sắp hết thời gian đăng ký học phần & đăng ký công ty',
+                                      body:
+                                          'Thời gian đăng ký học phần & đăng ký công ty là đến hết ngày ${CurrencyFormatter().formattedDate(_endDate)}',
+                                      timestamp: Timestamp.now(),
+                                    );
+                                    FirebaseApi.scheduleDailyNotification(
+                                        scheduledTime, () {
+                                      FirebaseApi()
+                                          .sendFirebaseCloudMessage(
+                                            notifications.title,
+                                            notifications.body,
+                                            'ef7LcJEeTvSqbPa1326AfA:APA91bE3PODJdPDjx4IRhrIA-q7paVWJkAVahvXsW0CnWly72c_0D5GBKZc-_299QKjDaodK_m1xkrkokMs3ujMW_KjnvF-kPRmmHdE-oC-HqNOcu4xRtFWX4UXI5ii_PSkDPvnuI5O3',
+                                          )
+                                          .then((_) => FirebaseFirestore
+                                              .instance
+                                              .collection("notifications")
+                                              .add(notifications.toJson()));
+
+                                      print(
+                                          "Thông báo đã được gửi lúc $scheduledTime");
+                                    });
+                                    EasyLoading.showSuccess(
+                                        'Đặt thời gian thành công !');
+                                  });
                                 },
                               );
                             }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/models/DKHP.dart';
@@ -58,6 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'No data';
   }
 
+  DateTime? endDateRegisterCourseAndCompanyDateTime;
+  DateTime? endDateCheckReceiptAndAssignmentDateTime;
+  DateTime? endDateSubmitReportDateTime;
   String startDateRegisterCourseAndCompany = "Chưa đặt thời gian";
   String endDateRegisterCourseAndCompany = "";
   String startDateCheckReceiptAndAssignment = "Chưa đặt thời gian";
@@ -90,9 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     timelineStudentModel.courseRegisterAndCompany!.startDate);
             endDateRegisterCourseAndCompany = CurrencyFormatter().formattedDate(
                 timelineStudentModel.courseRegisterAndCompany!.endDate);
+            endDateRegisterCourseAndCompanyDateTime =
+                timelineStudentModel.courseRegisterAndCompany!.endDate;
             startDateCheckReceiptAndAssignment = CurrencyFormatter()
                 .formattedDate(
                     timelineStudentModel.checkReceiptAndAssignment!.startDate);
+            endDateCheckReceiptAndAssignmentDateTime =
+                timelineStudentModel.checkReceiptAndAssignment!.endDate;
             endDateCheckReceiptAndAssignment = CurrencyFormatter()
                 .formattedDate(
                     timelineStudentModel.checkReceiptAndAssignment!.endDate);
@@ -106,6 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
             startDateSubmitReport = CurrencyFormatter().formattedDate(
               timelineStudentModel.submitReport!.endDate,
             );
+            endDateSubmitReportDateTime =
+                timelineStudentModel.submitReport!.endDate;
             endDateSubmitReport = CurrencyFormatter()
                 .formattedDate(timelineStudentModel.submitReport!.endDate);
             startDateHaveScore = CurrencyFormatter()
@@ -310,7 +320,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Get.toNamed(RouteManager.courseRegistrationScreen);
+                          if (endDateRegisterCourseAndCompanyDateTime!
+                                  .compareTo(DateTime.now()) <
+                              0) {
+                            EasyLoading.showError(
+                              'Đã hết thời gian\nđăng ký học phần !',
+                            );
+                          }
+                          if (endDateRegisterCourseAndCompanyDateTime!
+                                  .compareTo(DateTime.now()) >
+                              0) {
+                            Get.toNamed(RouteManager.courseRegistrationScreen);
+                          }
                         },
                         child: SizedBox(
                           width: 65,
@@ -334,7 +355,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.toNamed(RouteManager.timKiemDiaDiem);
+                          if (endDateRegisterCourseAndCompanyDateTime!
+                                  .compareTo(DateTime.now()) <
+                              0) {
+                            EasyLoading.showError(
+                              'Đã hết thời gian đăng ký\nđịa điểm thực tập !',
+                            );
+                          }
+                          if (endDateRegisterCourseAndCompanyDateTime!
+                                  .compareTo(DateTime.now()) >
+                              0) {
+                            Get.toNamed(RouteManager.timKiemDiaDiem);
+                          }
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -421,9 +453,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        String? idDKHP = await getAllDKHP(loggedInUser.uid!);
-                        await Get.toNamed(RouteManager.submitReport,
-                            arguments: idDKHP);
+                        if (endDateSubmitReportDateTime!
+                                .compareTo(DateTime.now()) <
+                            0) {
+                          EasyLoading.showError(
+                            'Đã hết thời gian\nnộp báo cáo !',
+                          );
+                        }
+                        if (endDateSubmitReportDateTime!
+                                .compareTo(DateTime.now()) >
+                            0) {
+                          String? idDKHP = await getAllDKHP(loggedInUser.uid!);
+                          await Get.toNamed(RouteManager.submitReport,
+                              arguments: idDKHP);
+                        }
                       },
                       child: SizedBox(
                         width: 85,

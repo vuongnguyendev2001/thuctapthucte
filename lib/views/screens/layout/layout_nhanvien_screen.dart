@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trungtamgiasu/views/screens/mentor/all_notification_mentor.dart';
 import 'package:trungtamgiasu/views/screens/student/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/mentor/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/mentor/profile_canbo_screen.dart';
@@ -24,7 +25,7 @@ class _LayoutNhanvienScreenState extends State<LayoutNhanvienScreen> {
 
   List pages = [
     const HomeNhanVienScreen(),
-    const AllNotificationStudent(),
+    const AllNotificationMentor(),
     const ProfileCanBoScreen()
   ];
   @override

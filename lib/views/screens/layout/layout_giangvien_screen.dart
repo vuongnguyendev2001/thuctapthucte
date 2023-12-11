@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trungtamgiasu/views/screens/lecturers/all_notification_lecturers.dart';
 import 'package:trungtamgiasu/views/screens/student/account_screen.dart';
 import 'package:trungtamgiasu/views/screens/mentor/notification_screen.dart';
 import 'package:trungtamgiasu/views/screens/lecturers/home_giangvien_screen.dart';
@@ -24,7 +25,7 @@ class _LayoutGiangvienScreenState extends State<LayoutGiangvienScreen> {
 
   List pages = [
     const HomeGiangvienScreen(),
-    const AllNotificationStudent(),
+    const AllNotificationLecturers(),
     const AccountLecturersScreen(),
   ];
   @override

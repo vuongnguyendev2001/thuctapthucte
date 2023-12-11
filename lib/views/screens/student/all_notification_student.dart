@@ -83,7 +83,8 @@ class _AllNotificationStudentState extends State<AllNotificationStudent> {
                 document.data()! as Map<String, dynamic>;
             Notifications notifications = Notifications.fromJson(data);
             return notifications.emailUser == loggedInUser.email ||
-                notifications.emailUser == '';
+                notifications.emailUser == '' ||
+                notifications.emailUser == 'students';
           }).map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
@@ -97,20 +98,20 @@ class _AllNotificationStudentState extends State<AllNotificationStudent> {
                 ),
                 child: ListTile(
                   title: Text(
-                    notifications.title,
+                    notifications.title!,
                     style: Style.titleStyle,
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        notifications.body,
+                        notifications.body!,
                         style: Style.subtitleStyle,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 3),
-                      notifications.urlFile != null
+                      notifications.urlFile != ''
                           ? InkWell(
                               onTap: () {
                                 PdfViewerArguments arguments =

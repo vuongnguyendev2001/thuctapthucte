@@ -849,6 +849,8 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
       status: 'Đang duyệt',
       timestamp: Timestamp.now(),
       idDKHP: idDHK,
+      checkFormAssignment: false,
+      checkFormReceipt: false,
     );
     await _firebaseFirestore
         .collection("registrations")

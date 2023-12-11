@@ -699,128 +699,136 @@ class _ApprovingInternshipsScreenState
                                                 ),
                                               ),
                                               const SizedBox(height: 2),
-                                              if (internshipApplication
-                                                      .status ==
-                                                  'Đã duyệt')
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: InkWell(
-                                                        onTap: () async {
-                                                          bool checkForm =
-                                                              await getAllReceiptForm(
+                                              internshipApplication.status ==
+                                                          'Đã duyệt' &&
+                                                      internshipApplication
+                                                              .checkFormAssignment ==
+                                                          false
+                                                  ? Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: InkWell(
+                                                            onTap: () async {
+                                                              bool checkForm = await getAllReceiptForm(
                                                                   internshipApplication
                                                                       .user
                                                                       .uid!,
                                                                   internshipApplication
                                                                       .Company
                                                                       .id!) as bool;
-                                                          if (checkForm ==
-                                                              false) {
-                                                            RegisterViewerArguments
-                                                                arguments =
-                                                                RegisterViewerArguments(
-                                                                    internshipApplication
-                                                                        .user,
-                                                                    internshipApplication
-                                                                        .Company,
-                                                                    internshipApplication
-                                                                        .idDKHP);
-                                                            await Get.toNamed(
-                                                              RouteManager
-                                                                  .receiptFormScreen,
-                                                              arguments:
-                                                                  arguments,
-                                                            );
-                                                          } else {
-                                                            await Loading()
-                                                                .isshowError(
-                                                                    'Bạn đã lập phiếu cho sinh viên rồi');
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5),
-                                                          width: 200,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        7),
-                                                            color: primaryColor,
-                                                          ),
-                                                          child: Text(
-                                                            'Lập phiếu tiếp nhận',
-                                                            style: TextStyle(
-                                                              color: whiteColor,
-                                                              fontSize: 13,
+                                                              if (checkForm ==
+                                                                  false) {
+                                                                RegisterViewerArguments
+                                                                    arguments =
+                                                                    RegisterViewerArguments(
+                                                                        internshipApplication
+                                                                            .user,
+                                                                        internshipApplication
+                                                                            .Company,
+                                                                        internshipApplication
+                                                                            .idDKHP);
+                                                                await Get
+                                                                    .toNamed(
+                                                                  RouteManager
+                                                                      .receiptFormScreen,
+                                                                  arguments:
+                                                                      arguments,
+                                                                );
+                                                              } else {
+                                                                await Loading()
+                                                                    .isshowError(
+                                                                        'Bạn đã lập phiếu cho sinh viên rồi');
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(5),
+                                                              width: 200,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            7),
+                                                                color:
+                                                                    primaryColor,
+                                                              ),
+                                                              child: Text(
+                                                                'Lập phiếu tiếp nhận',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      whiteColor,
+                                                                  fontSize: 13,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: InkWell(
-                                                        onTap: () async {
-                                                          bool checkForm =
-                                                              await getAllAssignmentSlipForm(
+                                                        const SizedBox(
+                                                            width: 10),
+                                                        Expanded(
+                                                          child: InkWell(
+                                                            onTap: () async {
+                                                              bool checkForm =
+                                                                  await getAllAssignmentSlipForm(
                                                                       internshipApplication
                                                                           .user
-                                                                          .MSSV!)
-                                                                  as bool;
-                                                          if (checkForm ==
-                                                              false) {
-                                                            RegisterViewerArguments
-                                                                arguments =
-                                                                RegisterViewerArguments(
-                                                                    internshipApplication
-                                                                        .user,
-                                                                    internshipApplication
-                                                                        .Company,
-                                                                    internshipApplication
-                                                                        .idDKHP);
-                                                            await Get.toNamed(
-                                                              RouteManager
-                                                                  .assignmentSlip,
-                                                              arguments:
-                                                                  arguments,
-                                                            );
-                                                          } else {
-                                                            await Loading()
-                                                                .isshowError(
-                                                                    'Bạn đã lập phiếu cho sinh viên rồi');
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5),
-                                                          width: 200,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        7),
-                                                            color: primaryColor,
-                                                          ),
-                                                          child: Text(
-                                                            'Lập phiếu giao việc',
-                                                            style: TextStyle(
-                                                              color: whiteColor,
-                                                              fontSize: 13,
+                                                                          .MSSV!) as bool;
+                                                              if (checkForm ==
+                                                                  false) {
+                                                                RegisterViewerArguments
+                                                                    arguments =
+                                                                    RegisterViewerArguments(
+                                                                        internshipApplication
+                                                                            .user,
+                                                                        internshipApplication
+                                                                            .Company,
+                                                                        internshipApplication
+                                                                            .idDKHP);
+                                                                await Get
+                                                                    .toNamed(
+                                                                  RouteManager
+                                                                      .assignmentSlip,
+                                                                  arguments:
+                                                                      arguments,
+                                                                );
+                                                              } else {
+                                                                await Loading()
+                                                                    .isshowError(
+                                                                        'Bạn đã lập phiếu cho sinh viên rồi');
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(5),
+                                                              width: 200,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            7),
+                                                                color:
+                                                                    primaryColor,
+                                                              ),
+                                                              child: Text(
+                                                                'Lập phiếu giao việc',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      whiteColor,
+                                                                  fontSize: 13,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              else
-                                                const SizedBox(),
+                                                      ],
+                                                    )
+                                                  : const SizedBox.shrink(),
                                               Text(
                                                 'Ngày đăng ký: ${CurrencyFormatter().formattedDatebook(internshipApplication.timestamp)}',
                                                 style: Style.subtitleStyle,

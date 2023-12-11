@@ -325,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         // print(currentUser.email);
-                        Get.toNamed(RouteManager.signUpScreen);
+                        Get.toNamed(RouteManager.signUpCompany);
                         // try {
                         // await Loading().isShowLoading();
                         //   // await LoginService().sendOTP(emailController.text);

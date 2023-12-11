@@ -12,6 +12,7 @@ import 'package:trungtamgiasu/constants/loading.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/company_intern.dart';
 import 'package:trungtamgiasu/models/user/user_model.dart';
+import 'package:trungtamgiasu/services/firebase_api.dart';
 import 'package:trungtamgiasu/views/screens/mentor/receipt_form_screen.dart';
 import 'package:trungtamgiasu/views/widgets/custom_text_form_field.dart';
 
@@ -214,7 +215,13 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                             'id': id,
                           },
                         );
+                        await FirebaseApi().sendFirebaseCloudMessage(
+                          'Giáo vụ vừa nhận được yêu cầu duyệt công ty',
+                          '${nameCompanyController.text} vừa gửi yêu cầu duyệt',
+                          'cU6YkdXmS_KUDUcMNoy6YH:APA91bG4Mx6AeZBytharQKdVYF6jDSTuN3ZrOpa0U-n2Rua1Ba6ra5uq50IzROWLlhhol5w-ZvaBwOZXS5jTFehMySk3F76HH8oxNqTK5akaUZpZkmnvFS-3xfCFfF2g_RVbRvR_ZotG',
+                        );
                       });
+
                       // Get.back();
                       EasyLoading.showSuccess(
                           'Đăng ký thành công !\n Vui lòng chờ được phê duyệt');

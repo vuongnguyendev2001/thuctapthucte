@@ -22,15 +22,15 @@ class AddNotification extends StatefulWidget {
   State<AddNotification> createState() => _AddNotificationState();
 }
 
-const List<String> list = <String>[
+const List<String> listRole = <String>[
   'Sinh viên',
   'Giảng viên',
   'Giáo vụ',
-  'Nhân viên'
+  'Tất cả',
 ];
 
 class _AddNotificationState extends State<AddNotification> {
-  String dropdownValue = list.first;
+  String dropdownValue = listRole.first;
   final TextEditingController title = TextEditingController();
   final TextEditingController body = TextEditingController();
   final TextEditingController topic = TextEditingController();

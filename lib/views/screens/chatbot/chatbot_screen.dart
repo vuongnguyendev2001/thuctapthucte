@@ -23,6 +23,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   final _auth = FirebaseAuth.instance;
   User? loggedInUser;
   String? messageText;
+  String messageSend = "";
   String? question1 = 'Làm thế nào để chuẩn bị cho thực tập thực tế?';
   String? question2 = 'Điều kiện để đi thực tập là gì?';
   String? question3 = 'Tôi có thể tìm kiếm nơi thực tập ở đâu?';
@@ -80,10 +81,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
-        automaticallyImplyLeading: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'Hỏi đáp thực tập',
+          style: Style.homeTitleStyle,
+        ),
+        backgroundColor: primaryColor,
         centerTitle: true,
-        backgroundColor: whiteColor,
-        title: const Text('Hỏi Đáp Thực Tập'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -295,13 +299,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                             '$messageText',
                             style: TextStyle(
                               color: isMe ? Colors.white : Colors.black87,
-                              fontSize: 15.0,
+                              fontSize: 13.0,
                             ),
                             textAlign: TextAlign.start,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 5.0),
+                      const SizedBox(height: 2.0),
                       Text(
                         messageSender,
                         style: const TextStyle(
@@ -309,7 +313,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                           color: Colors.black54,
                         ),
                       ),
-                      const SizedBox(height: 10.0),
+                      const SizedBox(height: 7.0),
                     ],
                   );
                   messageWidgets.add(messageWidget);
@@ -354,7 +358,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                       validator: (value) {
                         return null;
                       },
-                      onChanged: (newValue) {},
+                      onChanged: (newValue) {
+                        messageSend = newValue;
+                        print(messageSend);
+                      },
                       controller: message,
                       keyboardType: TextInputType.text,
                       decoration: const InputDecoration(
@@ -366,29 +373,31 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      await _firestore
-                          .collection('chats')
-                          .doc(loggedInUser!.uid)
-                          .collection('room')
-                          .add({
-                        'sender': loggedInUser!.email,
-                        'text': message.text,
-                        'timestamp': FieldValue.serverTimestamp(),
-                      });
-                      await sendMessageToRasa(message.text).then((response) {
-                        setState(() {
-                          _firestore
-                              .collection('chats')
-                              .doc(loggedInUser!.uid)
-                              .collection('room')
-                              .add({
-                            'sender': 'chatbot',
-                            'text': response,
-                            'timestamp': FieldValue.serverTimestamp(),
-                          });
+                      try {
+                        message.clear();
+                        await _firestore
+                            .collection('chats')
+                            .doc(loggedInUser!.uid)
+                            .collection('room')
+                            .add({
+                          'sender': loggedInUser!.email,
+                          'text': messageSend,
+                          'timestamp': FieldValue.serverTimestamp(),
                         });
-                      });
-                      message.clear();
+                        String response = await sendMessageToRasa(messageSend);
+                        await _firestore
+                            .collection('chats')
+                            .doc(loggedInUser!.uid)
+                            .collection('room')
+                            .add({
+                          'sender': 'chatbot',
+                          'text': response,
+                          'timestamp': FieldValue.serverTimestamp(),
+                        });
+                      } catch (e) {
+                        // Xử lý lỗi nếu có
+                        print("Error: $e");
+                      }
                     },
                     icon: const Icon(Icons.send),
                   )

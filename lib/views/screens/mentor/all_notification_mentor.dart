@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:trungtamgiasu/constants/color.dart';
 import 'package:trungtamgiasu/constants/currency_formatter.dart';
@@ -9,15 +10,29 @@ import 'package:trungtamgiasu/constants/style.dart';
 import 'package:trungtamgiasu/controllers/route_manager.dart';
 import 'package:trungtamgiasu/models/notification.dart';
 import 'package:trungtamgiasu/models/pdf_model.dart';
+import 'package:trungtamgiasu/services/get_current_user.dart';
 
-class ManagerNotification extends StatefulWidget {
-  const ManagerNotification({super.key});
+class AllNotificationMentor extends StatefulWidget {
+  const AllNotificationMentor({super.key});
 
   @override
-  State<ManagerNotification> createState() => _ManagerNotificationState();
+  State<AllNotificationMentor> createState() => _AllNotificationMentorState();
 }
 
-class _ManagerNotificationState extends State<ManagerNotification> {
+class _AllNotificationMentorState extends State<AllNotificationMentor> {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final updatedUser = await getUserInfo(loggedInUser);
+    setState(() {
+      loggedInUser = updatedUser;
+    });
+  }
+
   final Stream<QuerySnapshot> notificationsStream = FirebaseFirestore.instance
       .collection('notifications')
       .orderBy(
@@ -30,27 +45,13 @@ class _ManagerNotificationState extends State<ManagerNotification> {
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: whiteColor),
         backgroundColor: primaryColor,
+        automaticallyImplyLeading: false,
         title: Text(
-          'Quản lý thông báo'.toUpperCase(),
-          style: Style.homeTitleStyle,
+          'Thông báo',
+          style: Style.hometitleStyle.copyWith(color: whiteColor),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: true,
-        actions: [
-          InkWell(
-            onTap: () async {
-              Get.toNamed(RouteManager.addNotification);
-            },
-            child: CircleAvatar(
-              backgroundColor: whiteColor,
-              radius: 17,
-              child: const Icon(Icons.add_outlined),
-            ),
-          ),
-          const SizedBox(width: 5),
-        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: notificationsStream,
@@ -83,7 +84,9 @@ class _ManagerNotificationState extends State<ManagerNotification> {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
             Notifications notifications = Notifications.fromJson(data);
-            return notifications.emailUser == '';
+            return notifications.emailUser == loggedInUser.email ||
+                notifications.emailUser == 'mentor' ||
+                notifications.emailUser == '';
           }).map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
@@ -96,28 +99,6 @@ class _ManagerNotificationState extends State<ManagerNotification> {
                   color: whiteColor,
                 ),
                 child: ListTile(
-                  leading: InkWell(
-                    onTap: () {
-                      FirebaseFirestore.instance
-                          .collection('notifications')
-                          .doc(notifications.id)
-                          .delete()
-                          .then(
-                        (_) {
-                          EasyLoading.showSuccess(
-                            'Xóa thành công',
-                          );
-                        },
-                      );
-                    },
-                    child: const CircleAvatar(
-                      backgroundColor: greyFontColor,
-                      child: Icon(
-                        Icons.delete_outline_outlined,
-                        color: primaryColor,
-                      ),
-                    ),
-                  ),
                   title: Text(
                     notifications.title!,
                     style: Style.titleStyle,
@@ -132,7 +113,7 @@ class _ManagerNotificationState extends State<ManagerNotification> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 3),
-                      notifications.urlFile != null
+                      notifications.urlFile != ''
                           ? InkWell(
                               onTap: () {
                                 PdfViewerArguments arguments =
